@@ -9,17 +9,35 @@ export default function Register() {
   const router = useRouter();
   const [form, setForm] = useState({ name: "", email: "", password: "" });
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const res = await fetch("/api/register", {
-      method: "POST",
-      body: JSON.stringify({
-        ...form,
-        password: bcrypt.hashSync(form.password, 10),
-      }),
+ const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  const res = await fetch("/api/register", {
+    method: "POST",
+    body: JSON.stringify({
+      ...form,
+      password: bcrypt.hashSync(form.password, 10),
+    }),
+  });
+
+  if (res.ok) {
+    // Automatically sign in the user using their credentials
+    const loginRes = await signIn("credentials", {
+      redirect: false,
+      email: form.email,
+      password: form.password,
     });
-    if (res.ok) router.push("/dashboard");
-  };
+
+    if (loginRes?.ok) {
+      router.push("/dashboard");
+    } else {
+      alert("Auto-login failed. Please try logging in manually.");
+    }
+  } else {
+    alert("User already exists or registration failed.");
+  }
+};
+
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100 px-4">

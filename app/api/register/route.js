@@ -6,6 +6,7 @@ export async function POST(req) {
   const { name, email, password } = await req.json();
   const exists = await User.findOne({ email });
   if (exists) {
+    alert ('user with the given email is already exists');
     return new Response("User already exists", { status: 400 });
   }
   await User.create({ name, email, password });

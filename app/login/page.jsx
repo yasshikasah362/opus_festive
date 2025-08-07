@@ -14,8 +14,8 @@ export default function Login() {
       email: form.email,
       password: form.password,
     });
-    if (res.ok || res.status === 200) router.push("/");
-    else alert("Login failed");
+    if (res.ok || res.status === 200) router.push("/dashboard");
+    else alert("Login failed ");
   };
 
   return (
