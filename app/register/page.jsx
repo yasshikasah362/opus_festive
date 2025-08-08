@@ -38,9 +38,19 @@ export default function Register() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#FC6C87] via-[#FFD6DD] to-[#FFEFF2] px-4">
+    <div
+      className="flex items-center justify-center min-h-screen px-4"
+      style={{ background: "var(--primary-gradient)" }}
+    >
+      <div
+    className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/flowers.png')] opacity-120 mix-blend-overlay"
+    aria-hidden="true"
+  />
       <div className="w-full max-w-md bg-white/90 backdrop-blur-lg rounded-2xl shadow-2xl p-8 space-y-6">
-        <h2 className="text-3xl font-bold text-center text-[#FC6C87]">
+        <h2
+          className="text-3xl font-bold text-center"
+          style={{ color: "var(--primary-color)" }}
+        >
           Create an Account
         </h2>
 
@@ -48,24 +58,46 @@ export default function Register() {
           <input
             type="text"
             placeholder="Full Name"
-            className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#FC6C87]/60 transition"
+            className="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 transition"
+            style={{
+              borderColor: "var(--input-border)",
+              focusRingColor: "var(--focus-ring)",
+            }}
             onChange={(e) => setForm({ ...form, name: e.target.value })}
           />
           <input
             type="email"
             placeholder="Email"
-            className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#FC6C87]/60 transition"
+            className="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 transition"
+            style={{
+              borderColor: "var(--input-border)",
+              focusRingColor: "var(--focus-ring)",
+            }}
             onChange={(e) => setForm({ ...form, email: e.target.value })}
           />
           <input
             type="password"
             placeholder="Password"
-            className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#FC6C87]/60 transition"
+            className="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 transition"
+            style={{
+              borderColor: "var(--input-border)",
+              focusRingColor: "var(--focus-ring)",
+            }}
             onChange={(e) => setForm({ ...form, password: e.target.value })}
           />
           <button
             type="submit"
-            className="w-full bg-[#FC6C87] text-white font-semibold py-3 rounded-lg shadow-md hover:bg-[#f84d70] transition"
+            className="w-full font-semibold py-3 rounded-lg shadow-md transition cursor-pointer"
+            style={{
+              backgroundColor: "var(--button-bg)",
+              color: "var(--button-text)",
+            }}
+            onMouseOver={(e) =>
+              (e.currentTarget.style.backgroundColor = "var(--button-bg-hover)")
+            }
+            onMouseOut={(e) =>
+              (e.currentTarget.style.backgroundColor = "var(--button-bg)")
+            }
           >
             Register
           </button>
@@ -79,7 +111,7 @@ export default function Register() {
 
         <button
           onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
-          className="w-full flex items-center justify-center gap-3 bg-white border border-gray-300 text-gray-700 py-3 rounded-lg hover:shadow-lg transition"
+          className="w-full flex items-center justify-center gap-3 border border-gray-300 text-gray-700 py-3 rounded-lg hover:shadow-lg transition cursor-pointer bg-white"
         >
           <img
             src="https://www.svgrepo.com/show/475656/google-color.svg"

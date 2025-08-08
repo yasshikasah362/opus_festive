@@ -4,6 +4,19 @@
   --background: #ffffff;
   --foreground: #171717;
 }
+:root {
+  --primary-color: #FC6C87;
+  --primary-gradient: linear-gradient(to right, #FC6C87, #FF9A8B, #FFB199);
+  --button-bg: #ffffff;
+  --button-text: var(--primary-color);
+  --heading-color: #ffffff;
+  --text-color: #ffffff;
+}
+.loader {
+  border-top-color: var(--primary-color);
+}
+
+
 
 @theme inline {
   --color-background: var(--background);
