@@ -45,29 +45,30 @@ const handleNavigation = (path) => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
             {/* Left - Logo & Nav Links */}
-            <div className="flex items-center space-x-6">
-              <Link
-                href="/"
-                className="text-2xl font-bold tracking-tight transition-colors text-[var(--primary-color)] hover:opacity-90 hover:scale-105 duration-200"
-              >
-                FestivalApp
-              </Link>
+           <div className="flex items-center space-x-6">
+  <Link
+    href="/"
+    className="text-2xl font-bold tracking-tight cursor-pointer transition-colors text-[var(--primary-color)] hover:opacity-90 hover:scale-105 duration-200"
+  >
+    FestivalApp
+  </Link>
 
-              {[
-                { label: "Register", href: "/register" },
-                { label: "Login", href: "/login" },
-                { label: "Create Templates", href: "/templates" },
-                { label: "Features", href: "/features" },
-              ].map((item) => (
-                <button
-                  key={item.href}
-                  onClick={() => handleNavigation(item.href)}
-                  className="font-medium relative px-2 py-1 transition-all duration-200 text-[var(--text-default)] hover:text-[var(--primary-color)] hover:scale-105 hover:underline hover:underline-offset-4"
-                >
-                  {item.label}
-                </button>
-              ))}
-            </div>
+  {[
+    { label: "Register", href: "/register" },
+    { label: "Login", href: "/login" },
+    { label: "Create Templates", href: "/templates" },
+    { label: "Features", href: "/features" },
+  ].map((item) => (
+    <button
+      key={item.href}
+      onClick={() => handleNavigation(item.href)}
+      className="font-medium relative px-2 py-1 transition-all duration-200 text-[var(--text-default)] hover:text-[var(--primary-color)] hover:scale-105 hover:underline hover:underline-offset-4 cursor-pointer"
+    >
+      {item.label}
+    </button>
+  ))}
+</div>
+
 
             {/* Right - SignIn / SignOut */}
             <div className="flex items-center space-x-4">
