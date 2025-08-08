@@ -73,12 +73,12 @@ const handleNavigation = (path) => {
             <div className="flex items-center space-x-4">
               {session ? (
                 <>
-                  <span className="text-sm hidden sm:block text-[var(--text-muted)]">
+                  {/* <span className="text-sm hidden sm:block text-[var(--text-muted)]">
                     {session.user?.email}
-                  </span>
+                  </span> */}
                   <button
                     onClick={() => signOut()}
-                    className="px-4 py-2 rounded-full transition-all duration-300 cursor-pointer bg-[var(--button-light-bg)] text-[var(--button-light-text)] hover:bg-[var(--button-light-hover)] hover:shadow-lg hover:scale-105"
+                    className="px-5 py-2 rounded-full transition-all duration-300 shadow cursor-pointer bg-[var(--button-bg)] text-[var(--button-text)] hover:bg-[var(--button-bg-hover)] hover:shadow-lg hover:scale-105"
                   >
                     Sign Out
                   </button>
