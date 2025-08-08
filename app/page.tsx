@@ -1,33 +1,42 @@
-'use client';
+import React from 'react';
 
-
-export default function HomePage() {
+const HomePage = () => {
   return (
-    <>
-      
+    <div
+      className="relative min-h-screen flex items-center justify-center px-6 py-12 text-white bg-gradient-to-r from-[#FC6C87] via-[#FF9A8B] to-[#FFB199] shadow-inner"
+    >
+      {/* Flower texture overlay */}
+      <div
+        className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/flowers.png')] opacity-20 mix-blend-overlay"
+        aria-hidden="true"
+      />
 
-      <main className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-300 flex items-center justify-center px-4">
-        <div className="max-w-md w-full bg-white shadow-xl rounded-2xl p-8 space-y-6 text-center">
-          <h1 className="text-4xl font-extrabold text-gray-800">Welcome 👋</h1>
-          <p className="text-gray-500 text-md">Simple & secure auth with Google</p>
-
-          {/* <div className="space-y-4">
-            <Link
-              href="/register"
-              className="block w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-200"
-            >
-              Register
-            </Link>
-
-            <Link
-              href="/login"
-              className="block w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-200"
-            >
-              Login
-            </Link>
-          </div> */}
+      {/* Main content */}
+      <div className="relative max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-12 z-10">
+        {/* Text Section */}
+        <div className="flex-1 text-center md:text-left">
+          <h1 className="text-4xl md:text-6xl font-extrabold leading-tight mb-4 drop-shadow-lg">
+            Celebrate Every Festival with Stunning Designs
+          </h1>
+          <p className="text-lg md:text-xl mb-6 drop-shadow">
+            Create personalized festival creatives effortlessly with modern templates. Make every occasion stand out!
+          </p>
+          <button className="bg-white text-[#FC6C87] font-semibold px-6 py-3 rounded-full shadow hover:bg-gray-100 transition-all">
+            Get Started for Free
+          </button>
         </div>
-      </main>
-    </>
+
+        {/* Image Section */}
+        <div className="flex-1">
+          <img
+            src="https://www.picmaker.com/assets/images/festivaltemplates/Hero%20Graphic.png"
+            alt="Festival Hero"
+            className="w-full max-w-md mx-auto drop-shadow-2xl animate-fade-in"
+          />
+        </div>
+      </div>
+    </div>
   );
-}
+};
+
+export default HomePage;
