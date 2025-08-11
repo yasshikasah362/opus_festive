@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import bcrypt from "bcryptjs";
 import { signIn } from "next-auth/react";
 import { motion } from "framer-motion";
+import { FiUser, FiMail, FiLock } from "react-icons/fi"; // Icons import
 
 export default function Register() {
   const router = useRouter();
@@ -38,6 +39,12 @@ export default function Register() {
     }
   };
 
+  const inputFields = [
+    { name: "name", placeholder: "Full Name", type: "text", icon: <FiUser /> },
+    { name: "email", placeholder: "Email Address", type: "email", icon: <FiMail /> },
+    { name: "password", placeholder: "Password", type: "password", icon: <FiLock /> },
+  ];
+
   return (
     <div
       className="flex items-center justify-center min-h-screen px-4 relative overflow-hidden"
@@ -59,12 +66,10 @@ export default function Register() {
         <motion.h2
           className="text-3xl font-bold text-center"
           style={{ color: "var(--primary-color)" }}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
         >
-          Create an Account
+          Create Free Account
         </motion.h2>
+        <h2 className="text-center text-gray-600">Every Amazing Journey starts with a new account</h2>
 
         <motion.form
           onSubmit={handleSubmit}
@@ -74,34 +79,28 @@ export default function Register() {
           variants={{
             hidden: {},
             show: {
-              transition: {
-                staggerChildren: 0.15,
-              },
+              transition: { staggerChildren: 0.15 },
             },
           }}
         >
-          {["name", "email", "password"].map((field, index) => (
-            <motion.input
-              key={field}
-              type={field === "password" ? "password" : field}
-              placeholder={
-                field === "name"
-                  ? "Full Name"
-                  : field === "email"
-                  ? "Email"
-                  : "Password"
-              }
-              className="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 transition"
-              style={{
-                borderColor: "var(--input-border)",
-                focusRingColor: "var(--focus-ring)",
-              }}
-              onChange={(e) => setForm({ ...form, [field]: e.target.value })}
+          {inputFields.map((field) => (
+            <motion.div
+              key={field.name}
+              className="flex items-center border rounded-lg px-3 py-2 focus-within:ring-2 focus-within:ring-[var(--primary-color)] transition"
+              style={{ borderColor: "var(--input-border)" }}
               variants={{
                 hidden: { opacity: 0, y: 20 },
                 show: { opacity: 1, y: 0 },
               }}
-            />
+            >
+              <span className="text-gray-500 mr-2">{field.icon}</span>
+              <input
+                type={field.type}
+                placeholder={field.placeholder}
+                className="flex-1 bg-transparent outline-none"
+                onChange={(e) => setForm({ ...form, [field.name]: e.target.value })}
+              />
+            </motion.div>
           ))}
 
           <motion.button
@@ -114,7 +113,7 @@ export default function Register() {
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.96 }}
           >
-            Register
+            Sign Up
           </motion.button>
         </motion.form>
 
@@ -135,7 +134,7 @@ export default function Register() {
             alt="Google"
             className="w-5 h-5"
           />
-          Sign in with Google
+          Login with Google
         </motion.button>
       </motion.div>
     </div>

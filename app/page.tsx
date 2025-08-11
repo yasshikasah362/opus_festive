@@ -2,9 +2,12 @@
 
 import { motion } from 'framer-motion';
 import './globals.css';
+import FeaturesPage from '../components/FeaturesPage';
 
 const HomePage = () => {
   return (
+    <>
+    
     <div
       className="relative min-h-screen flex items-center justify-center px-6 py-12 text-white shadow-inner"
       style={{
@@ -73,6 +76,10 @@ const HomePage = () => {
         </motion.div>
       </div>
     </div>
+   
+   <FeaturesPage/>
+
+    </>
   );
 };
 

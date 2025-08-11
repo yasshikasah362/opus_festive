@@ -4,10 +4,11 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { FiMail, FiLock } from "react-icons/fi";
 
 export default function Login() {
   const router = useRouter();
-  const [form, setForm] = useState({ email: "", password: "" });
+  const [form, setForm] = useState({ email: "", password: "", remember: false });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -35,7 +36,6 @@ export default function Login() {
         aria-hidden="true"
       />
 
-      {/* Motion Login Box */}
       <motion.div
         className="w-full max-w-md bg-white/90 backdrop-blur-lg rounded-2xl shadow-2xl p-8 space-y-6 z-10"
         initial={{ opacity: 0, y: 50, scale: 0.95 }}
@@ -49,9 +49,11 @@ export default function Login() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
         >
-          Welcome Back
+          Login
         </motion.h2>
+        <h4>Please enter your email address and password</h4>
 
+        {/* Login Form */}
         <motion.form
           onSubmit={handleSubmit}
           className="space-y-4"
@@ -59,32 +61,73 @@ export default function Login() {
           animate="show"
           variants={{
             hidden: {},
-            show: {
-              transition: {
-                staggerChildren: 0.15,
-              },
-            },
+            show: { transition: { staggerChildren: 0.15 } },
           }}
         >
-          {["email", "password"].map((field) => (
-            <motion.input
-              key={field}
-              type={field}
-              placeholder={field === "email" ? "Email" : "Password"}
-              value={form[field]}
-              onChange={(e) => setForm({ ...form, [field]: e.target.value })}
-              className="w-full px-4 py-3 rounded-lg border transition focus:outline-none focus:ring-2"
-              style={{
-                borderColor: "var(--input-border)",
-                boxShadow: "0 0 0 2px transparent",
-              }}
-              variants={{
-                hidden: { opacity: 0, y: 20 },
-                show: { opacity: 1, y: 0 },
-              }}
+          {/* Email Input */}
+          <motion.div
+            className="relative"
+            variants={{
+              hidden: { opacity: 0, y: 20 },
+              show: { opacity: 1, y: 0 },
+            }}
+          >
+            <FiMail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
+            <input
+              type="email"
+              placeholder="Enter Email Address"
+              value={form.email}
+              onChange={(e) => setForm({ ...form, email: e.target.value })}
+              className="w-full pl-10 pr-4 py-3 rounded-lg border transition focus:outline-none focus:ring-2"
+              style={{ borderColor: "var(--input-border)" }}
             />
-          ))}
+          </motion.div>
 
+          {/* Password Input */}
+          <motion.div
+            className="relative"
+            variants={{
+              hidden: { opacity: 0, y: 20 },
+              show: { opacity: 1, y: 0 },
+            }}
+          >
+            <FiLock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
+            <input
+              type="password"
+              placeholder="Password"
+              value={form.password}
+              onChange={(e) => setForm({ ...form, password: e.target.value })}
+              className="w-full pl-10 pr-4 py-3 rounded-lg border transition focus:outline-none focus:ring-2"
+              style={{ borderColor: "var(--input-border)" }}
+            />
+          </motion.div>
+
+          {/* Remember Me */}
+          <motion.div
+            className="flex items-center space-x-2"
+            variants={{
+              hidden: { opacity: 0, y: 20 },
+              show: { opacity: 1, y: 0 },
+            }}
+          >
+            <input
+              type="checkbox"
+              id="remember"
+              checked={form.remember}
+              onChange={(e) =>
+                setForm({ ...form, remember: e.target.checked })
+              }
+              className="h-4 w-4 text-[var(--primary-color)] focus:ring-[var(--primary-color)] border-gray-300 rounded cursor-pointer"
+            />
+            <label
+              htmlFor="remember"
+              className="text-sm text-gray-600 cursor-pointer"
+            >
+              Remember Me
+            </label>
+          </motion.div>
+
+          {/* Login Button */}
           <motion.button
             type="submit"
             className="w-full font-semibold py-3 rounded-lg shadow-md transition cursor-pointer"
@@ -95,7 +138,7 @@ export default function Login() {
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.96 }}
           >
-            Sign In
+            Login
           </motion.button>
         </motion.form>
 
@@ -121,8 +164,19 @@ export default function Login() {
             alt="Google"
             className="w-5 h-5"
           />
-          Sign in with Google
+          Login with Google
         </motion.button>
+
+        {/* Sign Up Redirect */}
+        <div className="text-center text-sm mt-4 text-gray-600">
+          Don't have an account?{" "}
+          <button
+            onClick={() => router.push("/register")}
+            className="text-[var(--primary-color)] font-medium hover:underline cursor-pointer"
+          >
+            Sign Up now
+          </button>
+        </div>
       </motion.div>
     </div>
   );
