@@ -89,8 +89,8 @@ export default function Login() {
             type="submit"
             className="w-full font-semibold py-3 rounded-lg shadow-md transition cursor-pointer"
             style={{
-              backgroundColor: "var(--button-bg)",
-              color: "var(--button-text)",
+              backgroundColor: "var(--primary-color)",
+              color: "var(--text-color)",
             }}
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.96 }}
