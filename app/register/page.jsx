@@ -5,37 +5,46 @@ import { useRouter } from "next/navigation";
 import bcrypt from "bcryptjs";
 import { signIn } from "next-auth/react";
 import { motion } from "framer-motion";
-import { FiUser, FiMail, FiLock } from "react-icons/fi"; // Icons import
+import { FiUser, FiMail, FiLock } from "react-icons/fi";
 
 export default function Register() {
   const router = useRouter();
   const [form, setForm] = useState({ name: "", email: "", password: "" });
+  const [loading, setLoading] = useState(false); // For register button
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
-    const res = await fetch("/api/register", {
-      method: "POST",
-      body: JSON.stringify({
-        ...form,
-        password: bcrypt.hashSync(form.password, 10),
-      }),
-    });
-
-    if (res.ok) {
-      const loginRes = await signIn("credentials", {
-        redirect: false,
-        email: form.email,
-        password: form.password,
+    try {
+      const res = await fetch("/api/register", {
+        method: "POST",
+        body: JSON.stringify({
+          ...form,
+          password: bcrypt.hashSync(form.password, 10),
+        }),
       });
 
-      if (loginRes?.ok) {
-        router.push("/dashboard");
+      if (res.ok) {
+        const loginRes = await signIn("credentials", {
+          redirect: false,
+          email: form.email,
+          password: form.password,
+        });
+
+        if (loginRes?.ok) {
+          router.push("/dashboard");
+        } else {
+          alert("Auto-login failed. Please try logging in manually.");
+        }
       } else {
-        alert("Auto-login failed. Please try logging in manually.");
+        alert("User already exists or registration failed.");
       }
-    } else {
-      alert("User already exists or registration failed.");
+    } catch (error) {
+      console.error(error);
+      alert("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -56,7 +65,6 @@ export default function Register() {
         aria-hidden="true"
       />
 
-      {/* Motion Wrapper */}
       <motion.div
         className="w-full max-w-md bg-white/90 backdrop-blur-lg rounded-2xl shadow-2xl p-8 space-y-6 z-10"
         initial={{ opacity: 0, y: 50, scale: 0.95 }}
@@ -69,7 +77,9 @@ export default function Register() {
         >
           Create Free Account
         </motion.h2>
-        <h2 className="text-center text-gray-600">Every Amazing Journey starts with a new account</h2>
+        <h2 className="text-center text-gray-600">
+          Every Amazing Journey starts with a new account
+        </h2>
 
         <motion.form
           onSubmit={handleSubmit}
@@ -78,9 +88,7 @@ export default function Register() {
           animate="show"
           variants={{
             hidden: {},
-            show: {
-              transition: { staggerChildren: 0.15 },
-            },
+            show: { transition: { staggerChildren: 0.15 } },
           }}
         >
           {inputFields.map((field) => (
@@ -99,30 +107,36 @@ export default function Register() {
                 placeholder={field.placeholder}
                 className="flex-1 bg-transparent outline-none"
                 onChange={(e) => setForm({ ...form, [field.name]: e.target.value })}
+                required
               />
             </motion.div>
           ))}
 
           <motion.button
             type="submit"
-            className="w-full font-semibold py-3 rounded-lg shadow-md transition cursor-pointer"
+            disabled={loading}
+            className={`w-full font-semibold py-3 rounded-lg shadow-md transition cursor-pointer ${
+              loading ? "opacity-70 cursor-not-allowed" : ""
+            }`}
             style={{
               backgroundColor: "var(--primary-color)",
               color: "var(--text-color)",
             }}
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.96 }}
+            whileHover={!loading ? { scale: 1.03 } : {}}
+            whileTap={!loading ? { scale: 0.96 } : {}}
           >
-            Sign Up
+            {loading ? "Registering..." : "Sign Up"}
           </motion.button>
         </motion.form>
 
+        {/* Divider */}
         <div className="flex items-center gap-2 text-gray-400">
           <hr className="flex-grow border-t" />
           <span className="text-sm">or</span>
           <hr className="flex-grow border-t" />
         </div>
 
+        {/* Google Sign-in Button */}
         <motion.button
           onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
           className="w-full flex items-center justify-center gap-3 border border-gray-300 text-gray-700 py-3 rounded-lg hover:shadow-lg transition cursor-pointer bg-white"
@@ -134,7 +148,7 @@ export default function Register() {
             alt="Google"
             className="w-5 h-5"
           />
-          Login with Google
+          Continue with Google
         </motion.button>
       </motion.div>
     </div>

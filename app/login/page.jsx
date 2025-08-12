@@ -9,19 +9,29 @@ import { FiMail, FiLock } from "react-icons/fi";
 export default function Login() {
   const router = useRouter();
   const [form, setForm] = useState({ email: "", password: "", remember: false });
+  const [loading, setLoading] = useState(false); // NEW: loading state
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const res = await signIn("credentials", {
-      redirect: false,
-      email: form.email,
-      password: form.password,
-    });
+    setLoading(true); // Start loading
 
-    if (res.ok || res.status === 200) {
-      router.push("/dashboard");
-    } else {
-      alert("Login failed");
+    try {
+      const res = await signIn("credentials", {
+        redirect: false,
+        email: form.email,
+        password: form.password,
+      });
+
+      if (res?.ok || res?.status === 200) {
+        router.push("/dashboard");
+      } else {
+        alert("Login failed");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false); // Stop loading
     }
   };
 
@@ -45,9 +55,6 @@ export default function Login() {
         <motion.h2
           className="text-3xl font-bold text-center"
           style={{ color: "var(--primary-color)" }}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
         >
           Login
         </motion.h2>
@@ -64,7 +71,7 @@ export default function Login() {
             show: { transition: { staggerChildren: 0.15 } },
           }}
         >
-          {/* Email Input */}
+          {/* Email */}
           <motion.div
             className="relative"
             variants={{
@@ -80,10 +87,11 @@ export default function Login() {
               onChange={(e) => setForm({ ...form, email: e.target.value })}
               className="w-full pl-10 pr-4 py-3 rounded-lg border transition focus:outline-none focus:ring-2"
               style={{ borderColor: "var(--input-border)" }}
+              required
             />
           </motion.div>
 
-          {/* Password Input */}
+          {/* Password */}
           <motion.div
             className="relative"
             variants={{
@@ -99,6 +107,7 @@ export default function Login() {
               onChange={(e) => setForm({ ...form, password: e.target.value })}
               className="w-full pl-10 pr-4 py-3 rounded-lg border transition focus:outline-none focus:ring-2"
               style={{ borderColor: "var(--input-border)" }}
+              required
             />
           </motion.div>
 
@@ -114,9 +123,7 @@ export default function Login() {
               type="checkbox"
               id="remember"
               checked={form.remember}
-              onChange={(e) =>
-                setForm({ ...form, remember: e.target.checked })
-              }
+              onChange={(e) => setForm({ ...form, remember: e.target.checked })}
               className="h-4 w-4 text-[var(--primary-color)] focus:ring-[var(--primary-color)] border-gray-300 rounded cursor-pointer"
             />
             <label
@@ -130,15 +137,18 @@ export default function Login() {
           {/* Login Button */}
           <motion.button
             type="submit"
-            className="w-full font-semibold py-3 rounded-lg shadow-md transition cursor-pointer"
+            disabled={loading}
+            className={`w-full font-semibold py-3 rounded-lg shadow-md transition cursor-pointer ${
+              loading ? "opacity-70 cursor-not-allowed" : ""
+            }`}
             style={{
               backgroundColor: "var(--primary-color)",
               color: "var(--text-color)",
             }}
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.96 }}
+            whileHover={!loading ? { scale: 1.03 } : {}}
+            whileTap={!loading ? { scale: 0.96 } : {}}
           >
-            Login
+            {loading ? "Logging in..." : "Login"}
           </motion.button>
         </motion.form>
 
