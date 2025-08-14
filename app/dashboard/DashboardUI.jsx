@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import {
   HomeIcon,
   PhotoIcon,
@@ -45,13 +46,7 @@ export default function DashboardUI({ username }) {
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col">
-        {/* Header
-       <header className="bg-[#0B1437] text-white flex justify-end items-center px-6 py-3 mt-14">
-  <div className="flex items-center gap-2 cursor-pointer">
-    <UserCircleIcon className="w-8 h-8" />
-    <span>{username}</span>
-  </div>
-</header> */}
+       
 
 
 
@@ -86,22 +81,31 @@ export default function DashboardUI({ username }) {
           </div>
 
           {/* Tags */}
-          <div className="mt-4 flex justify-center gap-2 flex-wrap">
-            {[
-              "Flyer",
-              "babysitting flyer",
-              "Poster",
-              "Social Media Post",
-              "Festive Greetings",
-            ].map((tag, i) => (
-              <span
-                key={i}
-                className="bg-[#ffb0a4] px-3 py-1 rounded cursor-pointer text-sm"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
+         <div className="mt-4 flex justify-center gap-2 flex-wrap">
+      {[
+        { label: "Flyer", href: "/Flyer" },
+        { label: "Discount Post" },
+        { label: "Poster" },
+        { label: "Social Media Post" },
+        { label: "Festive Greetings" },
+      ].map((tag, i) =>
+        tag.href ? (
+          <Link key={i} href={tag.href}>
+            <span className="bg-[#ffb0a4] px-3 py-1 rounded cursor-pointer text-sm">
+              {tag.label}
+            </span>
+          </Link>
+        ) : (
+          <span
+            key={i}
+            className="bg-[#ffb0a4] px-3 py-1 rounded cursor-pointer text-sm"
+          >
+            {tag.label}
+          </span>
+        )
+      )}
+    </div>
+
         </div>
 
         {/* Tabs */}
