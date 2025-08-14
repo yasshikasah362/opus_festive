@@ -1,25 +1,41 @@
 "use client";
-import { useState } from "react";
-import { FaRegImages, FaFont, FaCloudUploadAlt, FaTools, FaFolder, FaShapes, FaCrop, FaUndo, FaRedo, FaPalette, FaClock, FaLayerGroup } from "react-icons/fa";
+import { useState, useEffect } from "react";
+import {
+  FaRegImages,
+  FaFont,
+  FaCloudUploadAlt,
+  FaShapes,
+  FaCrop,
+  FaUndo,
+  FaRedo,
+  FaPalette,
+  FaClock,
+  FaLayerGroup
+} from "react-icons/fa";
 import { MdBrandingWatermark, MdEdit } from "react-icons/md";
+import productsData from "../../public/products.json";
 
 export default function Flyer() {
   const [activeTab, setActiveTab] = useState("templates");
   const [selectedImage, setSelectedImage] = useState(null);
-  const [imgDimensions, setImgDimensions] = useState(null);
+  const [products, setProducts] = useState([]); // store products from JSON
 
   const menuItems = [
     { id: "templates", icon: <FaRegImages size={20} />, label: "Templates" },
-    { id: "elements", icon: <FaShapes size={20} />, label: "Elements" },
+    { id: "products", icon: <FaShapes size={20} />, label: "Products" },
     { id: "text", icon: <FaFont size={20} />, label: "Text" },
-    { id: "brand", icon: <MdBrandingWatermark size={20} />, label: "Brand" },
-    { id: "uploads", icon: <FaCloudUploadAlt size={20} />, label: "Uploads" },
-    { id: "tools", icon: <FaTools size={20} />, label: "Tools" },
-    { id: "projects", icon: <FaFolder size={20} />, label: "Projects" },
+    { id: "tags", icon: <MdBrandingWatermark size={20} />, label: "Tags" },
+    { id: "color", icon: <FaCloudUploadAlt size={20} />, label: "Color" },
   ];
 
+  // Load products.json when tab changes to "products"
+  useEffect(() => {
+  if (activeTab === "products") {
+    setProducts(productsData);
+  }
+}, [activeTab]);
+
   const handleImageClick = (src) => {
-    // Just set the src; we’ll read natural size when the <img> in the canvas finishes loading
     setSelectedImage(src);
   };
 
@@ -41,9 +57,9 @@ export default function Flyer() {
       </header>
 
       {/* MAIN CONTENT */}
-      <div className="flex flex-1 overflow-hidden">
+      <div className=" cursor-pointer flex flex-1 overflow-hidden">
         {/* ICON MENU */}
-        <aside className="w-16 bg-white border-r flex flex-col items-center py-4 space-y-6">
+        <aside className=" cursor-pointer w-16 bg-white border-r flex flex-col items-center py-4 space-y-6">
           {menuItems.map((item) => (
             <button
               key={item.id}
@@ -59,8 +75,8 @@ export default function Flyer() {
         </aside>
 
         {/* SIDEBAR CONTENT */}
-        <aside className="w-64 bg-white border-r p-4 flex flex-col">
-          {activeTab === "templates" ? (
+        <aside className="w-64 cursor-pointer bg-white border-r p-4 flex flex-col">
+          {activeTab === "templates" && (
             <>
               <h2 className="text-lg font-semibold mb-4">Templates</h2>
               <input
@@ -70,7 +86,7 @@ export default function Flyer() {
               />
               <div className="space-y-3 overflow-y-auto flex-1">
                 {Array.from({ length: 6 }).map((_, i) => {
-                  const src = `/images/flyer${i + 1}.jpg`; // place images in /public/images/
+                  const src = `/images/flyer${i + 1}.jpg`;
                   const isSelected = selectedImage === src;
                   return (
                     <div
@@ -80,43 +96,69 @@ export default function Flyer() {
                       }`}
                       onClick={() => handleImageClick(src)}
                     >
-                      <img src={src} alt={`Template ${i + 1}`} className="w-full block" draggable={false} />
+                      <img
+                        src={src}
+                        alt={`Template ${i + 1}`}
+                        className="w-full block"
+                        draggable={false}
+                      />
                     </div>
                   );
                 })}
               </div>
             </>
-          ) : (
-            <div className="flex-1 flex items-center justify-center text-gray-400">
-              {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} Content
-            </div>
+          )}
+
+          {activeTab === "products" && (
+            <>
+              <h2 className="text-lg font-semibold mb-4">Products</h2>
+              <div className="space-y-3 overflow-y-auto flex-1">
+                {products.length > 0 ? (
+                  products.map((product, idx) => (
+                    <div
+                      key={idx}
+                      className="border rounded-lg p-2 flex gap-2 items-center hover:shadow cursor-pointer"
+                    >
+                      <img
+                        src={product.imageUrl}
+                        alt={product.product_name}
+                        className="w-12 h-12 object-cover rounded"
+                      />
+                      <div>
+                        <p className="font-semibold text-sm">{product.product_name}</p>
+                        <p className="text-xs text-gray-500">{product.category_name}</p>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-gray-400">Loading products...</p>
+                )}
+              </div>
+            </>
           )}
         </aside>
 
         {/* CANVAS AREA */}
-       <main className="flex-1 flex items-center justify-center bg-gray-50 overflow-auto">
-  <div
-    className="bg-white border shadow-lg flex items-center justify-center overflow-hidden"
-    style={{
-      width: "800px", // fixed size
-      height: "500px",
-    }}
-  >
-    {selectedImage ? (
-      <img
-        src={selectedImage}
-        alt="Selected"
-        className="w-full h-full object-cover" // 👈 fills the div completely
-        draggable={false}
-      />
-    ) : (
-      <span className="text-gray-400">No Template Selected</span>
-    )}
-  </div>
-</main>
-
-
-
+        <main className="flex-1 flex items-center justify-center bg-gray-50 overflow-auto">
+          <div
+            className="bg-white border shadow-lg flex items-center justify-center overflow-hidden"
+            style={{
+              width: "800px",
+              height: "500px",
+            }}
+          >
+            {selectedImage ? (
+              <img
+                src={selectedImage}
+                alt="Selected"
+                className="w-full h-full object-cover"
+                draggable={false}
+              />
+            ) : (
+              <span className="text-gray-400">No Template Selected</span>
+            )}
+          </div>
+        </main>
       </div>
 
       {/* FOOTER TOOLBAR */}

@@ -1,0 +1,566 @@
+[
+    {
+        "product_name": "Malta",
+        "category_name": "Sofa",
+        "sub_category_name": "SetSofas",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/SetSofas/Malta/Malta.png"
+    },
+    {
+        "product_name": "F3A060",
+        "category_name": "Sofa",
+        "sub_category_name": "LShape",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/LShape/F3A060/F3A060.png"
+    },
+    {
+        "product_name": "Futon",
+        "category_name": "Sofa",
+        "sub_category_name": "SetSofas",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/SetSofas/Futon/Futon.png"
+    },
+    {
+        "product_name": "Nato",
+        "category_name": "Sofa",
+        "sub_category_name": "SetSofas",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/SetSofas/Nato/Nato.png"
+    },
+    {
+        "product_name": "Steve",
+        "category_name": "Sofa",
+        "sub_category_name": "LShape",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/LShape/Steve/Steve.png"
+    },
+    {
+        "product_name": "Minotti",
+        "category_name": "Sofa",
+        "sub_category_name": "LShape",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/LShape/Minotti/Minotti.png"
+    },
+    {
+        "product_name": "Regal",
+        "category_name": "Sofa",
+        "sub_category_name": "LShape",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/LShape/Regal/Regal.png"
+    },
+    {
+        "product_name": "Penelope",
+        "category_name": "Sofa",
+        "sub_category_name": "SetSofas",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/SetSofas/Penelope/Penelope.png"
+    },
+    {
+        "product_name": "Lurell",
+        "category_name": "Sofa",
+        "sub_category_name": "SetSofas",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/SetSofas/Lurell/Lurell.png"
+    },
+    {
+        "product_name": "Enigma",
+        "category_name": "Sofa",
+        "sub_category_name": "LShape",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/LShape/Enigma/Enigma.png"
+    },
+    {
+        "product_name": "Dwell",
+        "category_name": "Sofa",
+        "sub_category_name": "LShape",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/LShape/Dwell/Dwell.png"
+    },
+    {
+        "product_name": "Durham",
+        "category_name": "Sofa",
+        "sub_category_name": "Chairs",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/Chairs/Durham/Durham.png"
+    },
+    {
+        "product_name": "Haven",
+        "category_name": "Sofa",
+        "sub_category_name": "SetSofas",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/SetSofas/Haven/Haven.png"
+    },
+    {
+        "product_name": "Kennedy",
+        "category_name": "Sofa",
+        "sub_category_name": "Chairs",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/Chairs/Kennedy/Kennedy.png"
+    },
+    {
+        "product_name": "Jasper",
+        "category_name": "Sofa",
+        "sub_category_name": "Chairs",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/Chairs/Jasper/Jasper.png"
+    },
+    {
+        "product_name": "Lennox",
+        "category_name": "Sofa",
+        "sub_category_name": "Chairs",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/Chairs/Lennox/Lennox.png"
+    },
+    {
+        "product_name": "Aramis",
+        "category_name": "Sofa",
+        "sub_category_name": "Chairs",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/Chairs/Aramis/Aramis.png"
+    },
+    {
+        "product_name": "Sloan",
+        "category_name": "Sofa",
+        "sub_category_name": "Chairs",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/Chairs/Sloan/Sloan.png"
+    },
+    {
+        "product_name": "Blaine",
+        "category_name": "Sofa",
+        "sub_category_name": "Chairs",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/Chairs/Blaine/Blaine.png"
+    },
+    {
+        "product_name": "Ruta",
+        "category_name": "Sofa",
+        "sub_category_name": "Chairs",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/Chairs/Ruta/Ruta.png"
+    },
+    {
+        "product_name": "Grisham",
+        "category_name": "Sofa",
+        "sub_category_name": "Chairs",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/Chairs/Grisham/Grisham.png"
+    },
+    {
+        "product_name": "Velocity",
+        "category_name": "Sofa",
+        "sub_category_name": "SetSofas",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/SetSofas/Velocity/Velocity.png"
+    },
+    {
+        "product_name": "Stratford",
+        "category_name": "Sofa",
+        "sub_category_name": "SetSofas",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/SetSofas/Stratford/Stratford.png"
+    },
+    {
+        "product_name": "Malen",
+        "category_name": "Sofa",
+        "sub_category_name": "LShape",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/LShape/Malen/Malen.png"
+    },
+    {
+        "product_name": "Lumina",
+        "category_name": "Sofa",
+        "sub_category_name": "LShape",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/LShape/Lumina/Lumina.png"
+    },
+    {
+        "product_name": "Terra",
+        "category_name": "Sofa",
+        "sub_category_name": "LShape",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/LShape/Terra/Terra.png"
+    },
+    {
+        "product_name": "BloomField",
+        "category_name": "Sofa",
+        "sub_category_name": "LShape",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/LShape/BloomField/BloomField.png"
+    },
+    {
+        "product_name": "Maximo",
+        "category_name": "Sofa",
+        "sub_category_name": "LShape",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/LShape/Maximo/Maximo.png"
+    },
+    {
+        "product_name": "Amor",
+        "category_name": "Sofa",
+        "sub_category_name": "SetSofas",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/SetSofas/Amor/Amor.png"
+    },
+    {
+        "product_name": "Vista",
+        "category_name": "Sofa",
+        "sub_category_name": "LShape",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/LShape/Vista/Vista.png"
+    },
+    {
+        "product_name": "Satan",
+        "category_name": "Sofa",
+        "sub_category_name": "LShape",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/LShape/Satan/Satan.png"
+    },
+    {
+        "product_name": "Echo",
+        "category_name": "Sofa",
+        "sub_category_name": "SetSofas",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/SetSofas/Echo/Echo.png"
+    },
+    {
+        "product_name": "Milo",
+        "category_name": "Sofa",
+        "sub_category_name": "SetSofas",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/SetSofas/Milo/Milo.png"
+    },
+    {
+        "product_name": "Walton",
+        "category_name": "Sofa",
+        "sub_category_name": "SetSofas",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/SetSofas/Walton/Walton.png"
+    },
+    {
+        "product_name": "Victory",
+        "category_name": "Sofa",
+        "sub_category_name": "SetSofas",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/SetSofas/Victory/Victory.png"
+    },
+    {
+        "product_name": "Mummy",
+        "category_name": "Sofa",
+        "sub_category_name": "SetSofas",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/SetSofas/Mummy/Mummy.png"
+    },
+    {
+        "product_name": "Enova",
+        "category_name": "Sofa",
+        "sub_category_name": "SetSofas",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/SetSofas/Enova/Enova.png"
+    },
+    {
+        "product_name": "F3A030",
+        "category_name": "Sofa",
+        "sub_category_name": "LShape",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/LShape/F3A030/F3A030.png"
+    },
+    {
+        "product_name": "Kofi",
+        "category_name": "Sofa",
+        "sub_category_name": "SetSofas",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/SetSofas/Kofi/Kofi.png"
+    },
+    {
+        "product_name": "Teddy",
+        "category_name": "Sofa",
+        "sub_category_name": "SetSofas",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/SetSofas/Teddy/Teddy.png"
+    },
+    {
+        "product_name": "Holly",
+        "category_name": "Sofa",
+        "sub_category_name": "SetSofas",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/SetSofas/Holly/Holly.png"
+    },
+    {
+        "product_name": "Foreo",
+        "category_name": "Sofa",
+        "sub_category_name": "LShape",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/LShape/Foreo/Foreo.png"
+    },
+    {
+        "product_name": "Tuxedo",
+        "category_name": "Sofa",
+        "sub_category_name": "LShape",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/LShape/Tuxedo/Tuxedo.png"
+    },
+    {
+        "product_name": "Greenwich",
+        "category_name": "Sofa",
+        "sub_category_name": "SetSofas",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/SetSofas/Greenwich/Greenwich.png"
+    },
+    {
+        "product_name": "F3A038",
+        "category_name": "Sofa",
+        "sub_category_name": "LShape",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/LShape/F3A038/F3A038.png"
+    },
+    {
+        "product_name": "JH_317",
+        "category_name": "Sofa",
+        "sub_category_name": "SetSofas",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/SetSofas/JH_317/JH_317.png"
+    },
+    {
+        "product_name": "Revolt",
+        "category_name": "Sofa",
+        "sub_category_name": "SetSofas",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/SetSofas/Revolt/Revolt.png"
+    },
+    {
+        "product_name": "Stefan",
+        "category_name": "Sofa",
+        "sub_category_name": "SetSofas",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/SetSofas/Stefan/Stefan.png"
+    },
+    {
+        "product_name": "Celestial",
+        "category_name": "Sofa",
+        "sub_category_name": "SetSofas",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/SetSofas/Celestial/Celestial.png"
+    },
+    {
+        "product_name": "Novara",
+        "category_name": "Sofa",
+        "sub_category_name": "SetSofas",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/SetSofas/Novara/Novara.png"
+    },
+    {
+        "product_name": "Marcus",
+        "category_name": "Sofa",
+        "sub_category_name": "SetSofas",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/SetSofas/Marcus/Marcus.png"
+    },
+    {
+        "product_name": "Himola",
+        "category_name": "Sofa",
+        "sub_category_name": "LShape",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/LShape/Himola/Himola.png"
+    },
+    {
+        "product_name": "Italy",
+        "category_name": "Sofa",
+        "sub_category_name": "LShape",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/LShape/Italy/Italy.png"
+    },
+    {
+        "product_name": "Copenhagen",
+        "category_name": "Sofa",
+        "sub_category_name": "SetSofas",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/SetSofas/Copenhagen/Copenhagen.png"
+    },
+    {
+        "product_name": "1735",
+        "category_name": "Sofa",
+        "sub_category_name": "LShape",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/LShape/1735/1735.png"
+    },
+    {
+        "product_name": "Linda",
+        "category_name": "Sofa",
+        "sub_category_name": "SetSofas",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/SetSofas/Linda/Linda.png"
+    },
+    {
+        "product_name": "Hector",
+        "category_name": "Sofa",
+        "sub_category_name": "LShape",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/LShape/Hector/Hector.png"
+    },
+    {
+        "product_name": "Douglas",
+        "category_name": "Sofa",
+        "sub_category_name": "SetSofas",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/SetSofas/Douglas/Douglas.png"
+    },
+    {
+        "product_name": "Schlaf",
+        "category_name": "Sofa",
+        "sub_category_name": "LShape",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/LShape/Schlaf/Schlaf.png"
+    },
+    {
+        "product_name": "Pluto",
+        "category_name": "Sofa",
+        "sub_category_name": "SetSofas",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/SetSofas/Pluto/Pluto.png"
+    },
+    {
+        "product_name": "Mod",
+        "category_name": "Sofa",
+        "sub_category_name": "SetSofas",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/SetSofas/Mod/Mod.png"
+    },
+    {
+        "product_name": "Velentina",
+        "category_name": "Sofa",
+        "sub_category_name": "SetSofas",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/SetSofas/Velentina/Velentina.png"
+    },
+    {
+        "product_name": "Zync",
+        "category_name": "Sofa",
+        "sub_category_name": "SetSofas",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/SetSofas/Zync/Zync.png"
+    },
+    {
+        "product_name": "Covey",
+        "category_name": "Sofa",
+        "sub_category_name": "LShape",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/LShape/Covey/Covey.png"
+    },
+    {
+        "product_name": "Smug",
+        "category_name": "Sofa",
+        "sub_category_name": "SetSofas",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/SetSofas/Smug/Smug.png"
+    },
+    {
+        "product_name": "Sereno",
+        "category_name": "Sofa",
+        "sub_category_name": "SetSofas",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/SetSofas/Sereno/Sereno.png"
+    },
+    {
+        "product_name": "Mercury",
+        "category_name": "Sofa",
+        "sub_category_name": "LShape",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/LShape/Mercury/Mercury.png"
+    },
+    {
+        "product_name": "Gloria",
+        "category_name": "Sofa",
+        "sub_category_name": "LShape",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/LShape/Gloria/Gloria.png"
+    },
+    {
+        "product_name": "Joy",
+        "category_name": "Sofa",
+        "sub_category_name": "SetSofas",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/SetSofas/Joy/Joy.png"
+    },
+    {
+        "product_name": "BossChair",
+        "category_name": "Sofa",
+        "sub_category_name": "Chairs",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/Chairs/BossChair/BossChair.png"
+    },
+    {
+        "product_name": "HighBackChair",
+        "category_name": "Sofa",
+        "sub_category_name": "Chairs",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/Chairs/HighBackChair/HighBackChair.png"
+    },
+    {
+        "product_name": "Spacia",
+        "category_name": "Sofa",
+        "sub_category_name": "SetSofas",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/SetSofas/Spacia/Spacia.png"
+    },
+    {
+        "product_name": "Olympia",
+        "category_name": "Sofa",
+        "sub_category_name": "LShape",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/LShape/Olympia/Olympia.png"
+    },
+    {
+        "product_name": "Vintter",
+        "category_name": "Sofa",
+        "sub_category_name": "LShape",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/LShape/Vintter/Vintter.png"
+    },
+    {
+        "product_name": "Moderno",
+        "category_name": "Sofa",
+        "sub_category_name": "SetSofas",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/SetSofas/Moderno/Moderno.png"
+    },
+    {
+        "product_name": "Welvet",
+        "category_name": "Sofa",
+        "sub_category_name": "SetSofas",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/SetSofas/Welvet/Welvet.png"
+    },
+    {
+        "product_name": "Manila",
+        "category_name": "Sofa",
+        "sub_category_name": "LShape",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/LShape/Manila/Manila.png"
+    },
+    {
+        "product_name": "MobiLounger",
+        "category_name": "Sofa",
+        "sub_category_name": "LShape",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/LShape/MobiLounger/MobiLounger.png"
+    },
+    {
+        "product_name": "Bombay",
+        "category_name": "Sofa",
+        "sub_category_name": "LShape",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/LShape/Bombay/Bombay.png"
+    },
+    {
+        "product_name": "Armani",
+        "category_name": "Sofa",
+        "sub_category_name": "SetSofas",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/SetSofas/Armani/Armani.png"
+    },
+    {
+        "product_name": "Goswell",
+        "category_name": "Sofa",
+        "sub_category_name": "SetSofas",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/SetSofas/Goswell/Goswell.png"
+    },
+    {
+        "product_name": "Kooper",
+        "category_name": "Sofa",
+        "sub_category_name": "SetSofas",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/SetSofas/Kooper/Kooper.png"
+    },
+    {
+        "product_name": "GlamLounger",
+        "category_name": "Sofa",
+        "sub_category_name": "LShape",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/LShape/GlamLounger/GlamLounger.png"
+    },
+    {
+        "product_name": "Supera",
+        "category_name": "Sofa",
+        "sub_category_name": "Chairs",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/Chairs/Supera/Supera.png"
+    },
+    {
+        "product_name": "Eliza",
+        "category_name": "Sofa",
+        "sub_category_name": "SetSofas",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/SetSofas/Eliza/Eliza.png"
+    },
+    {
+        "product_name": "Boat",
+        "category_name": "Sofa",
+        "sub_category_name": "LShape",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/LShape/Boat/Boat.png"
+    },
+    {
+        "product_name": "Elephant",
+        "category_name": "Sofa",
+        "sub_category_name": "SetSofas",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/SetSofas/Elephant/Elephant.png"
+    },
+    {
+        "product_name": "RS_12425_Y",
+        "category_name": "Sofa",
+        "sub_category_name": "SetSofas",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/SetSofas/RS_12425_Y/RS_12425_Y.png"
+    },
+    {
+        "product_name": "DChester",
+        "category_name": "Sofa",
+        "sub_category_name": "SetSofas",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/SetSofas/DChester/DChester.png"
+    },
+    {
+        "product_name": "Cabriole",
+        "category_name": "Sofa",
+        "sub_category_name": "SetSofas",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/SetSofas/Cabriole/Cabriole.png"
+    },
+    {
+        "product_name": "Fantasy",
+        "category_name": "Sofa",
+        "sub_category_name": "LShape",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/LShape/Fantasy/Fantasy.png"
+    },
+    {
+        "product_name": "Pepper",
+        "category_name": "Sofa",
+        "sub_category_name": "SetSofas",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/SetSofas/Pepper/Pepper.png"
+    },
+    {
+        "product_name": "Quatro",
+        "category_name": "Sofa",
+        "sub_category_name": "SetSofas",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/SetSofas/Quatro/Quatro.png"
+    },
+    {
+        "product_name": "Havana",
+        "category_name": "Sofa",
+        "sub_category_name": "SetSofas",
+        "imageUrl": "https://supoassets.s3.ap-south-1.amazonaws.com/public/productImages/OVL/Sofa/SetSofas/Havana/Havana.png"
+    }
+]
