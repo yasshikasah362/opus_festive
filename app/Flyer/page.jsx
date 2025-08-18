@@ -2,31 +2,31 @@
 import { useState, useEffect } from "react";
 import {
   FaRegImages,
-  FaFont,
-  FaCloudUploadAlt,
-  FaShapes,
-  FaCrop,
-  FaUndo,
-  FaRedo,
-  FaPalette,
-  FaClock,
-  FaLayerGroup
+  FaClock
+  
+  
 } from "react-icons/fa";
-import { MdBrandingWatermark, MdEdit } from "react-icons/md";
+import { MdGridView  } from "react-icons/md";
+import { MdNoteAdd } from "react-icons/md";  
+import { FaCheckCircle } from "react-icons/fa";
+ import { MdEdit, MdBrandingWatermark } from "react-icons/md";
 import productsData from "../../public/products.json";
+
 
 export default function Flyer() {
   const [activeTab, setActiveTab] = useState("templates");
   const [selectedImage, setSelectedImage] = useState(null);
   const [products, setProducts] = useState([]); // store products from JSON
+  const [selectedProducts, setSelectedProducts] = useState([]);
 
   const menuItems = [
-    { id: "templates", icon: <FaRegImages size={20} />, label: "Templates" },
-    { id: "products", icon: <FaShapes size={20} />, label: "Products" },
-    { id: "text", icon: <FaFont size={20} />, label: "Text" },
-    { id: "tags", icon: <MdBrandingWatermark size={20} />, label: "Tags" },
-    { id: "color", icon: <FaCloudUploadAlt size={20} />, label: "Color" },
+    { id: "templates", icon: <FaRegImages size={20} />, label: "Select Templates" },
+    { id: "products", icon: <MdGridView size={20} />, label: "Select Products" },
+    { id: "detail", icon: <MdNoteAdd size={20} />, label: "Add     Details" },
+    // { id: "tags", icon: <MdBrandingWatermark size={20} />, label: "Tags" },
+    // { id: "color", icon: <FaCloudUploadAlt size={20} />, label: "Color" },
   ];
+  
 
   // Load products.json when tab changes to "products"
   useEffect(() => {
@@ -40,139 +40,174 @@ export default function Flyer() {
   };
 
   return (
-    <div className="h-screen flex flex-col bg-gray-100">
-      {/* HEADER */}
-      <header className="bg-gradient-to-r from-[#FFB199] to-[#FC6C87] text-white px-4 py-4 flex items-center justify-between mt-16">
-        <div className="flex items-center gap-4 text-xl">
-          <FaCrop className="cursor-pointer hover:text-[#FC6C87]" title="Resize" />
-          <MdEdit className="cursor-pointer hover:text-[#FC6C87]" title="Editing" />
-          <FaUndo className="cursor-pointer hover:text-[#FC6C87]" title="Undo" />
-          <FaRedo className="cursor-pointer hover:text-[#FC6C87]" title="Redo" />
-        </div>
-        <div className="flex items-center gap-4 text-xl">
-          <FaPalette className="cursor-pointer hover:text-[#FFB199]" title="Color" />
-          <FaClock className="cursor-pointer hover:text-[#FFB199]" title="Duration" />
-          <FaLayerGroup className="cursor-pointer hover:text-[#FFB199]" title="Position" />
-        </div>
-      </header>
+    <div className="h-screen  flex flex-col bg-gray-100">
+     {/* MAIN CONTENT */}
+     <div className="cursor-pointer flex  overflow-hidden  mt-16">
+  {/* ICON MENU */}
+ 
 
-      {/* MAIN CONTENT */}
-      <div className=" cursor-pointer flex flex-1 overflow-hidden">
-        {/* ICON MENU */}
-        <aside className=" cursor-pointer w-16 bg-white border-r flex flex-col items-center py-4 space-y-6">
-          {menuItems.map((item) => (
-            <button
-              key={item.id}
-              className={`flex flex-col items-center text-gray-600 hover:text-[#FC6C87] ${
-                activeTab === item.id ? "text-blue-500" : ""
-              }`}
-              onClick={() => setActiveTab(item.id)}
-            >
-              {item.icon}
-              <span className="text-[10px] mt-1">{item.label}</span>
-            </button>
-          ))}
-        </aside>
+<aside className="cursor-pointer w-23 bg-white border-r flex flex-col py-4 ">
+  {menuItems.map((item, index) => {
+    const isActive = activeTab === item.id;
 
-        {/* SIDEBAR CONTENT */}
-        <aside className="w-64 cursor-pointer bg-white border-r p-4 flex flex-col">
-          {activeTab === "templates" && (
-            <>
-              <h2 className="text-lg font-semibold mb-4">Templates</h2>
-              <input
-                type="text"
-                placeholder="Search templates"
-                className="border rounded-lg px-3 py-2 mb-4 w-full"
-              />
-              <div className="space-y-3 overflow-y-auto flex-1">
-                {Array.from({ length: 6 }).map((_, i) => {
-                  const src = `/images/flyer${i + 1}.jpg`;
-                  const isSelected = selectedImage === src;
-                  return (
-                    <div
-                      key={i}
-                      className={`border rounded-lg overflow-hidden cursor-pointer hover:shadow ${
-                        isSelected ? "ring-2 ring-[#FC6C87]" : ""
-                      }`}
-                      onClick={() => handleImageClick(src)}
-                    >
-                      <img
-                        src={src}
-                        alt={`Template ${i + 1}`}
-                        className="w-full block"
-                        draggable={false}
-                      />
-                    </div>
-                  );
-                })}
-              </div>
-            </>
-          )}
+    // ✅ Completion condition
+    let isDone = false;
+    if (item.id === "templates") {
+      isDone = !!selectedImage;
+    } else if (item.id === "products") {
+      isDone = selectedProducts.length > 0;
+    } else if (item.id === "addDetail") {
+      isDone = detailsCompleted;
+    }
 
-          {activeTab === "products" && (
-            <>
-              <h2 className="text-lg font-semibold mb-4">Products</h2>
-              <div className="space-y-3 overflow-y-auto flex-1">
-                {products.length > 0 ? (
-                  products.map((product, idx) => (
-                    <div
-                      key={idx}
-                      className="border rounded-lg p-2 flex gap-2 items-center hover:shadow cursor-pointer"
-                    >
-                      <img
-                        src={product.imageUrl}
-                        alt={product.product_name}
-                        className="w-12 h-12 object-cover rounded"
-                      />
-                      <div>
-                        <p className="font-semibold text-sm">{product.product_name}</p>
-                        <p className="text-xs text-gray-500">{product.category_name}</p>
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  <p className="text-gray-400">Loading products...</p>
-                )}
-              </div>
-            </>
-          )}
-        </aside>
+    return (
+      <button
+  key={item.id}
+  onClick={() => setActiveTab(item.id)}
+  className="relative cursor-pointer flex flex-col items-center justify-center w-full h-28 bg-white rounded-lg hover:shadow-md transition duration-300 p-2"
+>
+  {/* Status icon */}
+  <span className="absolute top-2 left-1">
+    {isDone ? (
+      <FaCheckCircle className="text-green-500 w-5 h-5" />
+    ) : (
+      <FaClock className="text-gray-400 w-5 h-5" />
+    )}
+  </span>
 
-        {/* CANVAS AREA */}
-        <main className="flex-1 flex items-center justify-center bg-gray-50 overflow-auto">
-          <div
-            className="bg-white border shadow-lg flex items-center justify-center overflow-hidden"
-            style={{
-              width: "800px",
-              height: "500px",
-            }}
-          >
-            {selectedImage ? (
+  {/* Number */}
+  <span className="absolute   left-2 top-1/3.5 transform -translate-y-1/2 font-bold text-sm text-gray-800">
+    {index + 1}.
+  </span>
+
+  {/* Main icon */}
+  <div className="text-3xl  ">
+    {item.icon}
+  
+    </div>
+
+  {/* Label */}
+  <span className="text-xs text-center  font-semibold  leading-tight w-full break-words whitespace-normal">
+    {item.label}
+  </span>
+</button>
+
+    );
+  })}
+</aside>
+
+
+
+
+
+  {/* SIDEBAR CONTENT */}
+<aside className="w-100 cursor-pointer bg-white border-r p-3 flex  flex-col  overflow-x-hidden">
+  {activeTab === "templates" && (
+    <>
+      
+      <div className="grid grid-cols-2 gap-x-3 gap-y-5  ">
+        {Array.from({ length: 6 }).map((_, i) => {
+          const src = `/images/flyer${i + 1}.jpg`;
+          const isSelected = selectedImage === src;
+          return (
+            <div
+  key={i}
+  className={`border-white rounded-xl overflow-hidden   cursor-pointer transform transition duration-300 hover:scale-105 hover:shadow-xl ${
+    isSelected ? " ring-[#FC6C87]" : ""
+  } h-35 w-45`}  // 👈 yahan height aur width fix kari
+  onClick={() => handleImageClick(src)}
+>
               <img
-                src={selectedImage}
-                alt="Selected"
-                className="w-full h-full object-cover"
-                draggable={false}
-              />
-            ) : (
-              <span className="text-gray-400">No Template Selected</span>
-            )}
-          </div>
-        </main>
-      </div>
+  src={src}
+  alt={`Template ${i + 1}`}
+  className="w-full h-full object-cover rounded-md transition-transform hover:shadow-xl duration-300 transform hover:-rotate-1 hover:scale-105 hover:-translate-y-1"
+  draggable={false}
+/>
 
-      {/* FOOTER TOOLBAR */}
-      <footer className="bg-white border-t px-4 py-2 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <button className="px-3 py-1 rounded hover:bg-gray-100">Notes</button>
-          <button className="px-3 py-1 rounded hover:bg-gray-100">Duration</button>
+            </div>
+          );
+        })}
+      </div>
+    </>
+  )}
+
+ {activeTab === "products" && (
+  <>
+    {/* <h2 className="text-lg font-semibold mb-4">Products</h2> */}
+    <div className="grid grid-cols-2 gap-10  mx-6">
+  {products.length > 0 ? (
+    products.map((product, idx) => (
+      <div
+        key={idx}
+        className="group relative white-border rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-transform duration-300 transform hover:-rotate-1 hover:scale-105 hover:-translate-y-1 cursor-pointer bg-white"
+        style={{ perspective: "1000px", width: "160px" }}
+      >
+        <img
+          src={product.imageUrl}
+          alt={product.product_name}
+          className="h-24 w-full object-cover rounded-t-xl transition-transform duration-500 group-hover:scale-110"
+        />
+        <div className="text-center">
+          <p className="font-semibold text-sm truncate mb-0">{product.product_name}</p>
+          <p className="text-xs text-gray-500 mt-0.5">{product.category_name}</p> 
         </div>
-        <div className="flex items-center gap-2">
-          <button className="px-3 py-1 rounded hover:bg-gray-100">-</button>
-          <span>48%</span>
-          <button className="px-3 py-1 rounded hover:bg-gray-100">+</button>
-        </div>
-      </footer>
+      </div>
+    ))
+  ) : (
+    <p className="text-gray-400">Loading products...</p>
+  )}
+</div>
+
+  </>
+)}
+
+
+
+
+</aside>
+
+
+
+  {/* CANVAS AREA */}
+<main className="flex-1 h-screen flex items-center justify-center bg-gray-50 overflow-auto">
+<div
+  className="relative bg-white white-border shadow-lg rounded-xl overflow-hidden flex items-center justify-center"
+  style={{ width: "800px", height: "500px" }}
+>
+  {selectedImage ? (
+    <>
+      {/* Image - full fit, no gap */}
+      <img
+        src={selectedImage}
+        alt="Selected"
+        className="w-full h-full object-cover" 
+        draggable={false}
+      />
+
+      {/* Edit Button (top-right corner) */}
+      <button
+        onClick={() => alert("Edit template clicked!")}
+        className="absolute top-3 right-3 flex items-center gap-1 bg-[#FC6C87] text-white px-3 py-1.5 rounded-full shadow-lg hover:bg-[#e85a75] transition"
+      >
+        <MdEdit className="w-4 h-4" />
+        <span className="text-sm">Edit</span>
+      </button>
+    </>
+  ) : (
+    <span className="text-gray-400">No Template Selected</span>
+  )}
+</div>
+
+
+</main>
+
+
+
+
+
+
+</div>
+      
     </div>
   );
 }
