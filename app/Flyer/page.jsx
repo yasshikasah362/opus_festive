@@ -6,6 +6,7 @@ import {
   
   
 } from "react-icons/fa";
+import { FaExclamationCircle } from "react-icons/fa";
 import { MdGridView  } from "react-icons/md";
 import { MdNoteAdd } from "react-icons/md";  
 import { FaCheckCircle } from "react-icons/fa";
@@ -20,9 +21,9 @@ export default function Flyer() {
   const [selectedProducts, setSelectedProducts] = useState([]);
 
   const menuItems = [
-    { id: "templates", icon: <FaRegImages size={20} />, label: "Select Templates" },
-    { id: "products", icon: <MdGridView size={20} />, label: "Select Products" },
-    { id: "detail", icon: <MdNoteAdd size={20} />, label: "Add     Details" },
+    { id: "templates", icon: <FaRegImages size={20} />, label: "Select Template" },
+    { id: "products", icon: <MdGridView size={20} />, label: "Select Product" },
+    { id: "detail", icon: <MdNoteAdd size={20} />, label: "Add Detail" },
     // { id: "tags", icon: <MdBrandingWatermark size={20} />, label: "Tags" },
     // { id: "color", icon: <FaCloudUploadAlt size={20} />, label: "Color" },
   ];
@@ -46,7 +47,7 @@ export default function Flyer() {
   {/* ICON MENU */}
  
 
-<aside className="cursor-pointer w-23 bg-white border-r flex flex-col py-4 ">
+<aside className="cursor-pointer w-23    flex flex-col py-4 bg-gray-200  shadow-2xl ">
   {menuItems.map((item, index) => {
     const isActive = activeTab === item.id;
 
@@ -64,24 +65,24 @@ export default function Flyer() {
       <button
   key={item.id}
   onClick={() => setActiveTab(item.id)}
-  className="relative cursor-pointer flex flex-col items-center justify-center w-full h-28 bg-white rounded-lg hover:shadow-md transition duration-300 p-2"
+  className="relative cursor-pointer flex flex-col items-center justify-center w-20 ml-1.5 mt-1 h-25  rounded-lg border-gray-400 shadow-2xl border-2 p-2"
 >
   {/* Status icon */}
   <span className="absolute top-2 left-1">
     {isDone ? (
       <FaCheckCircle className="text-green-500 w-5 h-5" />
     ) : (
-      <FaClock className="text-gray-400 w-5 h-5" />
+      <FaExclamationCircle className="text-yellow-500 w-5 h-5" />
     )}
   </span>
 
   {/* Number */}
-  <span className="absolute   left-2 top-1/3.5 transform -translate-y-1/2 font-bold text-sm text-gray-800">
+  <span className="absolute mt-3   left-2  transform -translate-y-1/2 font-bold text-sm text-gray-800">
     {index + 1}.
   </span>
 
   {/* Main icon */}
-  <div className="text-3xl  ">
+  <div className="text-3xl mb-2 ">
     {item.icon}
   
     </div>
@@ -101,7 +102,7 @@ export default function Flyer() {
 
 
   {/* SIDEBAR CONTENT */}
-<aside className="w-100 cursor-pointer bg-white border-r p-3 flex  flex-col  overflow-x-hidden">
+<aside className="w-100 cursor-pointer bg-gray-100 border-r-2 border-gray-200 shadow-xs p-3 flex  flex-col  overflow-x-hidden">
   {activeTab === "templates" && (
     <>
       
@@ -170,36 +171,60 @@ export default function Flyer() {
 
   {/* CANVAS AREA */}
 <main className="flex-1 h-screen flex items-center justify-center bg-gray-50 overflow-auto">
-<div
-  className="relative bg-white white-border shadow-lg rounded-xl overflow-hidden flex items-center justify-center"
-  style={{ width: "800px", height: "500px" }}
->
-  {selectedImage ? (
-    <>
-      {/* Image - full fit, no gap */}
-      <img
-        src={selectedImage}
-        alt="Selected"
-        className="w-full h-full object-cover" 
-        draggable={false}
-      />
+  <div
+    className="relative bg-white shadow-lg rounded-xl overflow-hidden"
+    style={{ width: "800px", height: "500px" }}
+  >
+    {selectedImage ? (
+      <>
+        {/* Template Image */}
+        <img
+          src={selectedImage}
+          alt="Selected"
+          className="w-full h-full object-cover"
+          draggable={false}
+        />
 
-      {/* Edit Button (top-right corner) */}
-      <button
-        onClick={() => alert("Edit template clicked!")}
-        className="absolute top-3 right-3 flex items-center gap-1 bg-[#FC6C87] text-white px-3 py-1.5 rounded-full shadow-lg hover:bg-[#e85a75] transition"
-      >
-        <MdEdit className="w-4 h-4" />
-        <span className="text-sm">Edit</span>
-      </button>
-    </>
-  ) : (
-    <span className="text-gray-400">No Template Selected</span>
-  )}
-</div>
+        {/* Editable Text Overlay */}
+        <div className="absolute top-0 left-0 w-full h-full">
+          {/* Heading */}
+          <h1
+            contentEditable
+            suppressContentEditableWarning={true}
+            className="absolute top-20 left-20 text-3xl font-bold text-black cursor-text"
+          >
+            Sample Heading
+          </h1>
+          <MdEdit className="absolute top-20 left-10 w-5 h-5 text-black cursor-pointer" />
 
+          {/* Subheading */}
+          <h2
+            contentEditable
+            suppressContentEditableWarning={true}
+            className="absolute top-32 left-20 text-xl text-gray-700 cursor-text"
+          >
+            Sample Subheading
+          </h2>
+          <MdEdit className="absolute top-32 left-10 w-5 h-5 text-black cursor-pointer" />
 
+          {/* Any other text */}
+          <p
+            contentEditable
+            suppressContentEditableWarning={true}
+            className="absolute top-44 left-20 text-sm text-gray-600 cursor-text"
+          >
+            Additional details here...
+          </p>
+          <MdEdit className="absolute top-44 left-10 w-4 h-4 text-black cursor-pointer" />
+        </div>
+      </>
+    ) : (
+      <span className="text-gray-400">No Template Selected</span>
+    )}
+  </div>
 </main>
+
+
 
 
 
