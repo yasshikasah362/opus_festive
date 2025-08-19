@@ -2,10 +2,11 @@
 import { useState, useEffect } from "react";
 import {
   FaRegImages,
-  FaClock
+  
   
   
 } from "react-icons/fa";
+import { FaEdit } from "react-icons/fa";
 import { FaExclamationCircle } from "react-icons/fa";
 import { MdGridView  } from "react-icons/md";
 import { MdNoteAdd } from "react-icons/md";  
@@ -172,57 +173,38 @@ export default function Flyer() {
   {/* CANVAS AREA */}
 <main className="flex-1 h-screen flex items-center justify-center bg-gray-50 overflow-auto">
   <div
-    className="relative bg-white shadow-lg rounded-xl overflow-hidden"
+    className="relative bg-white shadow-lg rounded-xl overflow-hidden flex items-center justify-center"
     style={{ width: "800px", height: "500px" }}
   >
+    {/* Edit Button - top right corner */}
+    {selectedImage && (
+  <button
+    className="absolute cursor-pointer top-4 right-4 bg-[#FC6C87] hover:bg-[#e96981]  text-white px-3 py-2 rounded-full shadow-md flex items-center gap-1"
+    onClick={() => console.log("Edit clicked")} // replace with your edit function
+  >
+    <span className="text-sm font-medium">Edit</span>
+    <FaEdit className="w-4 h-4" />
+  </button>
+)}
+
+
     {selectedImage ? (
-      <>
-        {/* Template Image */}
-        <img
-          src={selectedImage}
-          alt="Selected"
-          className="w-full h-full object-cover"
-          draggable={false}
-        />
-
-        {/* Editable Text Overlay */}
-        <div className="absolute top-0 left-0 w-full h-full">
-          {/* Heading */}
-          <h1
-            contentEditable
-            suppressContentEditableWarning={true}
-            className="absolute top-20 left-20 text-3xl font-bold text-black cursor-text"
-          >
-            Sample Heading
-          </h1>
-          <MdEdit className="absolute top-20 left-10 w-5 h-5 text-black cursor-pointer" />
-
-          {/* Subheading */}
-          <h2
-            contentEditable
-            suppressContentEditableWarning={true}
-            className="absolute top-32 left-20 text-xl text-gray-700 cursor-text"
-          >
-            Sample Subheading
-          </h2>
-          <MdEdit className="absolute top-32 left-10 w-5 h-5 text-black cursor-pointer" />
-
-          {/* Any other text */}
-          <p
-            contentEditable
-            suppressContentEditableWarning={true}
-            className="absolute top-44 left-20 text-sm text-gray-600 cursor-text"
-          >
-            Additional details here...
-          </p>
-          <MdEdit className="absolute top-44 left-10 w-4 h-4 text-black cursor-pointer" />
-        </div>
-      </>
+      <img
+        src={selectedImage}
+        alt="Selected"
+        className="w-full h-full object-cover"
+        draggable={false}
+      />
     ) : (
-      <span className="text-gray-400">No Template Selected</span>
+      <div className="flex items-center justify-center w-full h-full">
+        <span className="text-gray-400 text-lg font-semibold">
+          No Template Selected
+        </span>
+      </div>
     )}
   </div>
 </main>
+
 
 
 
