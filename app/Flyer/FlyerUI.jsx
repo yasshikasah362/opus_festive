@@ -1,200 +1,202 @@
 "use client";
-import { useState, useEffect } from "react";
-import {
-  FaRegImages,
-  
-  
-  
-} from "react-icons/fa";
-import { FaEdit } from "react-icons/fa";
-import { FaExclamationCircle } from "react-icons/fa";
-import { MdGridView  } from "react-icons/md";
-import { MdNoteAdd } from "react-icons/md";  
-import { FaCheckCircle } from "react-icons/fa";
- import { MdEdit, MdBrandingWatermark } from "react-icons/md";
+import { useState, useEffect, useRef } from "react";
+import { FaRegImages, FaEdit, FaExclamationCircle, FaCheckCircle } from "react-icons/fa";
+import { MdGridView, MdNoteAdd } from "react-icons/md";
+import { Flyer_Prompts } from "./FlyerData";
 import productsData from "../../public/products.json";
-
 
 export default function Flyer() {
   const [activeTab, setActiveTab] = useState("templates");
-  const [selectedImage, setSelectedImage] = useState(null);
-  const [products, setProducts] = useState([]); // store products from JSON
+  const [selectedTemplate, setSelectedTemplate] = useState(null);
+  const [products, setProducts] = useState([]);
   const [selectedProducts, setSelectedProducts] = useState([]);
+  const [imgLoaded, setImgLoaded] = useState(false);
+  const [imgInfo, setImgInfo] = useState(null); // image ka size + offset save karne ke liye
+
+  const imgRef = useRef(null);
 
   const menuItems = [
     { id: "templates", icon: <FaRegImages size={20} />, label: "Select Template" },
     { id: "products", icon: <MdGridView size={20} />, label: "Select Product" },
     { id: "detail", icon: <MdNoteAdd size={20} />, label: "Add Detail" },
-    // { id: "tags", icon: <MdBrandingWatermark size={20} />, label: "Tags" },
-    // { id: "color", icon: <FaCloudUploadAlt size={20} />, label: "Color" },
   ];
-  
 
-  // Load products.json when tab changes to "products"
   useEffect(() => {
-  if (activeTab === "products") {
-    setProducts(productsData);
-  }
-}, [activeTab]);
+    if (activeTab === "products") setProducts(productsData);
+  }, [activeTab]);
 
-  const handleImageClick = (src) => {
-    setSelectedImage(src);
+  const handleTemplateClick = (template) => {
+    setSelectedTemplate(template);
+    setImgLoaded(false);
+    setImgInfo(null);
+  };
+
+  const handleImageLoad = () => {
+    const img = imgRef.current;
+    if (!img) return;
+
+    const containerWidth = img.clientWidth;
+    const containerHeight = img.clientHeight;
+    const naturalWidth = img.naturalWidth;
+    const naturalHeight = img.naturalHeight;
+
+    const imageRatio = naturalWidth / naturalHeight;
+    const containerRatio = containerWidth / containerHeight;
+
+    let renderedWidth, renderedHeight, offsetX = 0, offsetY = 0;
+
+    if (imageRatio > containerRatio) {
+      renderedWidth = containerWidth;
+      renderedHeight = containerWidth / imageRatio;
+      offsetY = (containerHeight - renderedHeight) / 2;
+    } else {
+      renderedHeight = containerHeight;
+      renderedWidth = containerHeight * imageRatio;
+      offsetX = (containerWidth - renderedWidth) / 2;
+    }
+
+    setImgInfo({
+      naturalWidth,
+      naturalHeight,
+      renderedWidth,
+      renderedHeight,
+      offsetX,
+      offsetY,
+    });
+
+    setImgLoaded(true);
+  };
+
+  const getScaledPosition = (coord) => {
+    if (!imgInfo) return { left: 0, top: 0 };
+
+    const scaleX = imgInfo.renderedWidth / imgInfo.naturalWidth;
+    const scaleY = imgInfo.renderedHeight / imgInfo.naturalHeight;
+
+    return {
+      left: coord.x * scaleX + imgInfo.offsetX,
+      top: coord.y * scaleY + imgInfo.offsetY,
+    };
   };
 
   return (
-    <div className="h-screen  flex flex-col bg-gray-100">
-     {/* MAIN CONTENT */}
-     <div className="cursor-pointer flex  overflow-hidden  mt-16">
-  {/* ICON MENU */}
- 
+    <div className="h-screen flex flex-col bg-gray-100">
+  <div className="flex mt-16">
+    {/* Left Sidebar */}
+    <aside className="w-24  flex flex-col py-4 bg-gray-200 shadow-2xl">
+      {menuItems.map((item) => {
+        let isDone = false;
+        if (item.id === "templates") isDone = !!selectedTemplate;
+        if (item.id === "products") isDone = selectedProducts.length > 0;
 
-<aside className="cursor-pointer w-23    flex flex-col py-4 bg-gray-200  shadow-2xl ">
-  {menuItems.map((item, index) => {
-    const isActive = activeTab === item.id;
+        return (
+          <button
+            key={item.id}
+            onClick={() => setActiveTab(item.id)}
+            className="relative flex flex-col items-center justify-center w-20 h-24 rounded-lg border-2 border-gray-400 p-2 mb-2"
+          >
+            <span className="absolute top-2 left-1">
+              {isDone ? (
+                <FaCheckCircle className="text-green-500 w-5 h-5" />
+              ) : (
+                <FaExclamationCircle className="text-yellow-500 w-5 h-5" />
+              )}
+            </span>
+            <span className="text-3xl mb-2">{item.icon}</span>
+            <span className="text-xs text-center font-semibold">{item.label}</span>
+          </button>
+        );
+      })}
+    </aside>
 
-    // ✅ Completion condition
-    let isDone = false;
-    if (item.id === "templates") {
-      isDone = !!selectedImage;
-    } else if (item.id === "products") {
-      isDone = selectedProducts.length > 0;
-    } else if (item.id === "addDetail") {
-      isDone = detailsCompleted;
-    }
-
-    return (
-      <button
-  key={item.id}
-  onClick={() => setActiveTab(item.id)}
-  className="relative cursor-pointer flex flex-col items-center justify-center w-20 ml-1.5 mt-1 h-25  rounded-lg border-gray-400 shadow-2xl border-2 p-2"
->
-  {/* Status icon */}
-  <span className="absolute top-2 left-1">
-    {isDone ? (
-      <FaCheckCircle className="text-green-500 w-5 h-5" />
-    ) : (
-      <FaExclamationCircle className="text-yellow-500 w-5 h-5" />
-    )}
-  </span>
-
-  {/* Number */}
-  <span className="absolute mt-3   left-2  transform -translate-y-1/2 font-bold text-sm text-gray-800">
-    {index + 1}.
-  </span>
-
-  {/* Main icon */}
-  <div className="text-3xl mb-2 ">
-    {item.icon}
-  
-    </div>
-
-  {/* Label */}
-  <span className="text-xs text-center  font-semibold  leading-tight w-full break-words whitespace-normal">
-    {item.label}
-  </span>
-</button>
-
-    );
-  })}
-</aside>
-
-
-
-
-
-  {/* SIDEBAR CONTENT */}
-<aside className="w-100 cursor-pointer bg-gray-100 border-r-2 border-gray-200 shadow-xs p-3 flex  flex-col  overflow-x-hidden">
-  {activeTab === "templates" && (
-    <>
-      
-      <div className="grid grid-cols-2 gap-x-3 gap-y-5  ">
-        {Array.from({ length: 6 }).map((_, i) => {
-          const src = `/images/flyer${i + 1}.jpg`;
-          const isSelected = selectedImage === src;
-          return (
+    {/* Right Sidebar */}
+    <aside className="w-96 p-4 h-160 flex flex-col overflow-y-auto bg-white border-l">
+      {activeTab === "templates" && (
+        <div className="grid grid-cols-2 gap-4">
+          {Flyer_Prompts.map((template) => (
             <div
-  key={i}
-  className={`border-white rounded-xl overflow-hidden   cursor-pointer transform transition duration-300 hover:scale-105 hover:shadow-xl ${
-    isSelected ? " ring-[#FC6C87]" : ""
-  } h-35 w-45`}  // 👈 yahan height aur width fix kari
-  onClick={() => handleImageClick(src)}
->
+              key={template.id}
+              className={`border rounded-xl cursor-pointer transition-transform duration-300 hover:scale-105 ${
+                selectedTemplate?.id === template.id ? "ring-2 ring-[#FC6C87]" : ""
+              }`}
+              onClick={() => handleTemplateClick(template)}
+            >
               <img
-  src={src}
-  alt={`Template ${i + 1}`}
-  className="w-full h-full object-cover rounded-md transition-transform hover:shadow-xl duration-300 transform hover:-rotate-1 hover:scale-105 hover:-translate-y-1"
-  draggable={false}
-/>
-
+                src={`https://supoassets.s3.ap-south-1.amazonaws.com/public/GoogleStudio/assets/Templates/flyer/v2/${encodeURIComponent(
+                  template.name
+                )}.webp`}
+                alt={template.name}
+                className="w-full h-40 object-cover rounded-md"
+                draggable={false}
+              />
             </div>
-          );
-        })}
-      </div>
-    </>
-  )}
-
- {activeTab === "products" && (
-  <>
-    {/* <h2 className="text-lg font-semibold mb-4">Products</h2> */}
-    <div className="grid grid-cols-2 gap-10  mx-6">
-  {products.length > 0 ? (
-    products.map((product, idx) => (
-      <div
-        key={idx}
-        className="group relative white-border rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-transform duration-300 transform hover:-rotate-1 hover:scale-105 hover:-translate-y-1 cursor-pointer bg-white"
-        style={{ perspective: "1000px", width: "160px" }}
-      >
-        <img
-          src={product.imageUrl}
-          alt={product.product_name}
-          className="h-24 w-full object-cover rounded-t-xl transition-transform duration-500 group-hover:scale-110"
-        />
-        <div className="text-center">
-          <p className="font-semibold text-sm truncate mb-0">{product.product_name}</p>
-          <p className="text-xs text-gray-500 mt-0.5">{product.category_name}</p> 
+          ))}
         </div>
-      </div>
-    ))
-  ) : (
-    <p className="text-gray-400">Loading products...</p>
-  )}
-</div>
+      )}
 
-  </>
-)}
+      {activeTab === "products" && (
+        <div className="grid grid-cols-2 gap-6">
+          {products.map((product, idx) => (
+            <div
+              key={idx}
+              className="group relative rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-transform transform hover:scale-105 cursor-pointer bg-white"
+            >
+              <img
+                src={product.imageUrl}
+                alt={product.product_name}
+                className="h-24 w-full object-cover rounded-t-xl"
+              />
+              <div className="text-center">
+                <p className="font-semibold text-sm truncate">{product.product_name}</p>
+                <p className="text-xs text-gray-500">{product.category_name}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </aside>
 
-
-
-
-</aside>
-
-
-
-  {/* CANVAS AREA */}
-<main className="flex-1 h-screen flex items-center justify-center bg-gray-50 overflow-auto">
+    {/* Canvas Area */}
+   <main className="flex-1 flex h-160 items-center justify-center bg-white overflow-hidden">
   <div
-    className="relative bg-white shadow-lg rounded-xl overflow-hidden flex items-center justify-center"
-    style={{ width: "800px", height: "500px" }}
+    className="relative bg-gray-200 shadow-lg w-200 h-120 rounded-xl flex items-center justify-center [&::-webkit-scrollbar]:hidden overflow-hidden"
+    style={{ scrollbarWidth: "none" }} // Firefox ke liye
   >
-    {/* Edit Button - top right corner */}
-    {selectedImage && (
-  <button
-    className="absolute cursor-pointer top-4 right-4 bg-[#FC6C87] hover:bg-[#e96981]  text-white px-3 py-2 rounded-full shadow-md flex items-center gap-1"
-    onClick={() => console.log("Edit clicked")} // replace with your edit function
-  >
-    <span className="text-sm font-medium">Edit</span>
-    <FaEdit className="w-4 h-4" />
-  </button>
-)}
+    {selectedTemplate ? (
+      <>
+        <img
+          ref={imgRef}
+          src={`https://supoassets.s3.ap-south-1.amazonaws.com/public/GoogleStudio/assets/Templates/flyer/v2/${encodeURIComponent(
+            selectedTemplate.name
+          )}.webp`}
+          alt={selectedTemplate.name}
+          className="w-full h-full object-contain rounded-md"  // ✅ use object-contain instead of cover
+          draggable={false}
+          onLoad={handleImageLoad}
+        />
 
-
-    {selectedImage ? (
-      <img
-        src={selectedImage}
-        alt="Selected"
-        className="w-full h-full object-cover"
-        draggable={false}
-      />
+        {/* Edit Buttons */}
+        {imgLoaded &&
+          selectedTemplate.annotations &&
+          Object.entries(selectedTemplate.annotations).map(([key, value]) => {
+            const pos = getScaledPosition(value);
+            return (
+              <button
+                key={key}
+                style={{
+                  position: "absolute",
+                  left: `${pos.left}px`,
+                  top: `${pos.top}px`,
+                  transform: "translate(-50%, -50%)",
+                }}
+                className="bg-[#FC6C87] text-white p-1 rounded-full shadow-md cursor-pointer"
+                onClick={() => console.log("Edit annotation:", key)}
+              >
+                <FaEdit className="w-3 h-3" />
+              </button>
+            );
+          })}
+      </>
     ) : (
       <div className="flex items-center justify-center w-full h-full">
         <span className="text-gray-400 text-lg font-semibold">
@@ -205,16 +207,8 @@ export default function Flyer() {
   </div>
 </main>
 
-
-
-
-
-
-
-
-
+  </div>
 </div>
-      
-    </div>
+
   );
 }
