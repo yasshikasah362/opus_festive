@@ -1,220 +1,33 @@
-"use client";
-import { useState, useEffect } from "react";
-import {
-  FaRegImages,
-  
-  
-  
-} from "react-icons/fa";
-import { FaEdit } from "react-icons/fa";
-import { FaExclamationCircle } from "react-icons/fa";
-import { MdGridView  } from "react-icons/md";
-import { MdNoteAdd } from "react-icons/md";  
-import { FaCheckCircle } from "react-icons/fa";
- import { MdEdit, MdBrandingWatermark } from "react-icons/md";
-import productsData from "../../public/products.json";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/authOptions";
+import FlyerUI from "./FlyerUI"; // your Flyer component
 
+export default async function FlyerPage() {
+  const session = await getServerSession(authOptions);
 
-export default function Flyer() {
-  const [activeTab, setActiveTab] = useState("templates");
-  const [selectedImage, setSelectedImage] = useState(null);
-  const [products, setProducts] = useState([]); // store products from JSON
-  const [selectedProducts, setSelectedProducts] = useState([]);
-
-  const menuItems = [
-    { id: "templates", icon: <FaRegImages size={20} />, label: "Select Template" },
-    { id: "products", icon: <MdGridView size={20} />, label: "Select Product" },
-    { id: "detail", icon: <MdNoteAdd size={20} />, label: "Add Detail" },
-    // { id: "tags", icon: <MdBrandingWatermark size={20} />, label: "Tags" },
-    // { id: "color", icon: <FaCloudUploadAlt size={20} />, label: "Color" },
-  ];
-  
-
-  // Load products.json when tab changes to "products"
-  useEffect(() => {
-  if (activeTab === "products") {
-    setProducts(productsData);
-  }
-}, [activeTab]);
-
-  const handleImageClick = (src) => {
-    setSelectedImage(src);
-  };
-
-  return (
-    <div className="h-screen  flex flex-col bg-gray-100">
-     {/* MAIN CONTENT */}
-     <div className="cursor-pointer flex  overflow-hidden  mt-16">
-  {/* ICON MENU */}
- 
-
-<aside className="cursor-pointer w-23    flex flex-col py-4 bg-gray-200  shadow-2xl ">
-  {menuItems.map((item, index) => {
-    const isActive = activeTab === item.id;
-
-    // ✅ Completion condition
-    let isDone = false;
-    if (item.id === "templates") {
-      isDone = !!selectedImage;
-    } else if (item.id === "products") {
-      isDone = selectedProducts.length > 0;
-    } else if (item.id === "addDetail") {
-      isDone = detailsCompleted;
-    }
-
+  if (!session) {
+    // If not logged in, show unauthorized page
     return (
-      <button
-  key={item.id}
-  onClick={() => setActiveTab(item.id)}
-  className="relative cursor-pointer flex flex-col items-center justify-center w-20 ml-1.5 mt-1 h-25  rounded-lg border-gray-400 shadow-2xl border-2 p-2"
->
-  {/* Status icon */}
-  <span className="absolute top-2 left-1">
-    {isDone ? (
-      <FaCheckCircle className="text-green-500 w-5 h-5" />
-    ) : (
-      <FaExclamationCircle className="text-yellow-500 w-5 h-5" />
-    )}
-  </span>
-
-  {/* Number */}
-  <span className="absolute mt-3   left-2  transform -translate-y-1/2 font-bold text-sm text-gray-800">
-    {index + 1}.
-  </span>
-
-  {/* Main icon */}
-  <div className="text-3xl mb-2 ">
-    {item.icon}
-  
-    </div>
-
-  {/* Label */}
-  <span className="text-xs text-center  font-semibold  leading-tight w-full break-words whitespace-normal">
-    {item.label}
-  </span>
-</button>
-
-    );
-  })}
-</aside>
-
-
-
-
-
-  {/* SIDEBAR CONTENT */}
-<aside className="w-100 cursor-pointer bg-gray-100 border-r-2 border-gray-200 shadow-xs p-3 flex  flex-col  overflow-x-hidden">
-  {activeTab === "templates" && (
-    <>
-      
-      <div className="grid grid-cols-2 gap-x-3 gap-y-5  ">
-        {Array.from({ length: 6 }).map((_, i) => {
-          const src = `/images/flyer${i + 1}.jpg`;
-          const isSelected = selectedImage === src;
-          return (
-            <div
-  key={i}
-  className={`border-white rounded-xl overflow-hidden   cursor-pointer transform transition duration-300 hover:scale-105 hover:shadow-xl ${
-    isSelected ? " ring-[#FC6C87]" : ""
-  } h-35 w-45`}  // 👈 yahan height aur width fix kari
-  onClick={() => handleImageClick(src)}
->
-              <img
-  src={src}
-  alt={`Template ${i + 1}`}
-  className="w-full h-full object-cover rounded-md transition-transform hover:shadow-xl duration-300 transform hover:-rotate-1 hover:scale-105 hover:-translate-y-1"
-  draggable={false}
-/>
-
-            </div>
-          );
-        })}
-      </div>
-    </>
-  )}
-
- {activeTab === "products" && (
-  <>
-    {/* <h2 className="text-lg font-semibold mb-4">Products</h2> */}
-    <div className="grid grid-cols-2 gap-10  mx-6">
-  {products.length > 0 ? (
-    products.map((product, idx) => (
       <div
-        key={idx}
-        className="group relative white-border rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-transform duration-300 transform hover:-rotate-1 hover:scale-105 hover:-translate-y-1 cursor-pointer bg-white"
-        style={{ perspective: "1000px", width: "160px" }}
+        className="flex items-center justify-center min-h-screen px-4"
+        style={{ background: "var(--primary-gradient)" }}
       >
-        <img
-          src={product.imageUrl}
-          alt={product.product_name}
-          className="h-24 w-full object-cover rounded-t-xl transition-transform duration-500 group-hover:scale-110"
+        <div
+          className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/flowers.png')] opacity-120 mix-blend-overlay"
+          aria-hidden="true"
         />
-        <div className="text-center">
-          <p className="font-semibold text-sm truncate mb-0">{product.product_name}</p>
-          <p className="text-xs text-gray-500 mt-0.5">{product.category_name}</p> 
+        <div className="bg-white/80 backdrop-blur-lg p-8 rounded-lg shadow-xl text-center border border-gray-200">
+          <h2 className="text-2xl font-semibold text-red-500 mb-3">
+            Unauthorized
+          </h2>
+          <p className="text-gray-600 text-sm">
+            Please log in to access this page.
+          </p>
         </div>
       </div>
-    ))
-  ) : (
-    <p className="text-gray-400">Loading products...</p>
-  )}
-</div>
+    );
+  }
 
-  </>
-)}
-
-
-
-
-</aside>
-
-
-
-  {/* CANVAS AREA */}
-<main className="flex-1 h-screen flex items-center justify-center bg-gray-50 overflow-auto">
-  <div
-    className="relative bg-white shadow-lg rounded-xl overflow-hidden flex items-center justify-center"
-    style={{ width: "800px", height: "500px" }}
-  >
-    {/* Edit Button - top right corner */}
-    {selectedImage && (
-  <button
-    className="absolute cursor-pointer top-4 right-4 bg-[#FC6C87] hover:bg-[#e96981]  text-white px-3 py-2 rounded-full shadow-md flex items-center gap-1"
-    onClick={() => console.log("Edit clicked")} // replace with your edit function
-  >
-    <span className="text-sm font-medium">Edit</span>
-    <FaEdit className="w-4 h-4" />
-  </button>
-)}
-
-
-    {selectedImage ? (
-      <img
-        src={selectedImage}
-        alt="Selected"
-        className="w-full h-full object-cover"
-        draggable={false}
-      />
-    ) : (
-      <div className="flex items-center justify-center w-full h-full">
-        <span className="text-gray-400 text-lg font-semibold">
-          No Template Selected
-        </span>
-      </div>
-    )}
-  </div>
-</main>
-
-
-
-
-
-
-
-
-
-</div>
-      
-    </div>
-  );
+  // If session exists, render Flyer page
+  return <FlyerUI username={session.user.name} />;
 }
