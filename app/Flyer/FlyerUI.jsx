@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import productsData from "../../public/products.json";
 import FlyerSidebar from "./FlyerSidebar";
 import FlyerCanvas from "./FlyerCanvas";
-import { Flyer_Prompts } from "./FlyerData";
+
 
 export default function Flyer() {
   const [activeTab, setActiveTab] = useState("templates");
@@ -36,7 +36,7 @@ const handleTemplateClick = (template) => {
   };
 
   return (
-    <div className="h-screen flex flex-col bg-gray-100 overflow-hidden">
+    <div className="h-screen flex flex-col bg-white overflow-hidden">
       <div className="flex mt-16">
         <FlyerSidebar
   activeTab={activeTab}

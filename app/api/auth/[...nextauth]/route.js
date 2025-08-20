@@ -25,18 +25,18 @@ const handler = NextAuth({
   ],
   callbacks: {
     async signIn({ user, account }) {
-  await connectToDatabase();
-  if (account.provider === "google") {
-    const existingUser = await User.findOne({ email: user.email });
-    if (!existingUser) {
-      await User.create({
-        name: user.name,
-        email: user.email,
-        image: user.image,
-      });
-    }
-  }
-  return true;
+      await connectToDatabase();
+      if (account.provider === "google") {
+        const existingUser = await User.findOne({ email: user.email });
+        if (!existingUser) {
+          await User.create({
+            name: user.name,
+            email: user.email,
+            image: user.image,
+          });
+        }
+      }
+      return true;
     },
     async session({ session }) {
       const user = await User.findOne({ email: session.user.email });
@@ -44,8 +44,14 @@ const handler = NextAuth({
       return session;
     },
   },
+
+  // ✅ Session ko 15 din ka karna
+  session: {
+    strategy: "jwt", // recommended with CredentialsProvider
+    maxAge: 15 * 24 * 60 * 60, // 15 din (seconds me)
+  },
+
   secret: process.env.NEXTAUTH_SECRET,
-  
 });
 
 export { handler as GET, handler as POST };

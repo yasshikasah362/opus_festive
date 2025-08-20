@@ -2,6 +2,14 @@
 import { useRef, useState, useEffect } from "react";
 import { FaEdit } from "react-icons/fa";
 import FlyerModal from "./FlyerModal";
+import {
+  Flyer_Heading,
+  Flyer_Subheading,
+  Flyer_Offer_tags,
+  Flyer_CTA_Tags,
+  Flyer_Background_style,
+  Flyer_Background_color,
+} from "./FlyerData";
 
 export default function FlyerCanvas({
   selectedTemplate,
@@ -30,7 +38,10 @@ export default function FlyerCanvas({
     const imageRatio = naturalWidth / naturalHeight;
     const containerRatio = containerWidth / containerHeight;
 
-    let renderedWidth, renderedHeight, offsetX = 0, offsetY = 0;
+    let renderedWidth,
+      renderedHeight,
+      offsetX = 0,
+      offsetY = 0;
 
     if (imageRatio > containerRatio) {
       renderedWidth = containerWidth;
@@ -42,12 +53,29 @@ export default function FlyerCanvas({
       offsetX = (containerWidth - renderedWidth) / 2;
     }
 
-    setImgLoaded({ naturalWidth, naturalHeight, renderedWidth, renderedHeight, offsetX, offsetY });
+    setImgLoaded({
+      naturalWidth,
+      naturalHeight,
+      renderedWidth,
+      renderedHeight,
+      offsetX,
+      offsetY,
+    });
+  };
+
+  // prepare data object for modal
+  const data = {
+    Flyer_Heading,
+    Flyer_Subheading,
+    Flyer_Offer_tags,
+    Flyer_CTA_Tags,
+    Flyer_Background_style,
+    Flyer_Background_color,
   };
 
   return (
-    <main className="flex-1 flex h-160 items-center justify-center bg-white overflow-hidden">
-      <div className="relative bg-gray-200 shadow-lg w-200 h-120 rounded-xl flex items-center justify-center overflow-hidden">
+    <main className="flex-1 flex h-160 items-center justify-center  overflow-hidden relative">
+      <div className="relative bg-gray-200 shadow-lg w-200 h-120 rounded-xl flex items-center justify-center ">
         {selectedTemplate ? (
           <>
             {/* Template Image */}
@@ -62,38 +90,42 @@ export default function FlyerCanvas({
               onLoad={handleImageLoad}
             />
 
-            {/* Edit Buttons for Annotations */}
+            {/* Edit Buttons */}
             {imgLoaded &&
               selectedTemplate.annotations &&
-              Object.entries(selectedTemplate.annotations).map(([key, value]) => {
-                const pos = getScaledPosition(value);
-                return (
-                  <button
-                    key={key}
-                    style={{
-                      position: "absolute",
-                      left: `${pos.left}px`,
-                      top: `${pos.top}px`,
-                      transform: "translate(-50%, -50%)",
-                    }}
-                    className="bg-[#FC6C87] text-white p-1 rounded-full shadow-md cursor-pointer"
-                    onClick={() => setActiveEdit(key)}
-                  >
-                    <FaEdit className="w-3 h-3" />
-                  </button>
-                );
-              })}
+              Object.entries(selectedTemplate.annotations).map(
+                ([key, value]) => {
+                  const pos = getScaledPosition(value);
+                  return (
+                    <button
+                      key={key}
+                      style={{
+                        position: "absolute",
+                        left: `${pos.left}px`,
+                        top: `${pos.top}px`,
+                        transform: "translate(-50%, -50%)",
+                      }}
+                      className="bg-[#FC6C87] text-white p-1 rounded-full shadow-md cursor-pointer"
+                      onClick={() => setActiveEdit(key)}
+                    >
+                      <FaEdit className="w-3 h-3" />
+                    </button>
+                  );
+                }
+              )}
 
             {/* Modal */}
             <FlyerModal
               activeEdit={activeEdit}
               setActiveEdit={setActiveEdit}
-              data={require("./FlyerData")}
+              data={data}
             />
           </>
         ) : (
           <div className="flex items-center justify-center w-full h-full">
-            <span className="text-gray-400 text-lg font-semibold">No Template Selected</span>
+            <span className="text-gray-400 text-lg font-semibold">
+              No Template Selected
+            </span>
           </div>
         )}
       </div>

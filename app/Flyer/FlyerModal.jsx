@@ -17,14 +17,16 @@ export default function FlyerModal({ activeEdit, setActiveEdit, data }) {
     <AnimatePresence>
       {activeEdit && (
         <motion.div
-          className="absolute inset-0 flex items-center justify-center z-50 bg-gray-200 bg-opacity-40"
+          className="absolute  inset-0 flex items-center justify-center z-50   bg-opacity-40"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.2 }}
         >
-          <motion.div
-            className="bg-white rounded-2xl shadow-xl w-[90%] max-w-[1200px] h-[90%] p-8 flex flex-col relative"
+
+          <main className="flex-1 flex h-160 pt-2 pb-2 items-center justify-center   relative">  
+<motion.div
+  className="bg-white rounded-2xl shadow-xl w-full h-full p-8 flex flex-col relative"
             initial={{ opacity: 0, scale: 0.8, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.8, y: 20 }}
@@ -59,6 +61,9 @@ export default function FlyerModal({ activeEdit, setActiveEdit, data }) {
               Confirm
             </button>
           </motion.div>
+          </main>
+
+
         </motion.div>
       )}
     </AnimatePresence>
