@@ -1,7 +1,9 @@
 "use client";
+import { useState } from "react";
 import { FaRegImages, FaExclamationCircle, FaCheckCircle } from "react-icons/fa";
 import { MdGridView, MdNoteAdd } from "react-icons/md";
-import { Flyer_Prompts } from "./FlyerData"; // ✅ import templates list
+import { Flyer_Prompts } from "./FlyerData";
+import AddDetailsModal from "./AddDetailsModal";
 
 export default function FlyerSidebar({
   activeTab,
@@ -11,6 +13,41 @@ export default function FlyerSidebar({
   selectedProducts,
   products,
 }) {
+  const [modalOpen, setModalOpen] = useState(false);
+  const [generatedFlyerUrl, setGeneratedFlyerUrl] = useState(null);
+
+ const handleGenerate = async (suggestion) => {
+  setModalOpen(false);
+
+  try {
+    const prompt = `Generate the marketing flyer for the uploaded image with the following settings:
+    Headline: ${suggestion.headline}
+    Subtext: ${suggestion.subtext}
+    Offer Tag: ${suggestion.offer_tag}
+    Call to Action: ${suggestion.call_to_action}
+    Aspect Ratio: ${suggestion.prompt_settings.aspect_ratio}
+    Theme: ${suggestion.prompt_settings.theme}
+    Background Colors: ${suggestion.prompt_settings.background_colors}
+    Mood: ${suggestion.prompt_settings.mood}`;
+
+    const res = await fetch("/api/generateFlyer", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ prompt }),
+    });
+
+    const data = await res.json();
+    if (data.imageUrl) {
+      setGeneratedFlyerUrl(data.imageUrl);
+    } else {
+      console.error("No image returned");
+    }
+  } catch (err) {
+    console.error("Error generating flyer:", err);
+  }
+};
+
+
   const menuItems = [
     { id: "templates", icon: <FaRegImages size={20} />, label: "Select Template" },
     { id: "products", icon: <MdGridView size={20} />, label: "Select Product" },
@@ -47,31 +84,32 @@ export default function FlyerSidebar({
       </aside>
 
       {/* Right Sidebar */}
-      <aside className="w-96 p-4 h-160 flex flex-col overflow-y-auto bg-white border-r-2 border-r-gray-200 ">
-        {/* ✅ Templates tab */}
+      <aside className="w-96 p-4 h-160 flex flex-col overflow-y-auto bg-white border-r-2 border-r-gray-200">
+        {/* Templates Tab */}
         {activeTab === "templates" && (
-  <div className="grid grid-cols-2 gap-4">
-    {Flyer_Prompts.map((template) => (
-      <div
-        key={template.id}
-        className={`rounded-xl cursor-pointer border-2 border-gray-400 transition-transform duration-300 hover:scale-105 ${
-          selectedTemplate?.id === template.id ? "ring-2 ring-[#FC6C87]" : ""
-        }`}
-        onClick={() => handleTemplateClick(template)} // ✅ call parent handler
-      >
-        <img
-          src={`https://supoassets.s3.ap-south-1.amazonaws.com/public/GoogleStudio/assets/Templates/flyer/v2/${encodeURIComponent(template.name)}.webp`}
-          alt={template.name}
-          className="w-full h-40 object-cover rounded-md"
-          draggable={false}
-        />
-      </div>
-    ))}
-  </div>
-)}
+          <div className="grid grid-cols-2 gap-4">
+            {Flyer_Prompts.map((template) => (
+              <div
+                key={template.id}
+                className={`rounded-xl cursor-pointer border-2 border-gray-400 transition-transform duration-300 hover:scale-105 ${
+                  selectedTemplate?.id === template.id ? "ring-2 ring-[#FC6C87]" : ""
+                }`}
+                onClick={() => handleTemplateClick(template)}
+              >
+                <img
+                  src={`https://supoassets.s3.ap-south-1.amazonaws.com/public/GoogleStudio/assets/Templates/flyer/v2/${encodeURIComponent(
+                    template.name
+                  )}.webp`}
+                  alt={template.name}
+                  className="w-full h-40 object-cover rounded-md"
+                  draggable={false}
+                />
+              </div>
+            ))}
+          </div>
+        )}
 
-
-        {/* ✅ Products tab */}
+        {/* Products Tab */}
         {activeTab === "products" && (
           <div className="grid grid-cols-2 gap-6">
             {products.map((product, idx) => (
@@ -92,6 +130,36 @@ export default function FlyerSidebar({
             ))}
           </div>
         )}
+
+        {/* Add Detail Tab */}
+        {activeTab === "detail" && (
+          <div className="flex justify-center items-center h-full">
+            <button
+              onClick={() => setModalOpen(true)}
+              className="px-6 py-3 bg-[#FC6C87] text-white font-semibold rounded-xl shadow-md hover:scale-105 transition-transform"
+            >
+              ➕ Add Details
+            </button>
+          </div>
+        )}
+
+        {/* Display generated flyer */}
+        {generatedFlyerUrl && (
+          <div className="mt-4 flex justify-center">
+            <img
+              src={generatedFlyerUrl}
+              alt="Generated Flyer"
+              className="w-80 h-auto rounded-xl shadow-lg"
+            />
+          </div>
+        )}
+
+        {/* Modal */}
+        <AddDetailsModal
+          isOpen={modalOpen}
+          onClose={() => setModalOpen(false)}
+          onGenerate={handleGenerate}
+        />
       </aside>
     </>
   );
