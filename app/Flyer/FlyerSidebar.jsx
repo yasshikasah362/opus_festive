@@ -109,24 +109,19 @@ export default function FlyerSidebar({
 
   try {
     // API call to generate flyer image
-   const res = await fetch("/api/generateFlyer", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ 
-    prompt: promptText, 
-    inputImageUrl: lastSelectedProduct.imageUrl  // <-- must be a valid URL
-  }),
-});
-
+    const res = await fetch("/api/generateFlyer", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ prompt: promptText, inputImageUrl }),
+    });
 
     const data = await res.json();
   if (data.imageUrl) {
   flyerForm.setOutputImage(data.imageUrl);
-  setGeneratedFlyerUrl(data.imageUrl); // <-- use the generated flyer
+  setGeneratedFlyerUrl(lastSelectedProduct.imageUrl); 
 } else {
   console.error("No image returned from API");
 }
-
 
   } catch (err) {
     console.error("Error generating flyer:", err);
@@ -231,7 +226,7 @@ export default function FlyerSidebar({
         </div>
 
         {/* Generated Flyer Popup */}
-     {generatedFlyerUrl && (
+        {generatedFlyerUrl && (
   <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
     <div className="bg-white p-4 rounded-xl shadow-lg relative">
       <button
@@ -248,7 +243,6 @@ export default function FlyerSidebar({
     </div>
   </div>
 )}
-
 
       </aside>
     </>
