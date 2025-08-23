@@ -3,7 +3,7 @@ import { useState } from "react";
 import { FaRegImages, FaExclamationCircle, FaCheckCircle } from "react-icons/fa";
 import { MdGridView, MdNoteAdd } from "react-icons/md";
 import { Flyer_Prompts } from "./FlyerData";
-import AddDetailsModal from "./AddDetailsModal";
+import { FlyerForm } from "./FlyerForm"; // import your FlyerForm class
 
 export default function FlyerSidebar({
   activeTab,
@@ -12,36 +12,122 @@ export default function FlyerSidebar({
   handleTemplateClick,
   selectedProducts,
   products,
+  handleProductSelect,
 }) {
-  const [modalOpen, setModalOpen] = useState(false);
+  const [flyerForm] = useState(new FlyerForm());
   const [generatedFlyerUrl, setGeneratedFlyerUrl] = useState(null);
+  const [lastSelectedProduct, setLastSelectedProduct] = useState(null);
 
- const handleGenerate = async (suggestion) => {
-  setModalOpen(false);
+  const handleProductSelectLocal = (product) => {
+  handleProductSelect(product); // keep parent handler
+  setLastSelectedProduct(product); // track latest selection
+};
+
+
+  // Generate the flyer prompt
+  function generateFlyerPrompt(settings) {
+    let prompt = "Generate a marketing flyer for the uploaded image with these settings -\n\n";
+
+    prompt += `Aspect Ratio: ${settings.aspect_ratio}\n`;
+    prompt += `Theme: ${settings.theme}\n`;
+    prompt += `Border Design: ${settings.border_design}, Thickness: ${settings.border_thickness}\n`;
+    prompt += `Background Style: ${settings.background_style}, Colors: ${settings.background_colors}\n`;
+    prompt += `Logo Placement: ${settings.logo_placement}\n`;
+    prompt += `Main Image Placement: ${settings.main_image_placement}, Size: ${settings.image_size}\n\n`;
+
+    if (settings.text_section) {
+      prompt += `Text Section:\n`;
+      prompt += `- Headline: "${settings.text_section.headline}"\n`;
+      prompt += `- Font Style: ${settings.text_section.font_style}, Color: ${settings.text_section.font_color}\n`;
+      prompt += `- Position: ${settings.text_section.position}\n`;
+      prompt += `- Subtext: "${settings.text_section.subtext}"\n\n`;
+    }
+
+    if (settings.offer_tag) {
+      prompt += `Offer Tag:\n`;
+      prompt += `- Text: "${settings.offer_tag.text}"\n`;
+      prompt += `- Position: ${settings.offer_tag.position}\n`;
+      prompt += `- Style: ${settings.offer_tag.style}\n\n`;
+    }
+
+    if (settings.call_to_action) {
+      prompt += `Call to Action:\n`;
+      prompt += `- Text: "${settings.call_to_action.text}"\n`;
+      prompt += `- Style: ${settings.call_to_action.style}\n`;
+      prompt += `- Location: ${settings.call_to_action.location}\n\n`;
+    }
+
+    if (settings.optional) prompt += `Optional: ${settings.optional}\n`;
+    if (settings.mood) prompt += `Mood: ${settings.mood}\n`;
+
+    return prompt.trim();
+  }
+
+  // Handle Add Details button click
+  const handleAddDetails = async () => {
+  if (!lastSelectedProduct) {
+    alert("Select a product first.");
+    return;
+  }
+
+  const inputImageUrl = lastSelectedProduct.imageUrl;
+  flyerForm.setInputImage(inputImageUrl);
+
+  const settings = {
+    aspect_ratio: "4:5",
+    theme: "Soft White Minimal",
+    border_design: "Thin rounded lines with soft corners",
+    border_thickness: "2px",
+    background_style: "Solid color",
+    background_colors: "ivory or light beige",
+    logo_placement: "Top-left",
+    main_image_placement: "center",
+    image_size: "60% of width",
+    text_section: {
+      headline: "Elegant Comfort for Every Home",
+      font_style: "Serif, Thin weight",
+      font_color: "Soft charcoal",
+      position: "Top 30%, centered",
+      subtext: "Introducing our new handcrafted lounger series.",
+    },
+    offer_tag: {
+      text: "Launch Offer 15% OFF",
+      position: "top-right",
+      style: "subtle circle badge",
+    },
+    call_to_action: {
+      text: "Shop Now",
+      style: "pill-shaped button, muted green",
+      location: "bottom center",
+    },
+    optional: "add soft shadow",
+    mood: "calm, clean, timeless",
+  };
+
+  const promptText = generateFlyerPrompt(settings);
+  
 
   try {
-    const prompt = `Generate the marketing flyer for the uploaded image with the following settings:
-    Headline: ${suggestion.headline}
-    Subtext: ${suggestion.subtext}
-    Offer Tag: ${suggestion.offer_tag}
-    Call to Action: ${suggestion.call_to_action}
-    Aspect Ratio: ${suggestion.prompt_settings.aspect_ratio}
-    Theme: ${suggestion.prompt_settings.theme}
-    Background Colors: ${suggestion.prompt_settings.background_colors}
-    Mood: ${suggestion.prompt_settings.mood}`;
+    // API call to generate flyer image
+   const res = await fetch("/api/generateFlyer", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ 
+    prompt: promptText, 
+    inputImageUrl: lastSelectedProduct.imageUrl  // <-- must be a valid URL
+  }),
+});
 
-    const res = await fetch("/api/generateFlyer", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ prompt }),
-    });
 
     const data = await res.json();
-    if (data.imageUrl) {
-      setGeneratedFlyerUrl(data.imageUrl);
-    } else {
-      console.error("No image returned");
-    }
+  if (data.imageUrl) {
+  flyerForm.setOutputImage(data.imageUrl);
+  setGeneratedFlyerUrl(data.imageUrl); // <-- use the generated flyer
+} else {
+  console.error("No image returned from API");
+}
+
+
   } catch (err) {
     console.error("Error generating flyer:", err);
   }
@@ -111,19 +197,20 @@ export default function FlyerSidebar({
 
         {/* Products Tab */}
         {activeTab === "products" && (
-          <div className="grid grid-cols-2 gap-6">
-            {products.map((product, idx) => (
-              <div
-                key={idx}
-                className="group relative rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-transform transform hover:scale-105 cursor-pointer bg-white"
-              >
+          <div className="grid grid-cols-2 gap-4">
+            {products.map((product) => (
+  <div
+    key={product.product_name}
+    onClick={() => handleProductSelectLocal(product)}
+    className="cursor-pointer p-3 border rounded-lg shadow-sm hover:shadow-md hover:scale-105 transition-transform duration-200 bg-white"
+  >
                 <img
                   src={product.imageUrl}
                   alt={product.product_name}
-                  className="h-24 w-full object-cover rounded-t-xl"
+                  className="w-full h-32 object-contain rounded-md"
                 />
-                <div className="text-center">
-                  <p className="font-semibold text-sm truncate">{product.product_name}</p>
+                <div className="mt-2 text-center">
+                  <p className="text-sm font-semibold">{product.product_name}</p>
                   <p className="text-xs text-gray-500">{product.category_name}</p>
                 </div>
               </div>
@@ -132,34 +219,37 @@ export default function FlyerSidebar({
         )}
 
         {/* Add Detail Tab */}
-        {activeTab === "detail" && (
-          <div className="flex justify-center items-center h-full">
+        <div className="flex justify-center items-center h-full">
+          {activeTab === "detail" && (
             <button
-              onClick={() => setModalOpen(true)}
+              onClick={handleAddDetails}
               className="px-6 py-3 bg-[#FC6C87] text-white font-semibold rounded-xl shadow-md hover:scale-105 transition-transform"
             >
-              ➕ Add Details
+              Add Details
             </button>
-          </div>
-        )}
+          )}
+        </div>
 
-        {/* Display generated flyer */}
-        {generatedFlyerUrl && (
-          <div className="mt-4 flex justify-center">
-            <img
-              src={generatedFlyerUrl}
-              alt="Generated Flyer"
-              className="w-80 h-auto rounded-xl shadow-lg"
-            />
-          </div>
-        )}
+        {/* Generated Flyer Popup */}
+     {generatedFlyerUrl && (
+  <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
+    <div className="bg-white p-4 rounded-xl shadow-lg relative">
+      <button
+        className="absolute top-2 right-2 text-red-500 font-bold"
+        onClick={() => setGeneratedFlyerUrl(null)}
+      >
+        X
+      </button>
+      <img
+        src={generatedFlyerUrl}
+        alt="Generated Flyer"
+        className="w-96 h-auto rounded-md"
+      />
+    </div>
+  </div>
+)}
 
-        {/* Modal */}
-        <AddDetailsModal
-          isOpen={modalOpen}
-          onClose={() => setModalOpen(false)}
-          onGenerate={handleGenerate}
-        />
+
       </aside>
     </>
   );

@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import productsData from "../../public/products.json";
 import FlyerSidebar from "./FlyerSidebar";
 import FlyerCanvas from "./FlyerCanvas";
+import { FlyerForm } from "./FlyerForm";
 
 
 export default function Flyer() {
@@ -12,16 +13,33 @@ export default function Flyer() {
   const [products, setProducts] = useState([]);
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [imgLoaded, setImgLoaded] = useState(false);
+  const [flyerForm, setFlyerForm] = useState(new FlyerForm());
+ const [inputImageUrl, setInputImageUrl] = useState("");
 
-  useEffect(() => {
-    if (activeTab === "products") setProducts(productsData);
-  }, [activeTab]);
 
-  // Flyer.jsx
 const handleTemplateClick = (template) => {
-  setSelectedTemplate(template); // ✅ update state
+  setSelectedTemplate(template);
   setImgLoaded(false);
+
+  setFlyerForm((prev) => {
+  return {
+    ...prev,
+    currFlyer: template,
+    
+  };
+});
+
 };
+
+
+
+useEffect(() => {
+  if (activeTab === "products") setProducts(productsData);
+}, [activeTab]);
+
+
+ 
+
 
 
   const getScaledPosition = (coord) => {
@@ -35,6 +53,26 @@ const handleTemplateClick = (template) => {
     };
   };
 
+ // Product select pe sirf product ka imageUrl bhejna hai
+const handleProductSelect = (product) => {
+  setFlyerForm((prev) => {
+    const updatedForm = { ...prev };
+    updatedForm.inputImageUrl = product.imageUrl; // class ka field update
+    console.log(" Saving inputImageUrl:", product.imageUrl);
+    console.log("Updated FlyerForm:", updatedForm);
+    return updatedForm;
+  });
+};
+
+
+
+
+
+
+
+
+
+
   return (
     <div className="h-screen flex flex-col bg-white overflow-hidden">
       <div className="flex mt-16">
@@ -44,17 +82,21 @@ const handleTemplateClick = (template) => {
   selectedTemplate={selectedTemplate} 
   selectedProducts={selectedProducts}
   products={products}
-  handleTemplateClick={handleTemplateClick} // ✅ important
+  handleTemplateClick={handleTemplateClick} 
+  handleProductSelect={handleProductSelect}   // ✅ add
 />
 
 
+
         <FlyerCanvas
-  selectedTemplate={selectedTemplate}  // ✅ pass selected template
+  selectedTemplate={selectedTemplate}
   activeEdit={activeEdit}
   setActiveEdit={setActiveEdit}
   imgLoaded={imgLoaded}
   setImgLoaded={setImgLoaded}
   getScaledPosition={getScaledPosition}
+  flyerForm={flyerForm}            // ✅ add
+  setFlyerForm={setFlyerForm}      // ✅ add
 />
       </div>
     </div>

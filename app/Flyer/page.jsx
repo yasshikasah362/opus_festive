@@ -29,5 +29,5 @@ export default async function FlyerPage() {
   }
 
   // If session exists, render Flyer page
-  return <FlyerUI username={session.user.name} />;
+  return <FlyerUI username={session.user.name}  />;
 }

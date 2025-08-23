@@ -1,43 +1,74 @@
 "use client";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
-import axios from "axios";
 
-export default function FlyerModal({ activeEdit, setActiveEdit, data, setGeneratedPrompt }) {
+export default function FlyerModal({
+  activeEdit,
+  setActiveEdit,
+  data,
+  flyerForm,
+  setFlyerForm,
+}) {
   if (!activeEdit) return null;
 
   const modalContent = {
     heading: { title: "Select Heading", options: data.Flyer_Heading },
     sub_heading: { title: "Select Subheading", options: data.Flyer_Subheading },
     offer_text: { title: "Select Offer Tag", options: data.Flyer_Offer_tags },
-    call_to_action: { title: "Select Call To Action", options: data.Flyer_CTA_Tags },
-    Flyer_Background_style: { title: "Select Background Style", options: data.Flyer_Background_style },
-    Flyer_Background_color: { title: "Select Background Color", options: data.Flyer_Background_color },
+    call_to_action: {
+      title: "Select Call To Action",
+      options: data.Flyer_CTA_Tags,
+    },
+    Flyer_Background_style: {
+      title: "Select Background Style",
+      options: data.Flyer_Background_style,
+    },
+    Flyer_Background_color: {
+      title: "Select Background Color",
+      options: data.Flyer_Background_color,
+    },
   }[activeEdit];
 
   const [selectedValue, setSelectedValue] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleConfirm = async () => {
-    setLoading(true);
+  const handleConfirm = () => {
+  if (!selectedValue) return;
 
-    try {
-      // Example API request to AI backend
-      const response = await axios.post("/api/generatePrompt", {
-        type: activeEdit,
-        value: selectedValue || "Not specified",
-      });
+  console.log(`Editing: ${activeEdit}, New Value: ${selectedValue}`);
 
-      setGeneratedPrompt(response.data.prompt);
-    } catch (err) {
-      console.error("Error generating prompt:", err);
+  setFlyerForm((prev) => {
+    const updatedFlyer = { ...prev.currFlyer };
+
+    switch (activeEdit) {
+      case "heading":
+        updatedFlyer.prompt_settings.text_section.headline = selectedValue;
+        break;
+      case "sub_heading":
+        updatedFlyer.prompt_settings.text_section.subtext = selectedValue;
+        break;
+      case "offer_text":
+        updatedFlyer.prompt_settings.offer_tag.text = selectedValue;
+        break;
+      case "call_to_action":
+        updatedFlyer.prompt_settings.call_to_action.text = selectedValue;
+        break;
+      case "Flyer_Background_style":
+        updatedFlyer.prompt_settings.background_style = selectedValue;
+        break;
+      case "Flyer_Background_color":
+        updatedFlyer.prompt_settings.background_colors = selectedValue;
+        break;
     }
 
-    setLoading(false);
-    setActiveEdit(null);
-  };
+    console.log("Updated Flyer:", updatedFlyer); // 👈 yaha check kro
 
-  
+    return { ...prev, currFlyer: updatedFlyer };
+  });
+
+  setActiveEdit(null); // close modal
+};
+
 
   return (
     <AnimatePresence>
@@ -72,7 +103,9 @@ export default function FlyerModal({ activeEdit, setActiveEdit, data, setGenerat
                   <button
                     key={idx}
                     className={`w-full py-3 border rounded transition text-lg ${
-                      selectedValue === opt ? "bg-gray-200 border-gray-400" : "hover:bg-gray-100"
+                      selectedValue === opt
+                        ? "bg-gray-200 border-gray-400"
+                        : "hover:bg-gray-100"
                     }`}
                     onClick={() => setSelectedValue(opt)}
                   >

@@ -18,10 +18,11 @@ export default function FlyerCanvas({
   imgLoaded,
   setImgLoaded,
   getScaledPosition,
+  flyerForm,
+  setFlyerForm,
 }) {
   const imgRef = useRef(null);
 
-  // Update imgLoaded when template changes
   useEffect(() => {
     if (selectedTemplate) setImgLoaded(false);
   }, [selectedTemplate]);
@@ -63,7 +64,6 @@ export default function FlyerCanvas({
     });
   };
 
-  // prepare data object for modal
   const data = {
     Flyer_Heading,
     Flyer_Subheading,
@@ -73,9 +73,11 @@ export default function FlyerCanvas({
     Flyer_Background_color,
   };
 
+  const ps = flyerForm?.currFlyer?.prompt_settings; // shortcut
+
   return (
-    <main className="flex-1 flex h-160 items-center justify-center  overflow-hidden relative">
-      <div className="relative bg-gray-200 shadow-lg w-200 h-120 rounded-xl flex items-center justify-center ">
+    <main className="flex-1 flex h-160 items-center justify-center overflow-hidden relative">
+      <div className="relative bg-gray-200 shadow-lg w-200 h-120 rounded-xl flex items-center justify-center">
         {selectedTemplate ? (
           <>
             {/* Template Image */}
@@ -89,6 +91,19 @@ export default function FlyerCanvas({
               draggable={false}
               onLoad={handleImageLoad}
             />
+
+            {/* ✅ Render direct from prompt_settings */}
+            <p className="absolute top-[10%] left-1/2 transform -translate-x-1/2 text-2xl font-bold">
+              {ps?.text_section?.headline || "Default Heading"}
+            </p>
+
+            <p className="absolute top-[20%] left-1/2 transform -translate-x-1/2 text-lg">
+              {ps?.text_section?.subtext || "Default Subheading"}
+            </p>
+
+            <p className="absolute bottom-[20%] left-1/2 transform -translate-x-1/2 text-sm">
+              {ps?.call_to_action?.text || "Call to Action"}
+            </p>
 
             {/* Edit Buttons */}
             {imgLoaded &&
@@ -119,6 +134,8 @@ export default function FlyerCanvas({
               activeEdit={activeEdit}
               setActiveEdit={setActiveEdit}
               data={data}
+              flyerForm={flyerForm}
+              setFlyerForm={setFlyerForm}
             />
           </>
         ) : (

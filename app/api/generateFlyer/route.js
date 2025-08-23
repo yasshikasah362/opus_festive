@@ -2,41 +2,45 @@ import { NextResponse } from "next/server";
 
 export async function POST(req) {
   try {
-    const { prompt } = await req.json();
-    if (!prompt) throw new Error("Prompt is missing");
+    const { prompt, inputImageUrl } = await req.json();
 
-    // Define the Gemini API endpoint and your API key
-    const geminiApiUrl = "https://generativeai.googleapis.com/v1alpha2/projects/intense-sled-449906-q0/locations/us-central1/models/gemini-2.0-flash-exp-image-generation:generateImage";
-    const apiKey = process.env.GEMINI_API_KEY;
-    console.log("Gemini API Key loaded:", !!apiKey);
-    // Prepare the request payload
-    const requestPayload = {
-      prompt: prompt,
-      generationConfig: {
-        responseModalities: ["Image"]
+    const response = await fetch(
+      "https://api.stability.ai/v1/generation/stable-diffusion-xl-1024-v1-0/text-to-image",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+          "Authorization": `Bearer ${process.env.STABILITY_API_KEY}`
+        },
+        body: JSON.stringify({
+          text_prompts: [{ text: `${prompt} Input image: ${inputImageUrl}` }],
+          cfg_scale: 7,
+          height: 1024,
+          width: 1024,
+          samples: 1,
+          steps: 30
+        })
       }
-    };
-
-    // Make the API request to Gemini
-    const response = await fetch(`${geminiApiUrl}?key=${apiKey}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(requestPayload)
-    });
+    );
 
     const data = await response.json();
 
-    if (response.ok) {
-      const imageUrl = data.imageUrl;
-      if (!imageUrl) throw new Error("No image returned from Gemini");
-      return NextResponse.json({ imageUrl });
-    } else {
-      throw new Error(data.error.message || "Failed to generate image");
+    if (!response.ok) {
+      console.error("Stability API error:", data);
+      return NextResponse.json({ error: "Stability API error", details: data }, { status: 500 });
     }
+
+    if (!data.artifacts || data.artifacts.length === 0) {
+      return NextResponse.json({ error: "No image returned from Stability API" }, { status: 500 });
+    }
+
+    const base64_image = data.artifacts[0].base64;
+    const imageUrl = `data:image/png;base64,${base64_image}`;
+
+    return NextResponse.json({ imageUrl });
   } catch (err) {
-    console.error("Server ERROR:", err);
-    return NextResponse.json({ error: err.message }, { status: 500 });
+    console.error("Error in /api/generateFlyer:", err);
+    return NextResponse.json({ error: "Server error", details: err.message }, { status: 500 });
   }
 }
