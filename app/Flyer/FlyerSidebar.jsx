@@ -3,7 +3,7 @@ import { useState } from "react";
 import { FaRegImages, FaExclamationCircle, FaCheckCircle } from "react-icons/fa";
 import { MdGridView, MdNoteAdd } from "react-icons/md";
 import { Flyer_Prompts } from "./FlyerData";
-import { FlyerForm } from "./FlyerForm"; // import your FlyerForm class
+import { FlyerForm } from "./FlyerForm";
 
 export default function FlyerSidebar({
   activeTab,
@@ -17,14 +17,13 @@ export default function FlyerSidebar({
   const [flyerForm] = useState(new FlyerForm());
   const [generatedFlyerUrl, setGeneratedFlyerUrl] = useState(null);
   const [lastSelectedProduct, setLastSelectedProduct] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const handleProductSelectLocal = (product) => {
-  handleProductSelect(product); // keep parent handler
-  setLastSelectedProduct(product); // track latest selection
-};
+    handleProductSelect(product);
+    setLastSelectedProduct(product);
+  };
 
-
-  // Generate the flyer prompt
   function generateFlyerPrompt(settings) {
     let prompt = "Generate a marketing flyer for the uploaded image with these settings -\n\n";
 
@@ -63,12 +62,13 @@ export default function FlyerSidebar({
     return prompt.trim();
   }
 
-  // Handle Add Details button click
-  const handleAddDetails = async () => {
+const handleAddDetails = async () => {
   if (!lastSelectedProduct) {
     alert("Select a product first.");
     return;
   }
+
+  setLoading(true);
 
   const inputImageUrl = lastSelectedProduct.imageUrl;
   flyerForm.setInputImage(inputImageUrl);
@@ -105,26 +105,29 @@ export default function FlyerSidebar({
   };
 
   const promptText = generateFlyerPrompt(settings);
-  
 
   try {
-    // API call to generate flyer image
-    const res = await fetch("/api/generateFlyer", {
+    // ✅ Fix: use response instead of res
+    const response = await fetch("http://localhost:5000/api/generateFlyer", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ prompt: promptText, inputImageUrl }),
     });
 
-    const data = await res.json();
-  if (data.imageUrl) {
-  flyerForm.setOutputImage(data.imageUrl);
-  setGeneratedFlyerUrl(lastSelectedProduct.imageUrl); 
-} else {
-  console.error("No image returned from API");
-}
+    const data = await response.json();
 
+    if (data.flyerUrl) {
+      flyerForm.setOutputImage(data.flyerUrl);
+      setGeneratedFlyerUrl(data.flyerUrl);
+    } else {
+      console.error("No flyerUrl returned from API", data);
+      alert("Failed to generate flyer. Try again.");
+    }
   } catch (err) {
     console.error("Error generating flyer:", err);
+    alert("Error while generating flyer.");
+  } finally {
+    setLoading(false);
   }
 };
 
@@ -194,11 +197,11 @@ export default function FlyerSidebar({
         {activeTab === "products" && (
           <div className="grid grid-cols-2 gap-4">
             {products.map((product) => (
-  <div
-    key={product.product_name}
-    onClick={() => handleProductSelectLocal(product)}
-    className="cursor-pointer p-3 border rounded-lg shadow-sm hover:shadow-md hover:scale-105 transition-transform duration-200 bg-white"
-  >
+              <div
+                key={product.product_name}
+                onClick={() => handleProductSelectLocal(product)}
+                className="cursor-pointer p-3 border rounded-lg shadow-sm hover:shadow-md hover:scale-105 transition-transform duration-200 bg-white"
+              >
                 <img
                   src={product.imageUrl}
                   alt={product.product_name}
@@ -218,32 +221,34 @@ export default function FlyerSidebar({
           {activeTab === "detail" && (
             <button
               onClick={handleAddDetails}
-              className="px-6 py-3 bg-[#FC6C87] text-white font-semibold rounded-xl shadow-md hover:scale-105 transition-transform"
+              disabled={loading}
+              className={`px-6 py-3 ${
+                loading ? "bg-gray-400" : "bg-[#FC6C87]"
+              } text-white font-semibold rounded-xl shadow-md hover:scale-105 transition-transform`}
             >
-              Add Details
+              {loading ? "Generating..." : "Add Details"}
             </button>
           )}
         </div>
 
         {/* Generated Flyer Popup */}
         {generatedFlyerUrl && (
-  <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
-    <div className="bg-white p-4 rounded-xl shadow-lg relative">
-      <button
-        className="absolute top-2 right-2 text-red-500 font-bold"
-        onClick={() => setGeneratedFlyerUrl(null)}
-      >
-        X
-      </button>
-      <img
-        src={generatedFlyerUrl}
-        alt="Generated Flyer"
-        className="w-96 h-auto rounded-md"
-      />
-    </div>
-  </div>
-)}
-
+          <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
+            <div className="bg-white p-4 rounded-xl shadow-lg relative">
+              <button
+                className="absolute top-2 right-2 text-red-500 font-bold"
+                onClick={() => setGeneratedFlyerUrl(null)}
+              >
+                X
+              </button>
+              <img
+                src={generatedFlyerUrl}
+                alt="Generated Flyer"
+                className="w-96 h-auto rounded-md"
+              />
+            </div>
+          </div>
+        )}
       </aside>
     </>
   );
