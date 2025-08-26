@@ -4,12 +4,13 @@ import { FaRegImages, FaExclamationCircle, FaCheckCircle } from "react-icons/fa"
 import { MdGridView, MdNoteAdd } from "react-icons/md";
 import { Flyer_Prompts } from "./FlyerData";
 import { FlyerForm } from "./FlyerForm";
+import { generateFlyer } from "../api/generateFlyer/route";
 
 export default function FlyerSidebar({
   activeTab,
   setActiveTab,
   selectedTemplate,
-  handleTemplateClick,
+  handleTemplateClic,
   selectedProducts,
   products,
   handleProductSelect,
@@ -18,118 +19,136 @@ export default function FlyerSidebar({
   const [generatedFlyerUrl, setGeneratedFlyerUrl] = useState(null);
   const [lastSelectedProduct, setLastSelectedProduct] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [flyerImage, setFlyerImage] = useState(null);
 
   const handleProductSelectLocal = (product) => {
     handleProductSelect(product);
     setLastSelectedProduct(product);
   };
 
-  function generateFlyerPrompt(settings) {
+ 
+
+function generateFlyerPrompt(settings) {
     let prompt = "Generate a marketing flyer for the uploaded image with these settings -\n\n";
 
     prompt += `Aspect Ratio: ${settings.aspect_ratio}\n`;
-    prompt += `Theme: ${settings.theme}\n`;
-    prompt += `Border Design: ${settings.border_design}, Thickness: ${settings.border_thickness}\n`;
-    prompt += `Background Style: ${settings.background_style}, Colors: ${settings.background_colors}\n`;
-    prompt += `Logo Placement: ${settings.logo_placement}\n`;
-    prompt += `Main Image Placement: ${settings.main_image_placement}, Size: ${settings.image_size}\n\n`;
-
+    
+    
     if (settings.text_section) {
-      prompt += `Text Section:\n`;
-      prompt += `- Headline: "${settings.text_section.headline}"\n`;
-      prompt += `- Font Style: ${settings.text_section.font_style}, Color: ${settings.text_section.font_color}\n`;
-      prompt += `- Position: ${settings.text_section.position}\n`;
-      prompt += `- Subtext: "${settings.text_section.subtext}"\n\n`;
+        prompt += `Text Section:\n`;
+        prompt += `- Headline: "${settings.text_section.headline}"\n`;
+        prompt += `- Font Style: ${settings.text_section.font_style}, Color: ${settings.text_section.font_color}\n`;
+        prompt += `- Position: ${settings.text_section.position}\n`;
+        prompt += `- Subtext: "${settings.text_section.subtext}"\n\n`;
     }
 
     if (settings.offer_tag) {
-      prompt += `Offer Tag:\n`;
-      prompt += `- Text: "${settings.offer_tag.text}"\n`;
-      prompt += `- Position: ${settings.offer_tag.position}\n`;
-      prompt += `- Style: ${settings.offer_tag.style}\n\n`;
+        prompt += `Offer Tag:\n`;
+        prompt += `- Text: "${settings.offer_tag.text}"\n`;
+        prompt += `- Position: ${settings.offer_tag.position}\n`;
+        prompt += `- Style: ${settings.offer_tag.style}\n\n`;
     }
 
     if (settings.call_to_action) {
-      prompt += `Call to Action:\n`;
-      prompt += `- Text: "${settings.call_to_action.text}"\n`;
-      prompt += `- Style: ${settings.call_to_action.style}\n`;
-      prompt += `- Location: ${settings.call_to_action.location}\n\n`;
+        prompt += `Call to Action:\n`;
+        prompt += `- Text: "${settings.call_to_action.text}"\n`;
+        prompt += `- Style: ${settings.call_to_action.style}\n`;
+        prompt += `- Location: ${settings.call_to_action.location}\n\n`;
     }
 
     if (settings.optional) prompt += `Optional: ${settings.optional}\n`;
     if (settings.mood) prompt += `Mood: ${settings.mood}\n`;
 
     return prompt.trim();
-  }
+}
 
 const handleAddDetails = async () => {
-  if (!lastSelectedProduct) {
-    alert("Select a product first.");
-    return;
+    if (!lastSelectedProduct) {
+        alert("Select a product first.");
+        return;
+    }
+
+    setLoading(true);
+
+    const inputImageUrl = lastSelectedProduct.imageUrl;
+    flyerForm.setInputImage(inputImageUrl);
+
+    const settings = {
+        aspect_ratio: "4:5",
+        theme: "Soft White Minimal",
+        border_design: "Thin rounded lines with soft corners",
+        border_thickness: "2px",
+        background_style: "Solid color",
+        background_colors: "ivory or light beige",
+        logo_placement: "Top-left",
+        main_image_placement: "center",
+        image_size: "60% of width",
+        text_section: {
+            headline: "Elegant Comfort for Every Home",
+            font_style: "Serif, Thin weight",
+            font_color: "Soft charcoal",
+            position: "Top 30%, centered",
+            subtext: "Introducing our new handcrafted lounger series.",
+        },
+        offer_tag: {
+            text: "Launch Offer 15% OFF",
+            position: "top-right",
+            style: "subtle circle badge",
+        },
+        call_to_action: {
+            text: "Shop Now",
+            style: "pill-shaped button, muted green",
+            location: "bottom center",
+        },
+        optional: "add soft shadow",
+        mood: "calm, clean, timeless",
+    };
+
+    const promptText = generateFlyerPrompt(settings);
+
+      try {
+  const data = await generateFlyer(promptText, inputImageUrl);
+
+  if (data.flyerImage) {
+    // ✅ Abhi ke liye sirf flyerImage set karo
+    setFlyerImage(data.flyerImage);
+  } else {
+    console.error("No flyerImage returned from API", data);
+    alert("Failed to generate flyer. Try again.");
   }
+} catch (err) {
+  console.error("Error generating flyer:", err);
+  alert("Error while generating flyer.");
+} finally {
+  setLoading(false);
+} 
+};
 
-  setLoading(true);
-
-  const inputImageUrl = lastSelectedProduct.imageUrl;
-  flyerForm.setInputImage(inputImageUrl);
-
-  const settings = {
-    aspect_ratio: "4:5",
-    theme: "Soft White Minimal",
-    border_design: "Thin rounded lines with soft corners",
-    border_thickness: "2px",
-    background_style: "Solid color",
-    background_colors: "ivory or light beige",
-    logo_placement: "Top-left",
-    main_image_placement: "center",
-    image_size: "60% of width",
-    text_section: {
-      headline: "Elegant Comfort for Every Home",
-      font_style: "Serif, Thin weight",
-      font_color: "Soft charcoal",
-      position: "Top 30%, centered",
-      subtext: "Introducing our new handcrafted lounger series.",
-    },
-    offer_tag: {
-      text: "Launch Offer 15% OFF",
-      position: "top-right",
-      style: "subtle circle badge",
-    },
-    call_to_action: {
-      text: "Shop Now",
-      style: "pill-shaped button, muted green",
-      location: "bottom center",
-    },
-    optional: "add soft shadow",
-    mood: "calm, clean, timeless",
-  };
-
-  const promptText = generateFlyerPrompt(settings);
-
+const handleGenerateFlyer = async () => {
   try {
-    // ✅ Fix: use response instead of res
     const response = await fetch("http://localhost:5000/api/generateFlyer", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ prompt: promptText, inputImageUrl }),
+      body: JSON.stringify({
+        prompt: userPrompt,          // 👈 yahan aapka prompt
+        inputImageUrl: selectedImageUrl, // 👈 yahan aapka image url
+      }),
     });
 
     const data = await response.json();
 
-    if (data.flyerUrl) {
-      flyerForm.setOutputImage(data.flyerUrl);
-      setGeneratedFlyerUrl(data.flyerUrl);
+    if (data.flyerImage) {
+      setFlyerImage(data.flyerImage);   // ✅ store in state
     } else {
-      console.error("No flyerUrl returned from API", data);
-      alert("Failed to generate flyer. Try again.");
+      console.error("No flyerImage returned from API", data);
     }
   } catch (err) {
     console.error("Error generating flyer:", err);
-    alert("Error while generating flyer.");
-  } finally {
-    setLoading(false);
   }
 };
+
+
+
 
 
   const menuItems = [
@@ -232,23 +251,10 @@ const handleAddDetails = async () => {
         </div>
 
         {/* Generated Flyer Popup */}
-        {generatedFlyerUrl && (
-          <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
-            <div className="bg-white p-4 rounded-xl shadow-lg relative">
-              <button
-                className="absolute top-2 right-2 text-red-500 font-bold"
-                onClick={() => setGeneratedFlyerUrl(null)}
-              >
-                X
-              </button>
-              <img
-                src={generatedFlyerUrl}
-                alt="Generated Flyer"
-                className="w-96 h-auto rounded-md"
-              />
-            </div>
-          </div>
-        )}
+       {flyerImage && (
+  <img src={flyerImage} alt="Generated Flyer" className="w-full h-auto" />
+)}
+
       </aside>
     </>
   );
