@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { FaRegImages, FaExclamationCircle, FaCheckCircle } from "react-icons/fa";
-import { MdGridView, MdNoteAdd } from "react-icons/md";
+import { MdGridView, MdNoteAdd,MdPhotoLibrary } from "react-icons/md";
 import { Flyer_Prompts } from "./FlyerData";
 import { FlyerForm } from "./FlyerForm";
 import { generateFlyer } from "../api/generateFlyer/route";
@@ -10,7 +10,7 @@ export default function FlyerSidebar({
   activeTab,
   setActiveTab,
   selectedTemplate,
-  handleTemplateClic,
+  handleTemplateClick,
   selectedProducts,
   products,
   handleProductSelect,
@@ -20,11 +20,24 @@ export default function FlyerSidebar({
   const [lastSelectedProduct, setLastSelectedProduct] = useState(null);
   const [loading, setLoading] = useState(false);
   const [flyerImage, setFlyerImage] = useState(null);
+  const [name, setName] = useState("");
+  const [number, setNumber] = useState("");
+  const [address, setAddress] = useState("");
+  const [generated, setGenerated] = useState(false);
+  const [tabStatus, setTabStatus] = useState({
+  product: false,
+  details: false,
+  gallery: false,
+});
+const [flyers, setFlyers] = useState([]);
+ const handleProductSelectLocal = (product) => {
+  handleProductSelect(product); // call parent’s function
+  setLastSelectedProduct(product);
+  setTabStatus((prev) => ({ ...prev, product: true })); // mark tab done here
+};
 
-  const handleProductSelectLocal = (product) => {
-    handleProductSelect(product);
-    setLastSelectedProduct(product);
-  };
+  
+  
 
  
 
@@ -112,6 +125,8 @@ const handleAddDetails = async () => {
   if (data.flyerImage) {
     // ✅ Abhi ke liye sirf flyerImage set karo
     setFlyerImage(data.flyerImage);
+    setFlyers((prev) => [...prev, data.flyerImage]); 
+    setGenerated(true);
   } else {
     console.error("No flyerImage returned from API", data);
     alert("Failed to generate flyer. Try again.");
@@ -124,30 +139,9 @@ const handleAddDetails = async () => {
 } 
 };
 
-const handleGenerateFlyer = async () => {
-  try {
-    const response = await fetch("http://localhost:5000/api/generateFlyer", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        prompt: userPrompt,          // 👈 yahan aapka prompt
-        inputImageUrl: selectedImageUrl, // 👈 yahan aapka image url
-      }),
-    });
-
-    const data = await response.json();
-
-    if (data.flyerImage) {
-      setFlyerImage(data.flyerImage);   // ✅ store in state
-    } else {
-      console.error("No flyerImage returned from API", data);
-    }
-  } catch (err) {
-    console.error("Error generating flyer:", err);
-  }
-};
-
-
+// const handleGenerateFlyer = (newFlyerUrl) => {
+//   setFlyers((prev) => [...prev, newFlyerUrl]); // add new flyer
+// };
 
 
 
@@ -155,6 +149,7 @@ const handleGenerateFlyer = async () => {
     { id: "templates", icon: <FaRegImages size={20} />, label: "Select Template" },
     { id: "products", icon: <MdGridView size={20} />, label: "Select Product" },
     { id: "detail", icon: <MdNoteAdd size={20} />, label: "Add Detail" },
+     { id: "gallery", icon: <MdPhotoLibrary size={20} />, label: "Gallery" },
   ];
 
   return (
@@ -165,23 +160,26 @@ const handleGenerateFlyer = async () => {
           let isDone = false;
           if (item.id === "templates") isDone = !!selectedTemplate;
           if (item.id === "products") isDone = selectedProducts.length > 0;
-
+          if (item.id === "detail") isDone = !!flyerImage; 
           return (
             <button
-              key={item.id}
-              onClick={() => setActiveTab(item.id)}
-              className="relative cursor-pointer flex flex-col items-center justify-center w-20 h-24 rounded-lg border-2 border-gray-400 p-2 mb-2"
-            >
-              <span className="absolute top-2 left-1">
-                {isDone ? (
-                  <FaCheckCircle className="text-green-500 w-5 h-5" />
-                ) : (
-                  <FaExclamationCircle className="text-yellow-500 w-5 h-5" />
-                )}
-              </span>
-              <span className="text-3xl mb-2">{item.icon}</span>
-              <span className="text-xs text-center font-semibold">{item.label}</span>
-            </button>
+  key={item.id}
+  onClick={() => setActiveTab(item.id)}
+  className="relative cursor-pointer flex flex-col items-center justify-center w-20 h-24 rounded-lg border-2 border-gray-400 p-2 mb-2"
+>
+  {item.id !== "gallery" && ( // ✅ Gallery tab me icon mat dikhana
+    <span className="absolute top-2 left-1">
+      {tabStatus[item.id] ? (
+        <FaCheckCircle className="text-green-500 w-5 h-5" />
+      ) : (
+        <FaExclamationCircle className="text-yellow-500 w-5 h-5" />
+      )}
+    </span>
+  )}
+  <span className="text-3xl mb-2">{item.icon}</span>
+  <span className="text-xs text-center font-semibold">{item.label}</span>
+</button>
+
           );
         })}
       </aside>
@@ -237,23 +235,85 @@ const handleGenerateFlyer = async () => {
 
         {/* Add Detail Tab */}
         <div className="flex justify-center items-center h-full">
-          {activeTab === "detail" && (
-            <button
-              onClick={handleAddDetails}
-              disabled={loading}
-              className={`px-6 py-3 ${
-                loading ? "bg-gray-400" : "bg-[#FC6C87]"
-              } text-white font-semibold rounded-xl shadow-md hover:scale-105 transition-transform`}
-            >
-              {loading ? "Generating..." : "Add Details"}
-            </button>
-          )}
+          {/* Add Detail Tab */}
+{activeTab === "detail" && (
+  <div className="flex flex-col justify-center items-center h-full w-full">
+    <div className="w-full space-y-3">
+      <input
+        type="text"
+        placeholder="Name"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-pink-400 outline-none"
+      />
+      <input
+        type="text"
+        placeholder="Number"
+        value={number}
+        onChange={(e) => setNumber(e.target.value)}
+        className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-pink-400 outline-none"
+      />
+      <input
+        type="text"
+        placeholder="Address"
+        value={address}
+        onChange={(e) => setAddress(e.target.value)}
+        className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-pink-400 outline-none"
+      />
+    </div>
+
+    <button
+        onClick={handleAddDetails}
+        disabled={loading}
+        className={`mt-5 px-6 py-3 ${
+          loading
+            ? "bg-gray-400"
+            : generated
+            ? "bg-green-500"
+            : "bg-[#FC6C87]"
+        } text-white font-semibold rounded-xl shadow-md hover:scale-105 transition-transform`}
+      >
+        {loading
+          ? "Generating..."
+          : generated
+          ? "Generated"
+          : "Confirm & Generate Flyer"}
+      </button>
+  </div>
+)}
+
         </div>
 
         {/* Generated Flyer Popup */}
-       {flyerImage && (
-  <img src={flyerImage} alt="Generated Flyer" className="w-full h-auto" />
+      {flyerImage && (
+  <div className=" inset-0  bg-opacity-50 flex justify-center items-center z-50">
+    
+
+      {/* gallery tab */}
+    {activeTab === "gallery" && flyers.length > 0 && (
+  <div className="p-4 grid grid-cols-2 sm:grid-cols-3 gap-4">
+    {flyers.map((img, index) => (
+      <div key={index} className="flex justify-center">
+        <img
+          src={img}
+          alt={`Generated Flyer ${index + 1}`}
+          className="w-48 h-auto rounded-lg shadow-lg hover:scale-105 transition-transform"
+        />
+      </div>
+    ))}
+  </div>
 )}
+
+
+        
+      
+
+      
+    
+  </div>
+)}
+
+
 
       </aside>
     </>
