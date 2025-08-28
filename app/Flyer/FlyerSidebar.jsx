@@ -4,7 +4,7 @@ import { FaRegImages, FaExclamationCircle, FaCheckCircle } from "react-icons/fa"
 import { MdGridView, MdNoteAdd,MdPhotoLibrary } from "react-icons/md";
 import { Flyer_Prompts } from "./FlyerData";
 import { FlyerForm } from "./FlyerForm";
-import { generateFlyer } from "../api/generateFlyer/route";
+
 
 export default function FlyerSidebar({
   activeTab,
@@ -75,18 +75,21 @@ function generateFlyerPrompt(settings) {
     return prompt.trim();
 }
 
+
+
+
 const handleAddDetails = async () => {
-    if (!lastSelectedProduct) {
-        alert("Select a product first.");
-        return;
-    }
+  if (!lastSelectedProduct) {
+    alert("Select a product first.");
+    return;
+  }
 
-    setLoading(true);
+  setLoading(true);
 
-    const inputImageUrl = lastSelectedProduct.imageUrl;
-    flyerForm.setInputImage(inputImageUrl);
+  const inputImageUrl = lastSelectedProduct.imageUrl;
+  flyerForm.setInputImage(inputImageUrl);
 
-    const settings = {
+   const settings = {
         aspect_ratio: "4:5",
         theme: "Soft White Minimal",
         border_design: "Thin rounded lines with soft corners",
@@ -117,31 +120,35 @@ const handleAddDetails = async () => {
         mood: "calm, clean, timeless",
     };
 
-    const promptText = generateFlyerPrompt(settings);
 
-      try {
-  const data = await generateFlyer(promptText, inputImageUrl);
+  const promptText = generateFlyerPrompt(settings);
 
-  if (data.flyerImage) {
-    // ✅ Abhi ke liye sirf flyerImage set karo
-    setFlyerImage(data.flyerImage);
-    setFlyers((prev) => [...prev, data.flyerImage]); 
-    setGenerated(true);
-  } else {
-    console.error("No flyerImage returned from API", data);
-    alert("Failed to generate flyer. Try again.");
+  try {
+    const res = await fetch("/api/generateFlyer", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ prompt: promptText, inputImageUrl }),
+    });
+
+    const data = await res.json();
+
+    if (data.flyerImage) {
+      setFlyerImage(data.flyerImage);
+      setFlyers((prev) => [...prev, data.flyerImage]);
+      setGenerated(true);
+    } else {
+      console.error("No flyerImage returned", data);
+      alert("Failed to generate flyer. Try again.");
+    }
+  } catch (err) {
+    console.error("Error generating flyer:", err);
+    alert("Error while generating flyer.");
+  } finally {
+    setLoading(false);
   }
-} catch (err) {
-  console.error("Error generating flyer:", err);
-  alert("Error while generating flyer.");
-} finally {
-  setLoading(false);
-} 
 };
 
-// const handleGenerateFlyer = (newFlyerUrl) => {
-//   setFlyers((prev) => [...prev, newFlyerUrl]); // add new flyer
-// };
+
 
 
 
