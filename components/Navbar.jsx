@@ -54,6 +54,7 @@ export default function Navbar() {
               {[
                 { label: "Create Templates", href: "/templates" },
                 { label: "Features", href: "/features" },
+                { label: "Dashboard", href: "/dashboard" },
               ].map((item) => (
                 <button
                   key={item.href}

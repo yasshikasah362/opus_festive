@@ -1,0 +1,342 @@
+[
+  {
+    "id": 1,
+    "name": "Diwali Grandeur",
+    "prompt_settings": {
+      "aspect_ratio": "1:1",
+      "theme": "Festive Gold & Maroon",
+      "border_design": "Intricate traditional Indian motifs in gold",
+      "border_thickness": "4px",
+      "background_style": "Gradient",
+      "background_colors": "Deep maroon to shimmering gold",
+      "logo_placement": "Top-center",
+      "main_image_placement": "center, slightly elevated",
+      "image_size": "75% of width",
+      "text_section": {
+        "headline": "Illuminate Your Home This Diwali",
+        "font_style": "Elegant Serif, metallic effect",
+        "font_color": "Bright Gold",
+        "position": "Upper middle",
+        "subtext": "Bring home prosperity and style with our exquisite Diwali collection."
+      },
+      "offer_tag": {
+        "text": "Special Diwali Offers!",
+        "position": "top-left",
+        "style": "Diya (oil lamp) shaped badge with glow"
+      },
+      "call_to_action": {
+        "text": "Shop Festive Deals",
+        "style": "Maroon button with gold border",
+        "location": "bottom center"
+      },
+      "optional": "Add subtle sparkle overlay, traditional rangoli patterns in corners.",
+      "mood": "Grand, festive, luxurious, traditional"
+    }
+  },
+  {
+    "id": 2,
+    "name": "Sparkling Diwali Delights",
+    "prompt_settings": {
+      "aspect_ratio": "4:5",
+      "theme": "Bright & Joyful Festivities",
+      "border_design": "Scattered light bokeh effect with small firecracker outlines",
+      "border_thickness": "none",
+      "background_style": "Soft gradient with subtle shimmer",
+      "background_colors": "Warm orange fading to a cheerful yellow",
+      "logo_placement": "Top-left",
+      "main_image_placement": "center",
+      "image_size": "65% of width",
+      "text_section": {
+        "headline": "Sparkle Up Your Space This Diwali!",
+        "font_style": "Playful Sans-serif, bold",
+        "font_color": "Dark Teal",
+        "position": "Top 20%, centered",
+        "subtext": "Discover dazzling furniture to make your celebrations brighter."
+      },
+      "offer_tag": {
+        "text": "Diwali Flash Sale!",
+        "position": "top-right",
+        "style": "Explosion/burst shape, yellow with red text"
+      },
+      "call_to_action": {
+        "text": "Light Up Your Home",
+        "style": "Rounded button, dark teal with yellow text",
+        "location": "bottom center"
+      },
+      "optional": "Subtle diya icons floating, small glitter particles.",
+      "mood": "Joyful, energetic, sparkling, vibrant"
+    }
+  },
+  {
+    "id": 3,
+    "name": "Prosperity & Comfort",
+    "prompt_settings": {
+      "aspect_ratio": "1:1",
+      "theme": "Auspicious & Wealthy Vibes",
+      "border_design": "Coin patterns and floral motifs in gold",
+      "border_thickness": "3px",
+      "background_style": "Deep, rich solid color with subtle pattern",
+      "background_colors": "Emerald green or royal blue with gold accents",
+      "logo_placement": "Top-right",
+      "main_image_placement": "center, slightly larger",
+      "image_size": "70% of width",
+      "text_section": {
+        "headline": "Welcome Prosperity This Diwali",
+        "font_style": "Classic Serif, elegant",
+        "font_color": "Gold",
+        "position": "Upper middle, left-aligned",
+        "subtext": "Adorn your home with furniture that brings both comfort and good fortune."
+      },
+      "offer_tag": {
+        "text": "Dhanteras Special Discounts!",
+        "position": "bottom-left",
+        "style": "Lotus flower badge"
+      },
+      "call_to_action": {
+        "text": "Embrace Abundance",
+        "style": "Rectangular button, emerald green with gold border",
+        "location": "bottom-right"
+      },
+      "optional": "Subtle Lakshmi foot imprints, scattered gold coins graphic.",
+      "mood": "Auspicious, prosperous, luxurious, traditional"
+    }
+  },
+  {
+    "id": 4,
+    "name": "Diwali Gifting Guide",
+    "prompt_settings": {
+      "aspect_ratio": "9:16 vertical",
+      "theme": "Thoughtful & Elegant Gifting",
+      "border_design": "Delicate golden swirls and dots",
+      "border_thickness": "2px",
+      "background_style": "Soft bokeh effect",
+      "background_colors": "Creamy white to light gold",
+      "logo_placement": "Bottom-center",
+      "main_image_placement": "center, with subtle gift boxes around",
+      "image_size": "60% of width",
+      "text_section": {
+        "headline": "Give the Gift of Comfort & Style This Diwali",
+        "font_style": "Calligraphic Script, elegant",
+        "font_color": "Rich Brown or Metallic Gold",
+        "position": "Top 20%, centered",
+        "subtext": "Find the perfect present for your loved ones from our curated Diwali collection."
+      },
+      "offer_tag": {
+        "text": "Diwali Gift Vouchers Available!",
+        "position": "top-right",
+        "style": "Ribbon tag with a small gift icon"
+      },
+      "call_to_action": {
+        "text": "Discover Gift Ideas",
+        "style": "Rounded button, soft gold with brown text",
+        "location": "bottom center"
+      },
+      "optional": "Add subtle glitter or shimmer effect, soft shadows under gift boxes.",
+      "mood": "Generous, elegant, thoughtful, festive"
+    }
+  },
+  {
+    "id": 5,
+    "name": "Family Diwali Gathering",
+    "prompt_settings": {
+      "aspect_ratio": "16:9 landscape",
+      "theme": "Warm & Inviting Family Celebration",
+      "border_design": "Soft, diffused light glow around the edges",
+      "border_thickness": "none",
+      "background_style": "Blurred warm interior lighting with festive elements",
+      "background_colors": "Cozy oranges, deep reds, and amber tones",
+      "logo_placement": "Top-left",
+      "main_image_placement": "right side, showing a living room setup",
+      "image_size": "60% width",
+      "text_section": {
+        "headline": "Create Memorable Diwali Moments",
+        "font_style": "Friendly Sans-serif, medium weight",
+        "font_color": "Creamy White",
+        "position": "Left side, centered vertically",
+        "subtext": "Our comfortable furniture sets the stage for joyous family gatherings this festive season."
+      },
+      "offer_tag": {
+        "text": "Family Pack Discounts!",
+        "position": "top-right",
+        "style": "Heart-shaped badge or a group of happy figures"
+      },
+      "call_to_action": {
+        "text": "Shop Family Favorites",
+        "style": "Rectangular button, deep red with white text",
+        "location": "bottom-right"
+      },
+      "optional": "Subtle traditional rangoli on the floor, small diyas on surfaces within the graphic.",
+      "mood": "Warm, inviting, familial, joyous"
+    }
+  },
+  {
+    "id": 6,
+    "name": "Modern Diwali Decor",
+    "prompt_settings": {
+      "aspect_ratio": "1:1",
+      "theme": "Contemporary Festive Aesthetics",
+      "border_design": "Clean geometric lines in metallic tones",
+      "border_thickness": "1px",
+      "background_style": "Minimalist background with abstract light patterns",
+      "background_colors": "Cool greys and blacks with sharp gold and silver accents",
+      "logo_placement": "Bottom-left",
+      "main_image_placement": "center, sleek and modern",
+      "image_size": "70% of width",
+      "text_section": {
+        "headline": "A Modern Diwali, Redefined Comfort",
+        "font_style": "Sleek Modern Sans-serif, light",
+        "font_color": "Silver or White",
+        "position": "Top 25%, centered",
+        "subtext": "Celebrate with contemporary furniture that adds a sophisticated touch to your festivities."
+      },
+      "offer_tag": {
+        "text": "New Festive Arrivals!",
+        "position": "top-right",
+        "style": "Abstract star badge"
+      },
+      "call_to_action": {
+        "text": "Discover Modern Diwali",
+        "style": "Rounded button, black with silver text",
+        "location": "bottom center"
+      },
+      "optional": "Subtle glowing lines on the floor, minimalist diya outlines.",
+      "mood": "Modern, sophisticated, contemporary, chic"
+    }
+  },
+  {
+    "id": 7,
+    "name": "Diwali Feast & Furniture",
+    "prompt_settings": {
+      "aspect_ratio": "4:5",
+      "theme": "Dining & Entertaining Festive",
+      "border_design": "Decorative border with subtle food-related motifs (e.g., sweets)",
+      "border_thickness": "2px",
+      "background_style": "Soft, inviting background with blurred kitchen/dining elements",
+      "background_colors": "Earthy browns, warm creams, and festive reds",
+      "logo_placement": "Top-right",
+      "main_image_placement": "center, focusing on dining furniture",
+      "image_size": "60% of width",
+      "text_section": {
+        "headline": "Feast, Celebrate, Relax This Diwali",
+        "font_style": "Gourmet Script, welcoming",
+        "font_color": "Dark Red",
+        "position": "Upper middle, left-aligned",
+        "subtext": "Our dining and living room furniture ensures your Diwali gatherings are truly special."
+      },
+      "offer_tag": {
+        "text": "Dining Deals for Diwali!",
+        "position": "bottom-left",
+        "style": "Fork and knife icon badge"
+      },
+      "call_to_action": {
+        "text": "Shop Dining & Living",
+        "style": "Pill-shaped button, red with cream text",
+        "location": "bottom-right"
+      },
+      "optional": "Subtle scattering of rangoli powder texture, small sweet icons.",
+      "mood": "Gastronomic, celebratory, inviting, comfortable"
+    }
+  },
+  {
+    "id": 8,
+    "name": "Divine Diwali Decor",
+    "prompt_settings": {
+      "aspect_ratio": "1:1",
+      "theme": "Spiritual & Sacred Festivities",
+      "border_design": "Traditional temple architecture inspired patterns",
+      "border_thickness": "3px",
+      "background_style": "Soft glow from behind the product",
+      "background_colors": "Deep saffron and auspicious yellow, with temple bell motifs",
+      "logo_placement": "Top-center",
+      "main_image_placement": "center, slightly elevated",
+      "image_size": "65% of width",
+      "text_section": {
+        "headline": "Adorn Your Home with Divine Blessings",
+        "font_style": "Devanagari-inspired font, majestic",
+        "font_color": "Dark Brown or Gold",
+        "position": "Top 25%, centered",
+        "subtext": "Furniture that brings peace, prosperity, and a touch of the divine to your Diwali abode."
+      },
+      "offer_tag": {
+        "text": "Auspicious Offers!",
+        "position": "top-right",
+        "style": "Temple bell badge with a soft ring animation (if animated)"
+      },
+      "call_to_action": {
+        "text": "Explore Divine Collection",
+        "style": "Rounded button, saffron with brown text",
+        "location": "bottom center"
+      },
+      "optional": "Faint incense smoke effect, subtle chants in background (if audio), small lotus flower graphics.",
+      "mood": "Spiritual, sacred, serene, blessed"
+    }
+  },
+  {
+    "id": 9,
+    "name": "Diwali Countdown",
+    "prompt_settings": {
+      "aspect_ratio": "9:16 vertical",
+      "theme": "Anticipation & Excitement",
+      "border_design": "Clock-like gears or countdown numbers subtly integrated",
+      "border_thickness": "2px",
+      "background_style": "Dynamic, fast-paced light trails",
+      "background_colors": "Dark blues and purples with bright orange and yellow streaks",
+      "logo_placement": "Bottom-center",
+      "main_image_placement": "center, slightly zoomed in",
+      "image_size": "70% width",
+      "text_section": {
+        "headline": "Diwali is Almost Here! Get Ready!",
+        "font_style": "Bold Digital Font, striking",
+        "font_color": "Bright Orange",
+        "position": "Top 15%, centered",
+        "subtext": "Don't miss out on our pre-Diwali specials to prepare your home for the festivities!"
+      },
+      "offer_tag": {
+        "text": "Pre-Diwali Offers Ending Soon!",
+        "position": "middle-right",
+        "style": "Timer/countdown graphic"
+      },
+      "call_to_action": {
+        "text": "Shop Before It's Too Late!",
+        "style": "Emergency red button, glowing",
+        "location": "bottom center"
+      },
+      "optional": "Countdown timer element, subtle firework animation in the background.",
+      "mood": "Exciting, urgent, anticipatory, energetic"
+    }
+  },
+  {
+    "id": 10,
+    "name": "Sustainable Diwali Comfort",
+    "prompt_settings": {
+      "aspect_ratio": "1:1",
+      "theme": "Eco-Friendly & Mindful Celebrations",
+      "border_design": "Leafy vine pattern with small diya outlines",
+      "border_thickness": "2px",
+      "background_style": "Earthy tones with natural textures (e.g., jute, wood grain)",
+      "background_colors": "Soft greens and natural browns with muted gold accents",
+      "logo_placement": "Top-left",
+      "main_image_placement": "center, with natural light",
+      "image_size": "60% of width",
+      "text_section": {
+        "headline": "Celebrate a Greener Diwali with Comfort",
+        "font_style": "Organic Sans-serif, clean",
+        "font_color": "Forest Green",
+        "position": "Top 20%, centered",
+        "subtext": "Choose sustainable furniture that brightens your home and helps the planet this festive season."
+      },
+      "offer_tag": {
+        "text": "Eco-Friendly Diwali Deals!",
+        "position": "bottom-right",
+        "style": "Leaf badge with a small diya icon"
+      },
+      "call_to_action": {
+        "text": "Explore Sustainable Collection",
+        "style": "Rounded button, light green with dark green text",
+        "location": "bottom center"
+      },
+      "optional": "Subtle use of recycled material textures, soft glow from LED diyas.",
+      "mood": "Mindful, eco-conscious, peaceful, responsible"
+    }
+  }
+]

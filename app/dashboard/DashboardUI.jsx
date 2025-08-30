@@ -87,7 +87,7 @@ export default function DashboardUI({ username }) {
         { label: "Discount Post" },
         { label: "Poster" },
         { label: "Social Media Post" },
-        { label: "Festive Greetings" },
+        { label: "Festive Greetings" , href: "/Festives"},
       ].map((tag, i) =>
         tag.href ? (
           <Link key={i} href={tag.href}>
@@ -124,14 +124,89 @@ export default function DashboardUI({ username }) {
 
         {/* Upcoming Events */}
         <div className="p-6">
-          <div className="flex justify-between items-center mb-2">
-            <h2 className="text-lg font-semibold">Upcoming Events</h2>
-            <button className="bg-[#FC6C87] text-white px-4 py-1 rounded">
-              Edit Keywords
-            </button>
-          </div>
-          <div className="text-gray-500">No events available</div>
-        </div>
+  <div className="flex justify-between items-center mb-2">
+    <h2 className="text-lg font-semibold">Upcoming Events</h2>
+    <button className="bg-[#FC6C87] text-white px-4 py-1 rounded">
+      Edit Keywords
+    </button>
+  </div>
+
+
+
+  {/* Events grid */}
+  <div className="p-6">
+  
+
+  <div className="grid grid-cols-1 sm:grid-cols-4 gap-6">
+    {/* Diwali Card */}
+    <Link href="/diwali">
+  <div className="bg-white rounded-2xl shadow p-4 flex flex-col items-center text-center 
+                  transform transition duration-300 hover:scale-105 hover:shadow-2xl hover:-rotate-1 cursor-pointer">
+    <img
+      src="/diwali.jpg"
+      alt="Diwali"
+      className="w-32 h-32 object-cover rounded-xl mb-3"
+    />
+    <h3 className="text-lg font-semibold">Diwali</h3>
+    <p className="text-sm text-gray-500">20th October 2025</p>
+  </div>
+</Link>
+    {/* Gandhi Jayanti Card */}
+    <Link href="/gandhijayanti" className="block">
+  <div className="bg-white rounded-2xl shadow p-4 flex flex-col items-center text-center 
+                  transform transition duration-300 hover:scale-105 hover:shadow-2xl hover:rotate-1">
+    <img
+      src="/gandhijayanti.jpg"
+      alt="Gandhi Jayanti"
+      className="w-32 h-32 object-cover rounded-xl mb-3"
+    />
+    <h3 className="text-lg font-semibold">Gandhi Jayanti</h3>
+    <p className="text-sm text-gray-500">2nd October 2025</p>
+  </div>
+</Link>
+
+{/* navratri Card */}
+<Link href="/navratri" className="block">
+
+    <div className="bg-white rounded-2xl shadow p-4 flex flex-col items-center text-center 
+                    transform transition duration-300 hover:scale-105 hover:shadow-2xl hover:rotate-2">
+      <img
+        src="/navratri.jpg"
+        alt="Navratri"
+        className="w-32 h-32 object-cover rounded-xl mb-3"
+      />
+      <h3 className="text-lg font-semibold">Navratri</h3>
+      <p className="text-sm text-gray-500">2nd October 2025</p>
+    </div>
+</Link>
+
+    {/* Govardhan Puja Card */}
+    <div className="bg-white rounded-2xl shadow p-4 flex flex-col items-center text-center 
+                    transform transition duration-300 hover:scale-105 hover:shadow-2xl hover:-rotate-2">
+      <img
+        src="/govardhanpuja.jpg"
+        alt="Govardhan Puja"
+        className="w-32 h-32 object-cover rounded-xl mb-3"
+      />
+      <h3 className="text-lg font-semibold">Govardhan Puja</h3>
+      <p className="text-sm text-gray-500">21st Oct 2025</p>
+    </div>
+
+    
+
+   
+  </div>
+</div>
+
+
+
+
+
+
+</div>
+
+
+
       </div>
     </div>
   );

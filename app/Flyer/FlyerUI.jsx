@@ -83,7 +83,7 @@ const handleProductSelect = (product) => {
   selectedProducts={selectedProducts}
   products={products}
   handleTemplateClick={handleTemplateClick} 
-  handleProductSelect={handleProductSelect}   // ✅ add
+  handleProductSelect={handleProductSelect}   
 />
 
 

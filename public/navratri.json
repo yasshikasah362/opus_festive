@@ -1,0 +1,342 @@
+[
+  {
+    "id": 1,
+    "name": "Navratri Divine Vibes",
+    "prompt_settings": {
+      "aspect_ratio": "1:1",
+      "theme": "Traditional Devotional",
+      "border_design": "Ornate mandala in red and gold",
+      "border_thickness": "4px",
+      "background_style": "Gradient",
+      "background_colors": "Crimson red to golden yellow",
+      "logo_placement": "Top-center",
+      "main_image_placement": "center, slightly elevated",
+      "image_size": "70% of width",
+      "text_section": {
+        "headline": "Celebrate the Power of Devi",
+        "font_style": "Elegant Serif, golden emboss",
+        "font_color": "Bright Gold",
+        "position": "Upper middle",
+        "subtext": "Adorn your home with grace and devotion this Navratri."
+      },
+      "offer_tag": {
+        "text": "Navratri Specials!",
+        "position": "top-left",
+        "style": "Trishul-shaped glowing badge"
+      },
+      "call_to_action": {
+        "text": "Shop Festive Collection",
+        "style": "Red button with gold border",
+        "location": "bottom center"
+      },
+      "optional": "Subtle dandiya silhouettes, goddess aura effect.",
+      "mood": "Divine, spiritual, traditional"
+    }
+  },
+  {
+    "id": 2,
+    "name": "Garba Nights",
+    "prompt_settings": {
+      "aspect_ratio": "4:5",
+      "theme": "Energetic Dance Celebration",
+      "border_design": "Colorful dandiya sticks border",
+      "border_thickness": "none",
+      "background_style": "Vibrant gradient with sparkles",
+      "background_colors": "Orange, pink, and purple mix",
+      "logo_placement": "Top-left",
+      "main_image_placement": "center",
+      "image_size": "65% of width",
+      "text_section": {
+        "headline": "Dance Your Heart Out this Navratri!",
+        "font_style": "Bold Sans-serif, playful",
+        "font_color": "White",
+        "position": "Top 20%, centered",
+        "subtext": "Celebrate with joy, rhythm, and vibrant décor."
+      },
+      "offer_tag": {
+        "text": "Garba Night Deals!",
+        "position": "top-right",
+        "style": "Starburst badge with mirror work texture"
+      },
+      "call_to_action": {
+        "text": "Get Navratri Ready",
+        "style": "Rounded button, purple with yellow text",
+        "location": "bottom center"
+      },
+      "optional": "Glow effects, dancing silhouettes, disco lights.",
+      "mood": "Energetic, fun, festive"
+    }
+  },
+  {
+    "id": 3,
+    "name": "Nine Nights of Devotion",
+    "prompt_settings": {
+      "aspect_ratio": "1:1",
+      "theme": "Sacred & Devotional",
+      "border_design": "Lotus and diya patterns in gold",
+      "border_thickness": "3px",
+      "background_style": "Solid color with subtle sacred motifs",
+      "background_colors": "Royal blue with gold highlights",
+      "logo_placement": "Top-right",
+      "main_image_placement": "center",
+      "image_size": "70% of width",
+      "text_section": {
+        "headline": "Celebrate All 9 Forms of Devi",
+        "font_style": "Classic Serif",
+        "font_color": "Gold",
+        "position": "Upper middle, left-aligned",
+        "subtext": "Bring devotion, light, and festivity into your home."
+      },
+      "offer_tag": {
+        "text": "Navratri 9-Day Offers!",
+        "position": "bottom-left",
+        "style": "Lotus flower badge"
+      },
+      "call_to_action": {
+        "text": "Embrace Devotion",
+        "style": "Rectangular button, deep blue with gold border",
+        "location": "bottom-right"
+      },
+      "optional": "Subtle goddess Durga aura, stars, small diyas.",
+      "mood": "Spiritual, divine, graceful"
+    }
+  },
+  {
+    "id": 4,
+    "name": "Navratri Gift Guide",
+    "prompt_settings": {
+      "aspect_ratio": "9:16 vertical",
+      "theme": "Gifting & Sharing",
+      "border_design": "Golden floral swirls",
+      "border_thickness": "2px",
+      "background_style": "Soft golden bokeh",
+      "background_colors": "Ivory and soft yellow",
+      "logo_placement": "Bottom-center",
+      "main_image_placement": "center with subtle gift icons",
+      "image_size": "60% of width",
+      "text_section": {
+        "headline": "Share Joy this Navratri",
+        "font_style": "Elegant Script",
+        "font_color": "Dark Brown",
+        "position": "Top 20%, centered",
+        "subtext": "Perfect gifts to spread love and devotion this season."
+      },
+      "offer_tag": {
+        "text": "Gift Vouchers Available",
+        "position": "top-right",
+        "style": "Ribbon with a diya icon"
+      },
+      "call_to_action": {
+        "text": "Discover Gifts",
+        "style": "Rounded gold button with brown text",
+        "location": "bottom center"
+      },
+      "optional": "Sparkle overlay, gift boxes floating softly.",
+      "mood": "Generous, festive, elegant"
+    }
+  },
+  {
+    "id": 5,
+    "name": "Family Navratri Evenings",
+    "prompt_settings": {
+      "aspect_ratio": "16:9",
+      "theme": "Warm Family Festivities",
+      "border_design": "Soft glowing diya lights",
+      "border_thickness": "none",
+      "background_style": "Blurred cozy interior with diyas",
+      "background_colors": "Warm oranges and soft reds",
+      "logo_placement": "Top-left",
+      "main_image_placement": "right side, living room theme",
+      "image_size": "60% width",
+      "text_section": {
+        "headline": "Celebrate Togetherness this Navratri",
+        "font_style": "Friendly Sans-serif",
+        "font_color": "Creamy White",
+        "position": "Left, vertically centered",
+        "subtext": "Create warm festive evenings with your loved ones."
+      },
+      "offer_tag": {
+        "text": "Family Special Discounts",
+        "position": "top-right",
+        "style": "Heart-shaped glowing badge"
+      },
+      "call_to_action": {
+        "text": "Shop Family Collection",
+        "style": "Red button with white text",
+        "location": "bottom-right"
+      },
+      "optional": "Rangoli design at bottom, small diyas.",
+      "mood": "Warm, inviting, joyous"
+    }
+  },
+  {
+    "id": 6,
+    "name": "Modern Navratri Look",
+    "prompt_settings": {
+      "aspect_ratio": "1:1",
+      "theme": "Contemporary Celebration",
+      "border_design": "Clean metallic outlines",
+      "border_thickness": "1px",
+      "background_style": "Minimal with abstract lights",
+      "background_colors": "Black with neon pink and yellow",
+      "logo_placement": "Bottom-left",
+      "main_image_placement": "center sleek setup",
+      "image_size": "70% of width",
+      "text_section": {
+        "headline": "Celebrate Navratri in Style",
+        "font_style": "Modern Sans-serif",
+        "font_color": "Neon Yellow",
+        "position": "Top 25%, centered",
+        "subtext": "Add a contemporary touch to your festivities."
+      },
+      "offer_tag": {
+        "text": "New Arrivals!",
+        "position": "top-right",
+        "style": "Abstract glowing star badge"
+      },
+      "call_to_action": {
+        "text": "Shop Modern Decor",
+        "style": "Black button with neon text",
+        "location": "bottom center"
+      },
+      "optional": "Minimal dandiya stick outlines glowing subtly.",
+      "mood": "Modern, chic, stylish"
+    }
+  },
+  {
+    "id": 7,
+    "name": "Navratri Feast Time",
+    "prompt_settings": {
+      "aspect_ratio": "4:5",
+      "theme": "Dining & Gathering",
+      "border_design": "Food motif border",
+      "border_thickness": "2px",
+      "background_style": "Warm blurred dining setup",
+      "background_colors": "Earthy browns and festive reds",
+      "logo_placement": "Top-right",
+      "main_image_placement": "center dining furniture",
+      "image_size": "60% width",
+      "text_section": {
+        "headline": "Feast & Celebrate Navratri",
+        "font_style": "Welcoming Script",
+        "font_color": "Dark Red",
+        "position": "Upper middle, left-aligned",
+        "subtext": "Perfect dining for your festive feasts."
+      },
+      "offer_tag": {
+        "text": "Dining Specials!",
+        "position": "bottom-left",
+        "style": "Plate & spoon badge"
+      },
+      "call_to_action": {
+        "text": "Shop Dining Collection",
+        "style": "Rounded red button with cream text",
+        "location": "bottom-right"
+      },
+      "optional": "Small thali & sweet motifs.",
+      "mood": "Festive, inviting, delicious"
+    }
+  },
+  {
+    "id": 8,
+    "name": "Navratri Devotional Decor",
+    "prompt_settings": {
+      "aspect_ratio": "1:1",
+      "theme": "Sacred & Serene",
+      "border_design": "Temple bell and kalash motifs",
+      "border_thickness": "3px",
+      "background_style": "Glowing saffron aura",
+      "background_colors": "Saffron and gold",
+      "logo_placement": "Top-center",
+      "main_image_placement": "center",
+      "image_size": "65% width",
+      "text_section": {
+        "headline": "Invoke Blessings This Navratri",
+        "font_style": "Devanagari-inspired font",
+        "font_color": "Brown or Gold",
+        "position": "Top 25%, centered",
+        "subtext": "Decor that brings divinity and peace."
+      },
+      "offer_tag": {
+        "text": "Auspicious Deals",
+        "position": "top-right",
+        "style": "Temple bell badge"
+      },
+      "call_to_action": {
+        "text": "Explore Sacred Decor",
+        "style": "Saffron button with brown text",
+        "location": "bottom center"
+      },
+      "optional": "Incense smoke effect, lotus graphics.",
+      "mood": "Sacred, serene, devotional"
+    }
+  },
+  {
+    "id": 9,
+    "name": "Navratri Countdown",
+    "prompt_settings": {
+      "aspect_ratio": "9:16 vertical",
+      "theme": "Excitement & Anticipation",
+      "border_design": "Countdown numbers integrated with dandiya sticks",
+      "border_thickness": "2px",
+      "background_style": "Dynamic neon trails",
+      "background_colors": "Dark purple with orange streaks",
+      "logo_placement": "Bottom-center",
+      "main_image_placement": "center zoomed",
+      "image_size": "70% width",
+      "text_section": {
+        "headline": "Navratri is Almost Here!",
+        "font_style": "Digital Bold Font",
+        "font_color": "Bright Orange",
+        "position": "Top 15%, centered",
+        "subtext": "Get your home festive-ready before the nine nights begin!"
+      },
+      "offer_tag": {
+        "text": "Pre-Navratri Deals!",
+        "position": "middle-right",
+        "style": "Timer graphic badge"
+      },
+      "call_to_action": {
+        "text": "Shop Now!",
+        "style": "Glowing red button",
+        "location": "bottom center"
+      },
+      "optional": "Subtle fireworks in background.",
+      "mood": "Exciting, urgent, energetic"
+    }
+  },
+  {
+    "id": 10,
+    "name": "Eco-Friendly Navratri",
+    "prompt_settings": {
+      "aspect_ratio": "1:1",
+      "theme": "Green & Conscious",
+      "border_design": "Leafy vines with diya outlines",
+      "border_thickness": "2px",
+      "background_style": "Natural textures",
+      "background_colors": "Soft greens, browns, and muted gold",
+      "logo_placement": "Top-left",
+      "main_image_placement": "center with natural light",
+      "image_size": "60% width",
+      "text_section": {
+        "headline": "Celebrate a Greener Navratri",
+        "font_style": "Organic Sans-serif",
+        "font_color": "Forest Green",
+        "position": "Top 20%, centered",
+        "subtext": "Choose eco-friendly celebrations and décor this season."
+      },
+      "offer_tag": {
+        "text": "Eco-Friendly Deals",
+        "position": "bottom-right",
+        "style": "Leaf badge with diya icon"
+      },
+      "call_to_action": {
+        "text": "Explore Eco Collection",
+        "style": "Rounded green button",
+        "location": "bottom center"
+      },
+      "optional": "Recycled textures, LED diya glow.",
+      "mood": "Mindful, eco-conscious, peaceful"
+    }
+  }
+]
