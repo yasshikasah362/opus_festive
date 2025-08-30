@@ -24,7 +24,7 @@ function MenuItem({ icon, label }) {
 export default function DashboardUI({ username }) {
   const [category, setCategory] = useState("All Category");
   const categories = ["All Category", "Flyer", "Menu", "Brochure", "Poster"];
-  const tabs = ["My Creations", "My Images",  "My Uploads"];
+  const tabs = ["Upcoming Events", "My Images",  "My Uploads"];
 
   return (
     <div className="flex h-screen bg-gray-100">

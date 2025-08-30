@@ -6,6 +6,7 @@ import { FaHeading, FaTag } from "react-icons/fa";
 import { MdSubtitles } from "react-icons/md";
 import { RiPriceTag3Fill } from "react-icons/ri";
 import EditModal from "./EditModal"; // import modal
+import { FaCheckCircle } from "react-icons/fa";
 
 const Navratri = () => {
   const [active, setActive] = useState("templates");
@@ -131,31 +132,36 @@ const Navratri = () => {
         <div className="w-75 bg-white border-r-2 border-r-gray-200 p-4 overflow-auto">
         
   {active === "templates" && (
-    <div className="grid gap-4">
-      {templates.map((temp, index) => (
-        <div
-          key={temp.id}
-          className={`cursor-pointer p-2 border rounded-lg shadow-md bg-white flex flex-col items-center gap-2 transform transition duration-300 hover:scale-105 hover:rotate-1 hover:shadow-2xl ${
-            selectedTemplate?.id === temp.id ? "text-black" : ""
-          }`}
-          onClick={() => setSelectedTemplate(temp)}
-        >
-          {/* ✅ Image from navratri array */}
-          <img
-            src={navratri[index]?.img}   // <-- यही main fix है
-            alt={templates[index]?.name || `Template ${temp.id}`}
-            className="w-full h-40 object-cover rounded-md"
-            draggable={false}
-          />
+  <div className="grid gap-4">
+    {templates.map((temp, index) => (
+      <div
+        key={temp.id}
+        className={`relative cursor-pointer p-2 border rounded-lg shadow-md bg-white flex flex-col items-center gap-2 transform transition duration-300 hover:scale-105 hover:rotate-1 hover:shadow-2xl ${
+          selectedTemplate?.id === temp.id ? "ring-2 ring-[#0be545]" : ""
+        }`}
+        onClick={() => setSelectedTemplate(temp)}
+      >
+        {/* ✅ Image from navratri array */}
+        <img
+          src={navratri[index]?.img}
+          alt={templates[index]?.name || `Template ${temp.id}`}
+          className="w-full h-40 object-cover rounded-md"
+          draggable={false}
+        />
 
-          {/* ✅ Name from JSON */}
-          <h5 className="font-semibold text-center">
-            {templates[index]?.name}
-          </h5>
-        </div>
-      ))}
-    </div>
-  )}
+        {/* ✅ Name from JSON */}
+        <h5 className="font-semibold text-center">
+          {templates[index]?.name}
+        </h5>
+
+        {/* ✅ Check mark on selected */}
+        {selectedTemplate?.id === temp.id && (
+          <FaCheckCircle className="absolute top-2 left-2 text-[#0be545] text-2xl drop-shadow-lg" />
+        )}
+      </div>
+    ))}
+  </div>
+)}
 
 
 
