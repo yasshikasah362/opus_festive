@@ -119,7 +119,7 @@ console.log("Generated Template from Gemini:", data.generatedImage);
           {/* Templates */}
           <div onClick={() => setActive("templates")}
                className={`cursor-pointer flex items-center gap-1 p-3 rounded-xl shadow-md transition-all duration-200 ${
-                 active === "templates" ? "bg-[#FC6C87] text-white shadow-lg scale-105" : "bg-white hover:shadow-lg hover:scale-105"
+                 active === "templates" ? "bg-gradient-to-tr from-pink-500 to-orange-400 text-white shadow-lg scale-105" : "bg-white hover:shadow-lg hover:scale-105"
                }`}>
             <div className="flex flex-col items-center pb-2">
               <FaRegImages size={20} />
@@ -131,7 +131,7 @@ console.log("Generated Template from Gemini:", data.generatedImage);
           {/* Products */}
           <div onClick={() => setActive("product")}
                className={`cursor-pointer flex items-center gap-1 p-4 rounded-xl shadow-md transition-all duration-200 ${
-                 active === "product" ? "bg-[#FC6C87] text-white shadow-lg scale-105" : "bg-white hover:shadow-lg hover:scale-105"
+                 active === "product" ? "bg-gradient-to-tr from-pink-500 to-orange-400 text-white shadow-lg scale-105" : "bg-white hover:shadow-lg hover:scale-105"
                }`}>
             <div className="flex flex-col items-center ml-1">
               <MdGridView size={20} />
@@ -142,7 +142,7 @@ console.log("Generated Template from Gemini:", data.generatedImage);
           {/* Add Details */}
           <div onClick={() => setActive("details")}
                className={`cursor-pointer flex items-center gap-1 p-3 rounded-xl shadow-md transition-all duration-200 ${
-                 active === "details" ? "bg-[#FC6C87] text-white shadow-lg scale-105" : "bg-white hover:shadow-lg hover:scale-105"
+                 active === "details" ? "bg-gradient-to-tr from-pink-500 to-orange-400 text-white shadow-lg scale-105" : "bg-white hover:shadow-lg hover:scale-105"
                }`}>
             <div className="flex flex-col items-center ml-2">
               <MdNoteAdd size={20} />
@@ -164,41 +164,38 @@ console.log("Generated Template from Gemini:", data.generatedImage);
         </div>
 
         {/* Middle Panel */}
-        <div className="w-75 bg-white border-r-2 border-r-gray-200 p-4 overflow-auto">
+        <div className="w-[420px] bg-white border-r border-gray-200 p-5 overflow-y-auto">
           
-{active === "templates" && (
-  <div className="grid gap-4">
-    {template.map((temp, index) => (
-      <div
-        key={temp.id}
-        className={`relative cursor-pointer p-2 border rounded-lg shadow-md bg-white flex flex-col items-center gap-2 transform transition duration-300 hover:scale-105 hover:rotate-1 hover:shadow-2xl ${
-          selectedTemplate?.id === temp.id ? "ring-2 ring-[#0be545]" : ""
-        }`}
-        onClick={() => setSelectedTemplate({ ...temp, ...templates[index] })}
-      >
-        {/* ✅ Image */}
-        <img
-          src={temp.img}
-          alt={templates[index]?.name || `Template ${temp.id}`}
-          className="w-full h-40 object-cover rounded-md"
-          draggable={false}
-        />
-
-        {/* ✅ Name */}
-        <h5 className="font-semibold text-center">
-          {templates[index]?.name}
-        </h5>
-
-        {/* ✅ Check Mark for selected template */}
-        {selectedTemplate?.id === temp.id && (
-          <FaCheckCircle
-            className="absolute top-2 left-2 text-[#0be545] text-2xl drop-shadow-lg"
-          />
-        )}
-      </div>
-    ))}
-  </div>
-)}
+ {active === "templates" && (
+              <div className="grid gap-6 sm:grid-cols-2">
+                {templates.map((temp, index) => (
+                  <div
+                    key={temp.id}
+                    onClick={() => setSelectedTemplate(temp)}
+                    className={`relative group cursor-pointer rounded-2xl overflow-hidden shadow-md transition-all duration-300 ${
+                      selectedTemplate?.id === temp.id
+                        ? "ring-4 ring-pink-400 scale-105"
+                        : "hover:scale-105 hover:shadow-lg"
+                    }`}
+                  >
+                    <img
+                      src={template[index]?.img}
+                      alt={temp.name || `Template ${temp.id}`}
+                      className="w-full h-40 object-cover"
+                      draggable={false}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition">
+                      <h5 className="absolute bottom-3 left-3 text-white font-semibold text-sm">
+                        {temp.name}
+                      </h5>
+                    </div>
+                    {selectedTemplate?.id === temp.id && (
+                      <FaCheckCircle className="absolute top-3 left-3 text-green-400 text-2xl drop-shadow-lg" />
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
 
           {/* ✅ Product Gallery */}
           {active === "product" && (
@@ -220,18 +217,27 @@ console.log("Generated Template from Gemini:", data.generatedImage);
             </div>
           )}
 
-          {active === "details" && (
-            <div>
+           {active === "details" && (
+            <div className="space-y-3">
               <h3 className="text-lg font-semibold mb-3">Add Details</h3>
-              <input type="text" placeholder="Enter Name" className="w-full border rounded px-3 py-2 mb-2" />
-              <input type="text" placeholder="Enter Mobile Number" className="w-full border rounded px-3 py-2 mb-2" />
-              <input type="text" placeholder="Enter Address" className="w-full border rounded px-3 py-2 mb-2" />
-              <button 
-  onClick={generateTemplate}
-  className="mt-4 bg-[#FC6C87] text-white px-4 py-2 rounded-md shadow"
->
-  Generate Template
-</button>
+              <input
+                type="text"
+                placeholder="Enter Name"
+                className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-pink-400 outline-none"
+              />
+              <input
+                type="text"
+                placeholder="Enter Mobile Number"
+                className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-pink-400 outline-none"
+              />
+              <input
+                type="text"
+                placeholder="Enter Address"
+                className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-pink-400 outline-none"
+              />
+              <button className="w-full bg-gradient-to-r from-pink-500 to-orange-400 text-white py-2 rounded-lg shadow-md hover:opacity-90 transition">
+                Confirm
+              </button>
             </div>
           )}
 

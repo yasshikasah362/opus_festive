@@ -23,33 +23,26 @@ const handler = NextAuth({
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     }),
   ],
-  callbacks: {
-    async signIn({ user, account }) {
-      await connectToDatabase();
-      if (account.provider === "google") {
-        const existingUser = await User.findOne({ email: user.email });
-        if (!existingUser) {
-          await User.create({
-            name: user.name,
-            email: user.email,
-            image: user.image,
-          });
-        }
-      }
-      return true;
-    },
-    async session({ session }) {
-      const user = await User.findOne({ email: session.user.email });
-      session.user.id = user._id;
-      return session;
-    },
-  },
 
-  // ✅ Session ko 15 din ka karna
-  session: {
-    strategy: "jwt", // recommended with CredentialsProvider
-    maxAge: 15 * 24 * 60 * 60, // 15 din (seconds me)
+
+ callbacks: {
+  async jwt({ token, user, trigger, session }) {
+    if (trigger === "update" && session?.remember) {
+      token.remember = true;
+    }
+    return token;
   },
+  async session({ session, token }) {
+    session.user.id = token.sub;
+    session.remember = token.remember || false;
+    return session;
+  }
+},
+session: {
+  strategy: "jwt",
+  maxAge: 24 * 60 * 60, // default 1 din
+},
+
 
   secret: process.env.NEXTAUTH_SECRET,
 });

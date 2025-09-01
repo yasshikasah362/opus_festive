@@ -1,15 +1,22 @@
 "use client";
 
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { FiMail, FiLock } from "react-icons/fi";
+
 
 export default function Login() {
   const router = useRouter();
   const [form, setForm] = useState({ email: "", password: "", remember: false });
   const [loading, setLoading] = useState(false); // NEW: loading state
+
+  const { data: session } = useSession();
+useEffect(() => {
+  if (session) router.push("/dashboard");
+}, [session]);
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -20,6 +27,7 @@ export default function Login() {
         redirect: false,
         email: form.email,
         password: form.password,
+        remember: form.remember,
       });
 
       if (res?.ok || res?.status === 200) {
@@ -65,6 +73,8 @@ export default function Login() {
           onSubmit={handleSubmit}
           className="space-y-4"
           initial="hidden"
+          autoComplete="on"
+          method="post" 
           animate="show"
           variants={{
             hidden: {},
@@ -82,7 +92,9 @@ export default function Login() {
             <FiMail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
             <input
               type="email"
+              name="email"
               placeholder="Enter Email Address"
+              autoComplete="email" 
               value={form.email}
               onChange={(e) => setForm({ ...form, email: e.target.value })}
               className="w-full pl-10 pr-4 py-3 rounded-lg border transition focus:outline-none focus:ring-2"
@@ -103,6 +115,8 @@ export default function Login() {
             <input
               type="password"
               placeholder="Password"
+              name="password"
+              autoComplete="current-password" 
               value={form.password}
               onChange={(e) => setForm({ ...form, password: e.target.value })}
               className="w-full pl-10 pr-4 py-3 rounded-lg border transition focus:outline-none focus:ring-2"
