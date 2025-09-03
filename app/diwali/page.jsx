@@ -3,16 +3,24 @@ import React, { useState, useEffect } from "react";
 import { FaRegImages, FaHeading, FaTag, FaCheckCircle } from "react-icons/fa";
 import { MdNoteAdd, MdPhotoLibrary, MdGridView, MdSubtitles } from "react-icons/md";
 import { RiPriceTag3Fill } from "react-icons/ri";
-import EditModal from "./EditModal"; // import modal
+import EditModal from "./EditModal";
 
 const Diwali = () => {
   const [active, setActive] = useState("templates");
   const [templates, setTemplates] = useState([]);
   const [selectedTemplate, setSelectedTemplate] = useState(null);
   const [products, setProducts] = useState([]);
+  const [selectedProduct, setSelectedProduct] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalType, setModalType] = useState(null);
+  
+  // ✅ This state object tracks all saved edits for each prompt setting
   const [savedData, setSavedData] = useState({});
+
+  // State to track completion of each step
+  const [isTemplateSelected, setIsTemplateSelected] = useState(false);
+  const [isProductSelected, setIsProductSelected] = useState(false);
+  const [isDetailsConfirmed, setIsDetailsConfirmed] = useState(false);
 
   useEffect(() => {
     fetch("/diwali.json")
@@ -61,31 +69,36 @@ const Diwali = () => {
   return (
     <div className="flex flex-col h-screen font-[Inter]">
       {/* Navbar */}
-      <div className="h-16 bg-gradient-to-r from-pink-600 to-orange-500 text-white flex items-center justify-center text-lg font-semibold shadow-md">
-         Diwali Designer
-      </div>
+      <div className="h-16 bg-gradient-to-r from-pink-600 to-orange-500 text-white flex items-center justify-center text-lg font-semibold shadow-md"></div>
 
       {/* Main Content */}
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-1 overflow-hidden ">
         {/* Sidebar */}
-        <div className="w-28 flex flex-col py-4 bg-gray-100 border-r border-gray-200 shadow-xl space-y-5">
+        <div className="w-28 flex flex-col py-4 bg-gray-100 border-r border-gray-200 shadow-xl space-y-5 ">
           {[
-            { key: "templates", icon: <FaRegImages size={22} />, label: "Templates" },
-            { key: "product", icon: <MdGridView size={22} />, label: "Products" },
-            { key: "details", icon: <MdNoteAdd size={22} />, label: "Details" },
-            { key: "gallery", icon: <MdPhotoLibrary size={22} />, label: "Gallery" },
+            { key: "templates", icon: <FaRegImages size={22} />, label: "1. Select Templates", completed: isTemplateSelected },
+            { key: "product", icon: <MdGridView size={22} />, label: "2. Products", completed: isProductSelected },
+            { key: "details", icon: <MdNoteAdd size={22} />, label: "3. Add Details", completed: isDetailsConfirmed },
+            { key: "gallery", icon: <MdPhotoLibrary size={22} />, label: "4. Result", completed: false },
           ].map((item) => (
             <div
               key={item.key}
               onClick={() => setActive(item.key)}
-              className={`cursor-pointer flex flex-col items-center gap-1 p-3 rounded-xl transition-all duration-200 relative group ${
+              className={`cursor-pointer mr-2 flex flex-col items-center gap-1 p-3 rounded-xl transition-all duration-200 relative group ${
                 active === item.key
                   ? "bg-gradient-to-tr from-pink-500 to-orange-400 text-white shadow-lg scale-105"
                   : "bg-white hover:shadow-lg hover:scale-105 text-gray-700"
               }`}
             >
-              {item.icon}
-              <span className="text-xs font-medium text-center">{item.label}</span>
+              <div className="relative">
+                {item.icon}
+                {item.completed && (
+                  <FaCheckCircle className="absolute top-1 -left-6 text-green-400" />
+                )}
+              </div>
+              <span className="font-medium text-center">
+                {item.label}
+              </span>
               {active === item.key && (
                 <div className="absolute left-0 top-0 bottom-0 w-1 bg-pink-500 rounded-r-md"></div>
               )}
@@ -100,7 +113,10 @@ const Diwali = () => {
               {templates.map((temp, index) => (
                 <div
                   key={temp.id}
-                  onClick={() => setSelectedTemplate(temp)}
+                  onClick={() => {
+                    setSelectedTemplate(temp);
+                    setIsTemplateSelected(true);
+                  }}
                   className={`relative group cursor-pointer rounded-2xl overflow-hidden shadow-md transition-all duration-300 ${
                     selectedTemplate?.id === temp.id
                       ? "ring-4 ring-pink-400 scale-105"
@@ -131,7 +147,15 @@ const Diwali = () => {
               {products.map((prod, i) => (
                 <div
                   key={i}
-                  className="bg-white border rounded-lg shadow-md flex flex-col items-center p-3 hover:shadow-lg transition"
+                  onClick={() => {
+                    setSelectedProduct(prod);
+                    setIsProductSelected(true);
+                  }}
+                  className={`border-2 border-gray-300 rounded-2xl shadow-md flex flex-col items-center p-3 hover:shadow-lg transition cursor-pointer ${
+                    selectedProduct?.product_name === prod.product_name
+                      ? ""
+                      : ""
+                  }`}
                 >
                   <img
                     src={prod.imageUrl}
@@ -162,7 +186,10 @@ const Diwali = () => {
                 placeholder="Enter Address"
                 className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-pink-400 outline-none"
               />
-              <button className="w-full bg-gradient-to-r from-pink-500 to-orange-400 text-white py-2 rounded-lg shadow-md hover:opacity-90 transition">
+              <button
+                onClick={() => setIsDetailsConfirmed(true)}
+                className="w-full bg-gradient-to-r from-pink-500 to-orange-400 text-white py-2 rounded-lg shadow-md hover:opacity-90 transition"
+              >
                 Confirm
               </button>
             </div>
@@ -201,19 +228,25 @@ const Diwali = () => {
                     className="p-3 rounded-full bg-white shadow-md hover:scale-110 transition relative group"
                   >
                     {btn.icon}
+                    {/* ✅ Conditional indicator for saved changes */}
+                    {Object.keys(savedData).length > 0 && savedData[btn.type] && (
+                        <span className="absolute -top-1 -right-1 h-2.5 w-2.5 bg-green-500 rounded-full ring-2 ring-white"></span>
+                    )}
                     <span className="absolute left-12 top-1/2 -translate-y-1/2 bg-black text-white text-xs px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition">
                       {btn.label}
                     </span>
                   </button>
                 ))}
               </div>
-
               <EditModal
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
                 type={modalType}
                 options={getOptions()}
-                onSave={(val) => setSavedData({ ...savedData, [modalType]: val })}
+                onSave={(val) => {
+                  setSavedData({ ...savedData, [modalType]: val });
+                  setIsModalOpen(false); // Close modal after saving
+                }}
               />
             </div>
           ) : (
