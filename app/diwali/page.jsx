@@ -67,7 +67,7 @@ const Diwali = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen font-[Inter]">
+    <div className="flex flex-col h-screen ">
       {/* Navbar */}
       <div className="h-16 bg-gradient-to-r from-pink-600 to-orange-500 text-white flex items-center justify-center text-lg font-semibold shadow-md"></div>
 
@@ -77,7 +77,7 @@ const Diwali = () => {
         <div className="w-28 flex flex-col py-4 bg-gray-100 border-r border-gray-200 shadow-xl space-y-5 ">
           {[
             { key: "templates", icon: <FaRegImages size={22} />, label: "1. Select Templates", completed: isTemplateSelected },
-            { key: "product", icon: <MdGridView size={22} />, label: "2. Products", completed: isProductSelected },
+            { key: "product", icon: <MdGridView size={22} />, label: "2.Products", completed: isProductSelected },
             { key: "details", icon: <MdNoteAdd size={22} />, label: "3. Add Details", completed: isDetailsConfirmed },
             { key: "gallery", icon: <MdPhotoLibrary size={22} />, label: "4. Result", completed: false },
           ].map((item) => (
@@ -93,7 +93,7 @@ const Diwali = () => {
               <div className="relative">
                 {item.icon}
                 {item.completed && (
-                  <FaCheckCircle className="absolute top-1 -left-6 text-green-400" />
+                  <FaCheckCircle className="absolute -top-1 -left-8 text-green-400" />
                 )}
               </div>
               <span className="font-medium text-center">
@@ -143,30 +143,37 @@ const Diwali = () => {
           )}
 
           {active === "product" && (
-            <div className="grid grid-cols-2 gap-4">
-              {products.map((prod, i) => (
-                <div
-                  key={i}
-                  onClick={() => {
-                    setSelectedProduct(prod);
-                    setIsProductSelected(true);
-                  }}
-                  className={`border-2 border-gray-300 rounded-2xl shadow-md flex flex-col items-center p-3 hover:shadow-lg transition cursor-pointer ${
-                    selectedProduct?.product_name === prod.product_name
-                      ? ""
-                      : ""
-                  }`}
-                >
-                  <img
-                    src={prod.imageUrl}
-                    alt={prod.product_name}
-                    className="w-full h-24 object-contain mb-2"
-                  />
-                  <h4 className="font-medium text-sm text-gray-800">{prod.product_name}</h4>
-                </div>
-              ))}
-            </div>
+  <div className="grid grid-cols-2 gap-4">
+    {products.map((prod, i) => {
+      const isSelected = selectedProduct?.product_name === prod.product_name;
+      return (
+        <div
+          key={i}
+          onClick={() => {
+            setSelectedProduct(prod);
+            setIsProductSelected(true);
+          }}
+          className={`relative border-2 rounded-2xl shadow-md flex flex-col items-center p-3 hover:shadow-lg transition cursor-pointer 
+            ${isSelected ? "ring-4 ring-pink-200 border-pink-300 scale-105" : "border-gray-300"}
+          `}
+        >
+          {/* ✅ Green tick only when selected */}
+          {isSelected && (
+            <FaCheckCircle className="absolute top-2 left-2 text-green-500 text-lg drop-shadow-md" />
           )}
+
+          <img
+            src={prod.imageUrl}
+            alt={prod.product_name}
+            className="w-full h-24 object-contain mb-2"
+          />
+          <h4 className="font-medium text-sm text-gray-800">{prod.product_name}</h4>
+        </div>
+      );
+    })}
+  </div>
+)}
+
 
           {active === "details" && (
             <div className="space-y-3">
@@ -190,7 +197,7 @@ const Diwali = () => {
                 onClick={() => setIsDetailsConfirmed(true)}
                 className="w-full bg-gradient-to-r from-pink-500 to-orange-400 text-white py-2 rounded-lg shadow-md hover:opacity-90 transition"
               >
-                Confirm
+                Confirm and Generate
               </button>
             </div>
           )}
@@ -220,34 +227,44 @@ const Diwali = () => {
                   { icon: <FaTag size={18} />, type: "offer_tag", label: "Edit CTA" },
                 ].map((btn, i) => (
                   <button
-                    key={i}
-                    onClick={() => {
-                      setModalType(btn.type);
-                      setIsModalOpen(true);
-                    }}
-                    className="p-3 rounded-full bg-white shadow-md hover:scale-110 transition relative group"
-                  >
-                    {btn.icon}
-                    {/* ✅ Conditional indicator for saved changes */}
-                    {Object.keys(savedData).length > 0 && savedData[btn.type] && (
-                        <span className="absolute -top-1 -right-1 h-2.5 w-2.5 bg-green-500 rounded-full ring-2 ring-white"></span>
-                    )}
-                    <span className="absolute left-12 top-1/2 -translate-y-1/2 bg-black text-white text-xs px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition">
-                      {btn.label}
-                    </span>
-                  </button>
+  key={i}
+  onClick={() => {
+    setModalType(btn.type);
+    setIsModalOpen(true);
+  }}
+  className={`p-3 rounded-full shadow-md hover:scale-110 transition relative group 
+  ${savedData[selectedTemplate?.id]?.[btn.type] 
+    ? "bg-pink-600/70 text-white ring-2 ring-pink-600" 
+    : "bg-white text-black"}
+`}
+
+>
+  {btn.icon}
+ 
+  <span className="absolute left-12 top-1/2 -translate-y-1/2 bg-black text-white text-xs px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition">
+    {btn.label}
+  </span>
+</button>
+
                 ))}
               </div>
-              <EditModal
-                isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
-                type={modalType}
-                options={getOptions()}
-                onSave={(val) => {
-                  setSavedData({ ...savedData, [modalType]: val });
-                  setIsModalOpen(false); // Close modal after saving
-                }}
-              />
+             <EditModal
+  isOpen={isModalOpen}
+  onClose={() => setIsModalOpen(false)}
+  type={modalType}
+  options={getOptions()}
+  onSave={(val) => {
+    setSavedData((prev) => ({
+      ...prev,
+      [selectedTemplate.id]: {
+        ...(prev[selectedTemplate.id] || {}),
+        [modalType]: val,
+      },
+    }));
+    setIsModalOpen(false); // Close modal after saving
+  }}
+/>
+
             </div>
           ) : (
             <div className="relative bg-gray-200 shadow-inner w-[500px] h-[500px] rounded-xl flex items-center justify-center text-gray-500">
@@ -255,6 +272,8 @@ const Diwali = () => {
             </div>
           )}
         </div>
+
+
       </div>
     </div>
   );

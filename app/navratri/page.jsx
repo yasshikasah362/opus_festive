@@ -13,6 +13,8 @@ const Navratri = () => {
     const [templates, setTemplates] = useState([]);
     const [selectedTemplate, setSelectedTemplate] = useState(null);
     const [products, setProducts] = useState([]);
+    const [selectedProduct, setSelectedProduct] = useState(null);
+
     
     // New state variables for completion status
     const [isTemplateSelected, setIsTemplateSelected] = useState(false);
@@ -40,6 +42,8 @@ const Navratri = () => {
             .catch(err => console.error("Error loading products:", err));
     }, []);
 
+   
+
     // Update completion state based on user actions
     useEffect(() => {
         if (selectedTemplate) {
@@ -52,6 +56,7 @@ const Navratri = () => {
     const handleProductSelect = (product) => {
         // logic to select product
         setIsProductSelected(true);
+         setSelectedProduct(product);
         // setActive("details");
     };
 
@@ -124,7 +129,7 @@ const Navratri = () => {
                                 {item.icon}
                                 {/* Green tick, positioned absolutely */}
                                 {item.completed && (
-                                    <FaCheckCircle className="absolute top-1 -left-6 text-green-400" />
+                                    <FaCheckCircle className="absolute -top-1 -left-8 text-green-400" />
                                 )}
                             </div>
                             <span className="font-semibold text-sm text-center">
@@ -172,25 +177,35 @@ const Navratri = () => {
                         </div>
                     )}
                     {active === "product" && (
-                        <div>
-                            <div className="grid grid-cols-2 cursor-pointer gap-2">
-                                {products.map((prod, i) => (
-                                    <div
-                                        key={i}
-                                        onClick={() => handleProductSelect(prod)}
-                                        className="border-2 border-gray-200 rounded-2xl shadow-md flex flex-col items-center p-3 hover:shadow-lg transition"
-                                    >
-                                        <img
-                                            src={prod.imageUrl}
-                                            alt={prod.product_name}
-                                            className="w-full h-20 object-contain"
-                                        />
-                                        <h4 className="font-semibold">{prod.product_name}</h4>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    )}
+  
+    <div className="grid grid-cols-2 cursor-pointer gap-5">
+      {products.map((prod, i) => {
+        const isSelected = selectedProduct?.product_name === prod.product_name;
+        return (
+          <div
+            key={i}
+            onClick={() => handleProductSelect(prod)}
+            className={`relative border-2 rounded-2xl shadow-md flex flex-col items-center p-3 hover:shadow-lg transition 
+              ${isSelected ? "ring-4 ring-pink-200 border-pink-300 scale-105" : "border-gray-200"}
+            `}
+          >
+            {isSelected && (
+              <FaCheckCircle className="absolute top-2 left-2 text-green-500 text-lg drop-shadow-md" />
+            )}
+
+            <img
+              src={prod.imageUrl}
+              alt={prod.product_name}
+              className="w-full h-20 object-contain"
+            />
+            <h4 className="font-semibold">{prod.product_name}</h4>
+          </div>
+        );
+      })}
+    </div>
+  
+)}
+
                     {active === "details" && (
                         <div className="space-y-3">
                             <h3 className="text-lg font-semibold mb-3">Add Details</h3>
@@ -213,7 +228,7 @@ const Navratri = () => {
                                 onClick={handleConfirmDetails}
                                 className="w-full bg-gradient-to-r from-pink-500 to-orange-400 text-white py-2 rounded-lg shadow-md hover:opacity-90 transition"
                             >
-                                Confirm
+                                Confirm and Generate
                             </button>
                         </div>
                     )}
@@ -226,100 +241,114 @@ const Navratri = () => {
                 </div>
 
                 {/* Right Content */}
-                <div className="flex-1 flex items-center justify-center relative overflow-hidden">
-                    {selectedTemplate ? (
-                        <div className="relative bg-gray-200 shadow-lg w-[500px] h-[500px] rounded-xl flex items-center justify-center">
-                            <img
-                                src={navratri.find((d) => d.id === selectedTemplate.id)?.img}
-                                alt={selectedTemplate.name}
-                                className="w-full h-full object-contain rounded-md"
-                            />
+                {/* Right Content */}
+<div className="flex-1 flex items-center justify-center relative overflow-hidden">
+  {selectedTemplate ? (
+    <div className="relative bg-gray-200 shadow-lg w-[500px] h-[500px] rounded-xl flex items-center justify-center">
+      <img
+        src={navratri.find((d) => d.id === selectedTemplate.id)?.img}
+        alt={selectedTemplate.name}
+        className="w-full h-full object-contain rounded-md"
+      />
 
-                            {/* Vertical Icons with Indicators */}
-                            <div className="absolute top-4 left-4 flex flex-col space-y-3 bg-white/70 p-2 rounded-lg shadow">
-                                {/* Headline Button */}
-                                <button
-                                    onClick={() => {
-                                        setModalType("headline");
-                                        setIsModalOpen(true);
-                                    }}
-                                    className="p-2 hover:bg-gray-200 rounded-full relative group"
-                                >
-                                    <FaHeading size={20} />
-                                    {savedData.headline && (
-                                        <span className="absolute -top-1 -right-1 h-2.5 w-2.5 bg-green-500 rounded-full ring-2 ring-white"></span>
-                                    )}
-                                    <span className="absolute left-12 top-1/2 -translate-y-1/2 bg-black text-white text-xs px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition whitespace-nowrap">
-                                        Edit Headline
-                                    </span>
-                                </button>
-                                {/* Subtext Button */}
-                                <button
-                                    onClick={() => {
-                                        setModalType("subtext");
-                                        setIsModalOpen(true);
-                                    }}
-                                    className="p-2 hover:bg-gray-200 rounded-full relative group"
-                                >
-                                    <MdSubtitles size={20} />
-                                    {savedData.subtext && (
-                                        <span className="absolute -top-1 -right-1 h-2.5 w-2.5 bg-green-500 rounded-full ring-2 ring-white"></span>
-                                    )}
-                                    <span className="absolute left-12 top-1/2 -translate-y-1/2 bg-black text-white text-xs px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition whitespace-nowrap">
-                                        Edit Subtext
-                                    </span>
-                                </button>
-                                {/* Offer Button */}
-                                <button
-                                    onClick={() => {
-                                        setModalType("offer");
-                                        setIsModalOpen(true);
-                                    }}
-                                    className="p-2 hover:bg-gray-200 rounded-full relative group"
-                                >
-                                    <RiPriceTag3Fill size={20} />
-                                    {savedData.offer && (
-                                        <span className="absolute -top-1 -right-1 h-2.5 w-2.5 bg-green-500 rounded-full ring-2 ring-white"></span>
-                                    )}
-                                    <span className="absolute left-12 top-1/2 -translate-y-1/2 bg-black text-white text-xs px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition whitespace-nowrap">
-                                        Edit Offer
-                                    </span>
-                                </button>
-                                {/* Offer Tag Button (CTA) */}
-                                <button
-                                    onClick={() => {
-                                        setModalType("offer_tag");
-                                        setIsModalOpen(true);
-                                    }}
-                                    className="p-2 hover:bg-gray-200 rounded-full relative group"
-                                >
-                                    <FaTag size={20} />
-                                    {savedData.offer_tag && (
-                                        <span className="absolute -top-1 -right-1 h-2.5 w-2.5 bg-green-500 rounded-full ring-2 ring-white"></span>
-                                    )}
-                                    <span className="absolute left-12 top-1/2 -translate-y-1/2 bg-black text-white text-xs px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition whitespace-nowrap">
-                                        Edit CTA
-                                    </span>
-                                </button>
-                            </div>
+      {/* get saved data for current template */}
+      {(() => {
+        const currentSavedData = savedData[selectedTemplate?.id] || {};
+        return (
+          <div className="absolute top-4 left-4 flex flex-col space-y-3 bg-white/70 p-2 rounded-lg shadow">
+            {/* Headline */}
+            <button
+              onClick={() => {
+                setModalType("headline");
+                setIsModalOpen(true);
+              }}
+              className={`p-3 rounded-full shadow-md hover:scale-110 transition relative group
+                ${currentSavedData.headline ? "bg-pink-600/70 text-white ring-2 ring-pink-600" : "bg-white text-black"}
+              `}
+            >
+              <FaHeading size={18} />
+              <span className="absolute left-12 top-1/2 -translate-y-1/2 bg-black text-white text-xs px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition">
+                Edit Headline
+              </span>
+            </button>
 
-                            <EditModal
-                                isOpen={isModalOpen}
-                                onClose={() => setIsModalOpen(false)}
-                                type={modalType}
-                                options={getOptions()}
-                                onSave={(val) => {
-                                    setSavedData({ ...savedData, [modalType]: val });
-                                    setIsModalOpen(false); // Close modal on save
-                                }}
-                            />
-                        </div>
-                    ) : (
-                        <div className="relative bg-gray-200 shadow-lg w-[500px] h-[500px] rounded-xl flex items-center justify-center">
-                            No Template Selected
-                        </div>
-                    )}
-                </div>
+            {/* Subtext */}
+            <button
+              onClick={() => {
+                setModalType("subtext");
+                setIsModalOpen(true);
+              }}
+              className={`p-3 rounded-full shadow-md hover:scale-110 transition relative group
+                ${currentSavedData.subtext ? "bg-pink-600/70 text-white ring-2 ring-pink-600" : "bg-white text-black"}
+              `}
+            >
+              <MdSubtitles size={18} />
+              <span className="absolute left-12 top-1/2 -translate-y-1/2 bg-black text-white text-xs px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition">
+                Edit Subtext
+              </span>
+            </button>
+
+            {/* Offer */}
+            <button
+              onClick={() => {
+                setModalType("offer");
+                setIsModalOpen(true);
+              }}
+              className={`p-3 rounded-full shadow-md hover:scale-110 transition relative group
+                ${currentSavedData.offer ? "bg-pink-600/70 text-white ring-2 ring-pink-600" : "bg-white text-black"}
+              `}
+            >
+              <RiPriceTag3Fill size={18} />
+              <span className="absolute left-12 top-1/2 -translate-y-1/2 bg-black text-white text-xs px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition">
+                Edit Offer
+              </span>
+            </button>
+
+            {/* CTA */}
+            <button
+              onClick={() => {
+                setModalType("offer_tag");
+                setIsModalOpen(true);
+              }}
+              className={`p-3 rounded-full shadow-md hover:scale-110 transition relative group
+                ${currentSavedData.offer_tag ? "bg-pink-600/70 text-white ring-2 ring-pink-600" : "bg-white text-black"}
+              `}
+            >
+              <FaTag size={18} />
+              <span className="absolute left-12 top-1/2 -translate-y-1/2 bg-black text-white text-xs px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition">
+                Edit CTA
+              </span>
+            </button>
+          </div>
+        );
+      })()}
+
+      <EditModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        type={modalType}
+        options={getOptions()}
+        onSave={(val) => {
+          setSavedData((prev) => ({
+            ...prev,
+            [selectedTemplate.id]: {
+              ...(prev[selectedTemplate.id] || {}),
+              [modalType]: val,
+            },
+          }));
+          setIsModalOpen(false);
+        }}
+      />
+    </div>
+  ) : (
+    <div className="relative bg-gray-200 shadow-lg w-[500px] h-[500px] rounded-xl flex items-center justify-center">
+      No Template Selected
+    </div>
+  )}
+</div>
+
+
+
             </div>
         </div>
     );
