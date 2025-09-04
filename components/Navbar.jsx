@@ -53,8 +53,8 @@ export default function Navbar() {
               {/* Common Links for both logged in and logged out */}
               {[
                 // { label: "Create Templates", href: "/templates" },
-                // { label: "Features", href: "/features" },
                 { label: "Dashboard", href: "/dashboard" },
+                { label: "Admin", href: "/admin" },
               ].map((item) => (
                 <button
                   key={item.href}
