@@ -15,6 +15,8 @@ export default function Flyer() {
   const [imgLoaded, setImgLoaded] = useState(false);
   const [flyerForm, setFlyerForm] = useState(new FlyerForm());
  const [inputImageUrl, setInputImageUrl] = useState("");
+ const [selectedProduct, setSelectedProduct] = useState(null);
+ 
 
 
 const handleTemplateClick = (template) => {
@@ -55,13 +57,17 @@ useEffect(() => {
 
  // Product select pe sirf product ka imageUrl bhejna hai
 const handleProductSelect = (product) => {
+  // 1. FlyerForm update (jaise abhi kar rahe ho)
   setFlyerForm((prev) => {
     const updatedForm = { ...prev };
-    updatedForm.inputImageUrl = product.imageUrl; // class ka field update
-    console.log(" Saving inputImageUrl:", product.imageUrl);
+    updatedForm.inputImageUrl = product.imageUrl;
+    console.log("Saving inputImageUrl:", product.imageUrl);
     console.log("Updated FlyerForm:", updatedForm);
     return updatedForm;
   });
+
+  // 2. SelectedProducts array update (UI ke liye)
+  setSelectedProduct(product);
 };
 
 
@@ -81,6 +87,8 @@ const handleProductSelect = (product) => {
   setActiveTab={setActiveTab}
   selectedTemplate={selectedTemplate} 
   selectedProducts={selectedProducts}
+  setSelectedProducts={setSelectedProducts}
+  selectedProduct={selectedProduct}
   products={products}
   handleTemplateClick={handleTemplateClick} 
   handleProductSelect={handleProductSelect}   
