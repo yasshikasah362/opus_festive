@@ -6,7 +6,7 @@ export default function AdminUI() {
   const [formData, setFormData] = useState({
     backgroundName: "",
     category: "Sofa",
-    tags: "Small",
+    tags: [],
     defaultPosition: "",
     baseUrl: "",
   });
@@ -27,6 +27,13 @@ export default function AdminUI() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    // Ensure tags is always array (split by commas)
+    const payload = {
+      ...formData,
+      tags: Array.isArray(formData.tags)
+        ? formData.tags
+        : formData.tags.split(",").map((t) => t.trim()).filter(Boolean),
+    };
     if (editId) {
       await axios.put(`http://localhost:5000/api/items/${editId}`, formData);
       setEditId(null);
@@ -36,7 +43,7 @@ export default function AdminUI() {
     setFormData({
       backgroundName: "",
       category: "Sofa",
-      tags: "Small",
+      tags: [],
       defaultPosition: "",
       baseUrl: "",
     });
@@ -55,6 +62,13 @@ export default function AdminUI() {
     setIsModalOpen(true);
   };
 
+  useEffect(() => {
+  axios.get("http://localhost:5000/api/backgrounds")
+    .then(res => setItems(res.data))
+    .catch(err => console.log(err));
+}, []);
+
+
   return (
     <div className="p-6 max-w-4xl mx-auto">
       <h1 className="text-3xl font-bold mb-6">Admin UI</h1>
@@ -66,7 +80,7 @@ export default function AdminUI() {
           setFormData({
             backgroundName: "",
             category: "Sofa",
-            tags: "Small",
+            tags: [],
             defaultPosition: "",
             baseUrl: "",
           });
@@ -95,7 +109,9 @@ export default function AdminUI() {
             >
               <td className="border px-4 py-2">{item.backgroundName}</td>
               <td className="border px-4 py-2">{item.category}</td>
-              <td className="border px-4 py-2">{item.tags}</td>
+              <td className="border px-4 py-2">
+                {Array.isArray(item.tags) ? item.tags.join(", ") : item.tags}
+              </td>
               <td className="border px-4 py-2 text-center space-x-2">
                 <button
                   onClick={() => handleEdit(item)}
@@ -154,17 +170,23 @@ export default function AdminUI() {
               </div>
 
               <div className="mb-3">
-                <label className="block mb-1">Tags</label>
-                <select
-                  value={formData.tags}
-                  onChange={(e) =>
-                    setFormData({ ...formData, tags: e.target.value })
+                <label className="block mb-1">Tags (comma separated)</label>
+                <input
+                  type="text"
+                  value={
+                    Array.isArray(formData.tags)
+                      ? formData.tags.join(", ")
+                      : formData.tags
                   }
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      tags: e.target.value.split(",").map((t) => t.trim()),
+                    })
+                  }
+                  placeholder="e.g. Small, Large, Modern"
                   className="w-full border rounded-lg px-3 py-2"
-                >
-                  <option>Small</option>
-                  <option>Large</option>
-                </select>
+                />
               </div>
 
               <div className="mb-3">
