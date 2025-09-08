@@ -15,20 +15,27 @@ export default function AdminUI() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Fetch items from MongoDB
-  const fetchItems = async () => {
-    try {
-      const res = await axios.get("http://localhost:5000/api/items");
-      const normalized = res.data.map(item => ({
-        ...item,
-        tags: Array.isArray(item.tags)
-          ? item.tags
-          : item.tags?.split(",").map(t => t.trim()) || []
-      }));
-      setItems(normalized);
-    } catch (err) {
-      console.error("Error fetching items:", err);
-    }
-  };
+ const fetchItems = async () => {
+  try {
+    // Environment-specific API URL
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+    const res = await axios.get(`${apiUrl}/items`);
+
+    console.log("💡 Data from backend:", res.data); // frontend console me check karo
+
+    const normalized = res.data.map(item => ({
+      ...item,
+      tags: Array.isArray(item.tags)
+        ? item.tags
+        : item.tags?.split(",").map(t => t.trim()) || []
+    }));
+
+    setItems(normalized);
+  } catch (err) {
+    console.error("Error fetching items:", err);
+  }
+};
+
 
   useEffect(() => {
     fetchItems();
