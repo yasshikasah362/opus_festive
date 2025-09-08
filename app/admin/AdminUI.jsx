@@ -22,18 +22,25 @@ export default function AdminUI() {
 
   const fetchItems = async () => {
     const res = await axios.get("http://localhost:5000/api/items");
-    setItems(res.data);
+    const normalized = res.data.map(item => ({
+    ...item,
+    tags: Array.isArray(item.tags)
+      ? item.tags
+      : item.tags?.split(",").map(t => t.trim()) || []
+  }));
+  setItems(normalized);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     // Ensure tags is always array (split by commas)
-    const payload = {
-      ...formData,
-      tags: Array.isArray(formData.tags)
-        ? formData.tags
-        : formData.tags.split(",").map((t) => t.trim()).filter(Boolean),
-    };
+   const payload = {
+  ...formData,
+  tags: Array.isArray(formData.tags)
+    ? formData.tags
+    : formData.tags.split(",").map((t) => t.trim()).filter(Boolean),
+};
+
     if (editId) {
       await axios.put(`http://localhost:5000/api/items/${editId}`, formData);
       setEditId(null);
@@ -111,8 +118,9 @@ export default function AdminUI() {
               <td className="border px-4 py-2">{item.backgroundName}</td>
               <td className="border px-4 py-2">{item.category}</td>
               <td className="border px-4 py-2">
-                {Array.isArray(item.tags) ? item.tags.join(", ") : item.tags}
-              </td>
+  {Array.isArray(item.tags) ? item.tags.join(", ") : item.tags}
+</td>
+
               <td className="border px-4 py-2 text-center space-x-2">
                 <button
                   onClick={() => handleEdit(item)}
@@ -174,21 +182,18 @@ export default function AdminUI() {
               <div className="mb-3">
                 <label className="block mb-1">Tags (comma separated)</label>
                 <input
-                  type="text"
-                  value={
-                    Array.isArray(formData.tags)
-                      ? formData.tags.join(", ")
-                      : formData.tags
-                  }
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      tags: e.target.value.split(",").map((t) => t.trim()),
-                    })
-                  }
-                  placeholder="e.g. Small, Large, Modern"
-                  className="w-full border rounded-lg px-3 py-2"
-                />
+  type="text"
+  value={Array.isArray(formData.tags) ? formData.tags.join(", ") : formData.tags}
+  onChange={(e) =>
+    setFormData({
+      ...formData,
+      tags: e.target.value.split(",").map((t) => t.trim()), // convert to array
+    })
+  }
+  placeholder="e.g. Small, Large, Modern"
+  className="w-full border rounded-lg px-3 py-2"
+/>
+
               </div>
 
               <div className="mb-3">
