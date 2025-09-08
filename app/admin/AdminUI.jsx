@@ -15,13 +15,13 @@ export default function AdminUI() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Fetch items from MongoDB
- const fetchItems = async () => {
+const fetchItems = async () => {
   try {
-    // Environment-specific API URL
+    // environment variable se URL lelo, fallback localhost ke liye
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
     const res = await axios.get(`${apiUrl}/items`);
 
-    console.log("💡 Data from backend:", res.data); // frontend console me check karo
+    console.log("💡 Data from backend:", res.data);
 
     const normalized = res.data.map(item => ({
       ...item,
@@ -35,6 +35,7 @@ export default function AdminUI() {
     console.error("Error fetching items:", err);
   }
 };
+
 
 
   useEffect(() => {
