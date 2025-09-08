@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import {
   HomeIcon,
@@ -8,7 +8,6 @@ import {
   WrenchScrewdriverIcon,
   Cog6ToothIcon,
   QuestionMarkCircleIcon,
-  UserCircleIcon,
   FunnelIcon,
 } from "@heroicons/react/24/outline";
 
@@ -24,7 +23,25 @@ function MenuItem({ icon, label }) {
 export default function DashboardUI({ username }) {
   const [category, setCategory] = useState("All Category");
   const categories = ["All Category", "Flyer", "Menu", "Brochure", "Poster"];
-  const tabs = ["Upcoming Events", "My Images",  "My Uploads"];
+  const tabs = ["Upcoming Events", "My Images", "My Uploads"];
+
+  // ✅ Flyers from localStorage
+  const [flyers, setFlyers] = useState([]);
+  const [activeTab, setActiveTab] = useState("Upcoming Events");
+
+  useEffect(() => {
+    const stored = JSON.parse(localStorage.getItem("flyers") || "[]");
+    setFlyers(stored);
+
+    // live update jab FlyerSidebar me naye flyers add ho
+    const handleStorage = () => {
+      const updated = JSON.parse(localStorage.getItem("flyers") || "[]");
+      setFlyers(updated);
+    };
+    window.addEventListener("storage", handleStorage);
+
+    return () => window.removeEventListener("storage", handleStorage);
+  }, []);
 
   return (
     <div className="flex h-screen bg-gray-100">
@@ -46,10 +63,6 @@ export default function DashboardUI({ username }) {
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col">
-       
-
-
-
         {/* Search Section */}
         <div className="bg-[#FC6C87] p-6 text-center text-white mt-14">
           <h1 className="text-2xl font-bold mb-4">
@@ -81,31 +94,30 @@ export default function DashboardUI({ username }) {
           </div>
 
           {/* Tags */}
-         <div className="mt-4 flex justify-center gap-2 flex-wrap">
-      {[
-        { label: "Flyer", href: "/Flyer" },
-        { label: "Discount Post" },
-        { label: "Poster" },
-        { label: "Social Media Post" },
-        { label: "Festive Greetings" , href: "/Festives"},
-      ].map((tag, i) =>
-        tag.href ? (
-          <Link key={i} href={tag.href}>
-            <span className="bg-[#ffb0a4] px-3 py-1 rounded cursor-pointer text-sm">
-              {tag.label}
-            </span>
-          </Link>
-        ) : (
-          <span
-            key={i}
-            className="bg-[#ffb0a4] px-3 py-1 rounded cursor-pointer text-sm"
-          >
-            {tag.label}
-          </span>
-        )
-      )}
-    </div>
-
+          <div className="mt-4 flex justify-center gap-2 flex-wrap">
+            {[
+              { label: "Flyer", href: "/Flyer" },
+              { label: "Discount Post" },
+              { label: "Poster" },
+              { label: "Social Media Post" },
+              { label: "Festive Greetings", href: "/Festives" },
+            ].map((tag, i) =>
+              tag.href ? (
+                <Link key={i} href={tag.href}>
+                  <span className="bg-[#ffb0a4] px-3 py-1 rounded cursor-pointer text-sm">
+                    {tag.label}
+                  </span>
+                </Link>
+              ) : (
+                <span
+                  key={i}
+                  className="bg-[#ffb0a4] px-3 py-1 rounded cursor-pointer text-sm"
+                >
+                  {tag.label}
+                </span>
+              )
+            )}
+          </div>
         </div>
 
         {/* Tabs */}
@@ -113,8 +125,9 @@ export default function DashboardUI({ username }) {
           {tabs.map((tab, i) => (
             <button
               key={i}
-              className={`px-4 py-2 rounded ${
-                i === 0 ? "bg-[#FC6C87] text-white" : "bg-gray-100"
+              onClick={() => setActiveTab(tab)}
+              className={` cursor-pointer px-4 py-2 rounded ${
+                activeTab === tab ? "bg-[#FC6C87] text-white" : "bg-gray-100"
               }`}
             >
               {tab}
@@ -122,91 +135,90 @@ export default function DashboardUI({ username }) {
           ))}
         </div>
 
-        {/* Upcoming Events */}
-        <div className="p-6">
-  <div className="flex justify-between items-center mb-2">
-    <h2 className="text-lg font-semibold">Upcoming Events</h2>
-    <button className="bg-[#FC6C87] text-white px-4 py-1 rounded">
-      Edit Keywords
-    </button>
-  </div>
+        {/* Active Tab Content */}
+        <div className="p-6 flex-1 overflow-auto">
+          {activeTab === "Upcoming Events" && (
+            <>
+              <div className="flex justify-between items-center mb-2">
+                <h2 className="text-lg font-semibold">Upcoming Events</h2>
+                <button className="bg-[#FC6C87] text-white px-4 py-1 rounded">
+                  Edit Keywords
+                </button>
+              </div>
 
+              {/* Events grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-4 gap-6">
+                {/* Example cards */}
+                <Link href="/diwali">
+                  <div className="bg-white rounded-2xl shadow p-4 flex flex-col items-center text-center transform transition duration-300 hover:scale-105 hover:shadow-2xl hover:-rotate-1 cursor-pointer">
+                    <img
+                      src="/diwali.jpg"
+                      alt="Diwali"
+                      className="w-32 h-32 object-cover rounded-xl mb-3"
+                    />
+                    <h3 className="text-lg font-semibold">Diwali</h3>
+                    <p className="text-sm text-gray-500">20th October 2025</p>
+                  </div>
+                </Link>
+                <Link href="/gandhijayanti">
+                  <div className="bg-white rounded-2xl shadow p-4 flex flex-col items-center text-center transform transition duration-300 hover:scale-105 hover:shadow-2xl hover:rotate-1">
+                    <img
+                      src="/gandhijayanti.jpg"
+                      alt="Gandhi Jayanti"
+                      className="w-32 h-32 object-cover rounded-xl mb-3"
+                    />
+                    <h3 className="text-lg font-semibold">Gandhi Jayanti</h3>
+                    <p className="text-sm text-gray-500">2nd October 2025</p>
+                  </div>
+                </Link>
+                <Link href="/navratri">
+                  <div className="bg-white rounded-2xl shadow p-4 flex flex-col items-center text-center transform transition duration-300 hover:scale-105 hover:shadow-2xl hover:rotate-2">
+                    <img
+                      src="/navratri.jpg"
+                      alt="Navratri"
+                      className="w-32 h-32 object-cover rounded-xl mb-3"
+                    />
+                    <h3 className="text-lg font-semibold">Navratri</h3>
+                    <p className="text-sm text-gray-500">2nd October 2025</p>
+                  </div>
+                </Link>
+                <div className="bg-white rounded-2xl shadow p-4 flex flex-col items-center text-center transform transition duration-300 hover:scale-105 hover:shadow-2xl hover:-rotate-2">
+                  <img
+                    src="/govardhanpuja.jpg"
+                    alt="Govardhan Puja"
+                    className="w-32 h-32 object-cover rounded-xl mb-3"
+                  />
+                  <h3 className="text-lg font-semibold">Govardhan Puja</h3>
+                  <p className="text-sm text-gray-500">21st Oct 2025</p>
+                </div>
+              </div>
+            </>
+          )}
 
+          {activeTab === "My Images" && (
+            <>
+              {/* <h2 className=" text-lg font-semibold mb-4">My Images</h2> */}
+              {flyers.length === 0 ? (
+                <p className="text-gray-500">No flyers generated yet.</p>
+              ) : (
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  {flyers.map((flyer, idx) => (
+                    <img
+                      key={idx}
+                      src={flyer}
+                      alt={`Flyer ${idx}`}
+                      className="rounded-xl shadow-md"
+                    />
+                  ))}
+                </div>
+              )}
+            </>
+          )}
 
-  {/* Events grid */}
-  <div className="p-6">
-  
-
-  <div className="grid grid-cols-1 sm:grid-cols-4 gap-6">
-    {/* Diwali Card */}
-    <Link href="/diwali">
-  <div className="bg-white rounded-2xl shadow p-4 flex flex-col items-center text-center 
-                  transform transition duration-300 hover:scale-105 hover:shadow-2xl hover:-rotate-1 cursor-pointer">
-    <img
-      src="/diwali.jpg"
-      alt="Diwali"
-      className="w-32 h-32 object-cover rounded-xl mb-3"
-    />
-    <h3 className="text-lg font-semibold">Diwali</h3>
-    <p className="text-sm text-gray-500">20th October 2025</p>
-  </div>
-</Link>
-    {/* Gandhi Jayanti Card */}
-    <Link href="/gandhijayanti" className="block">
-  <div className="bg-white rounded-2xl shadow p-4 flex flex-col items-center text-center 
-                  transform transition duration-300 hover:scale-105 hover:shadow-2xl hover:rotate-1">
-    <img
-      src="/gandhijayanti.jpg"
-      alt="Gandhi Jayanti"
-      className="w-32 h-32 object-cover rounded-xl mb-3"
-    />
-    <h3 className="text-lg font-semibold">Gandhi Jayanti</h3>
-    <p className="text-sm text-gray-500">2nd October 2025</p>
-  </div>
-</Link>
-
-{/* navratri Card */}
-<Link href="/navratri" className="block">
-
-    <div className="bg-white rounded-2xl shadow p-4 flex flex-col items-center text-center 
-                    transform transition duration-300 hover:scale-105 hover:shadow-2xl hover:rotate-2">
-      <img
-        src="/navratri.jpg"
-        alt="Navratri"
-        className="w-32 h-32 object-cover rounded-xl mb-3"
-      />
-      <h3 className="text-lg font-semibold">Navratri</h3>
-      <p className="text-sm text-gray-500">2nd October 2025</p>
-    </div>
-</Link>
-
-    {/* Govardhan Puja Card */}
-    <div className="bg-white rounded-2xl shadow p-4 flex flex-col items-center text-center 
-                    transform transition duration-300 hover:scale-105 hover:shadow-2xl hover:-rotate-2">
-      <img
-        src="/govardhanpuja.jpg"
-        alt="Govardhan Puja"
-        className="w-32 h-32 object-cover rounded-xl mb-3"
-      />
-      <h3 className="text-lg font-semibold">Govardhan Puja</h3>
-      <p className="text-sm text-gray-500">21st Oct 2025</p>
-    </div>
-
-    
-
-   
-  </div>
-</div>
-
-
-
-
-
-
-</div>
-
-
-
+          {activeTab === "My Uploads" && (
+            <p className="text-gray-500">Uploads section coming soon...</p>
+          )}
+        </div>
       </div>
     </div>
   );

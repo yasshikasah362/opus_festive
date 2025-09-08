@@ -96,7 +96,7 @@ const DiwaliUI = ({username}) => {
                   <FaCheckCircle className="absolute -top-1 -left-8 text-green-400" />
                 )}
               </div>
-              <span className="font-medium text-center">
+              <span className="font-medium text-center text-sm">
                 {item.label}
               </span>
               {active === item.key && (

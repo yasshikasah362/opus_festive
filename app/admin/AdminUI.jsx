@@ -103,7 +103,7 @@ const fetchItems = async () => {
       </button>
 
       {/* Scrollable Table */}
-      <div className="border-2 border-gray-200 rounded-lg overflow-y-auto h-[500px] p-4">
+      <div className="border-2 border-gray-200 rounded-lg overflow-y-auto h-[500px] p-1">
         <table className="w-full border-collapse border border-gray-300 rounded-lg shadow">
           <thead className="bg-gray-100">
             <tr>
@@ -111,6 +111,8 @@ const fetchItems = async () => {
               <th className="border px-4 py-2 text-left">Category</th>
               <th className="border px-4 py-2 text-left">Tags</th>
               <th className="border px-4 py-2 text-center">Actions</th>
+               <th className="border px-4 py-2 text-center">Position</th>
+                <th className="border px-4 py-2 text-center">Rotation</th>
             </tr>
           </thead>
           <tbody>
@@ -119,10 +121,25 @@ const fetchItems = async () => {
                 <td className="border px-4 py-2">{item.backgroundName}</td>
                 <td className="border px-4 py-2">{item.category}</td>
                 <td className="border px-4 py-2">{item.tags.join(", ")}</td>
-                <td className="border px-4 py-2 text-center space-x-2">
-                  <button onClick={() => handleEdit(item)} className="px-3 py-1 bg-yellow-400 hover:bg-yellow-500 rounded shadow">Edit</button>
-                  <button onClick={() => handleDelete(item._id)} className="px-3 py-1 bg-red-500 hover:bg-red-600 text-white rounded shadow">Delete</button>
-                </td>
+
+                <td className="border px-4 py-2"></td>
+                <td className="border px-4 py-2"></td>
+                <td className="border px-4 py-2 text-center">
+  <div className="flex justify-center space-x-2">
+    <button
+      onClick={() => handleEdit(item)}
+      className="px-3 py-1 bg-yellow-400 hover:bg-yellow-500 rounded shadow"
+    >
+      Edit
+    </button>
+    <button
+      onClick={() => handleDelete(item._id)}
+      className="px-3 py-1 bg-red-500 hover:bg-red-600 text-white rounded shadow"
+    >
+      Delete
+    </button>
+  </div>
+</td>
               </tr>
             ))}
           </tbody>

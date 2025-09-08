@@ -13,20 +13,17 @@ export default function FlyerSidebar({
   selectedProducts,
   products,
   handleProductSelect,
-  selectedProduct
+  selectedProduct,
 }) {
   const [flyerForm] = useState(new FlyerForm());
-  const [generatedFlyerUrl, setGeneratedFlyerUrl] = useState(null);
   const [lastSelectedProduct, setLastSelectedProduct] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [flyerImage, setFlyerImage] = useState(null);
   const [name, setName] = useState("");
   const [number, setNumber] = useState("");
   const [address, setAddress] = useState("");
   const [generated, setGenerated] = useState(false);
   const [flyers, setFlyers] = useState([]);
 
-  // ✅ Proper tabStatus with correct keys
   const [tabStatus, setTabStatus] = useState({
     templates: false,
     products: false,
@@ -34,25 +31,20 @@ export default function FlyerSidebar({
     gallery: false,
   });
 
-  // ✅ Template select wrapper
   const handleTemplateClickLocal = (template) => {
     handleTemplateClick(template);
-    setTabStatus((prev) => ({ ...prev, templates: true })); // mark templates done
+    setTabStatus((prev) => ({ ...prev, templates: true }));
   };
 
-  // ✅ Product select wrapper
   const handleProductSelectLocal = (product) => {
-  handleProductSelect(product); 
-  setLastSelectedProduct(product);
-  setTabStatus((prev) => ({ ...prev, products: true }));
-};
-
+    handleProductSelect(product);
+    setLastSelectedProduct(product);
+    setTabStatus((prev) => ({ ...prev, products: true }));
+  };
 
   function generateFlyerPrompt(settings) {
     let prompt = "Generate a marketing flyer for the uploaded image with these settings -\n\n";
-
     prompt += `Aspect Ratio: ${settings.aspect_ratio}\n`;
-
     if (settings.text_section) {
       prompt += `Text Section:\n`;
       prompt += `- Headline: "${settings.text_section.headline}"\n`;
@@ -60,24 +52,20 @@ export default function FlyerSidebar({
       prompt += `- Position: ${settings.text_section.position}\n`;
       prompt += `- Subtext: "${settings.text_section.subtext}"\n\n`;
     }
-
     if (settings.offer_tag) {
       prompt += `Offer Tag:\n`;
       prompt += `- Text: "${settings.offer_tag.text}"\n`;
       prompt += `- Position: ${settings.offer_tag.position}\n`;
       prompt += `- Style: ${settings.offer_tag.style}\n\n`;
     }
-
     if (settings.call_to_action) {
       prompt += `Call to Action:\n`;
       prompt += `- Text: "${settings.call_to_action.text}"\n`;
       prompt += `- Style: ${settings.call_to_action.style}\n`;
       prompt += `- Location: ${settings.call_to_action.location}\n\n`;
     }
-
     if (settings.optional) prompt += `Optional: ${settings.optional}\n`;
     if (settings.mood) prompt += `Mood: ${settings.mood}\n`;
-
     return prompt.trim();
   }
 
@@ -135,10 +123,15 @@ export default function FlyerSidebar({
       const data = await res.json();
 
       if (data.flyerImage) {
-        setFlyerImage(data.flyerImage);
+        // ✅ Local state
         setFlyers((prev) => [...prev, data.flyerImage]);
         setGenerated(true);
-        setTabStatus((prev) => ({ ...prev, detail: true })); // ✅ mark detail as done
+        setTabStatus((prev) => ({ ...prev, detail: true }));
+
+        // ✅ Save to localStorage also (for DashboardUI)
+        const existing = JSON.parse(localStorage.getItem("flyers") || "[]");
+        const updated = [...existing, data.flyerImage];
+        localStorage.setItem("flyers", JSON.stringify(updated));
       } else {
         console.error("No flyerImage returned", data);
         alert("Failed to generate flyer. Try again.");
@@ -162,46 +155,46 @@ export default function FlyerSidebar({
     <>
       {/* Left Sidebar */}
       <aside className="w-24 flex flex-col py-4 bg-gray-200 border-r-2 border-r-gray-100 shadow-2xl pl-2">
-  {menuItems.map((item) => {
-    const isActive = activeTab === item.id;
-
-    return (
-      <button
-        key={item.id}
-        onClick={() => setActiveTab(item.id)}
-        className={`relative cursor-pointer flex flex-col items-center justify-center w-20 h-24 rounded-lg border-2 p-2 mb-2 transition-transform duration-200
-          ${isActive 
-            ? "bg-gradient-to-tr from-pink-500 to-orange-400 text-white shadow-lg scale-105 border-pink-400"
-            : "bg-white hover:shadow-lg hover:scale-105 text-gray-700 border-gray-400"
-          }`}
-      >
-        {item.id !== "gallery" && (
-          <span className="absolute top-2 left-1">
-            {tabStatus[item.id] ? (
-              <FaCheckCircle className="text-green-500 w-5 h-5" />
-            ) : (
-              <FaExclamationCircle className="text-yellow-500 w-5 h-5" />
-            )}
-          </span>
-        )}
-        <span className="text-3xl mb-2">{item.icon}</span>
-        <span className="text-xs text-center font-semibold">{item.label}</span>
-      </button>
-    );
-  })}
-</aside>
-
+        {menuItems.map((item) => {
+          const isActive = activeTab === item.id;
+          return (
+            <button
+              key={item.id}
+              onClick={() => setActiveTab(item.id)}
+              className={`relative cursor-pointer flex flex-col items-center justify-center w-20 h-24 rounded-lg border-2 p-2 mb-2 transition-transform duration-200
+                ${isActive 
+                  ? "bg-gradient-to-tr from-pink-500 to-orange-400 text-white shadow-lg scale-105 border-pink-400"
+                  : "bg-white hover:shadow-lg hover:scale-105 text-gray-700 border-gray-400"
+                }`}
+            >
+              {item.id !== "gallery" && (
+                <span className="absolute top-2 left-1">
+                  {tabStatus[item.id] ? (
+                    <FaCheckCircle className="text-green-500 w-5 h-5" />
+                  ) : (
+                    <FaExclamationCircle className="text-yellow-500 w-5 h-5" />
+                  )}
+                </span>
+              )}
+              <span className="text-3xl mb-2">{item.icon}</span>
+              <span className="text-xs text-center font-semibold">{item.label}</span>
+            </button>
+          );
+        })}
+      </aside>
 
       {/* Right Sidebar */}
       <aside className="w-96 p-4 h-160 flex flex-col overflow-y-auto bg-white border-r-2 border-r-gray-100">
-        {/* Templates Tab */}
+        {/* Templates */}
         {activeTab === "templates" && (
           <div className="grid grid-cols-2 gap-4">
             {Flyer_Prompts.map((template) => (
               <div
                 key={template.id}
-                className={`relative rounded-xl cursor-pointer border-2 border-gray-300 transition-transform duration-300 hover:scale-105 ${
-                  selectedTemplate?.id === template.id ? "ring-4 ring-pink-200 border-pink-300 scale-105" : "border-gray-300"
+                className={`relative rounded-xl cursor-pointer border-2 transition-transform duration-300 hover:scale-105 ${
+                  selectedTemplate?.id === template.id
+                    ? "ring-4 ring-pink-200 border-pink-300 scale-105"
+                    : "border-gray-300"
                 }`}
                 onClick={() => handleTemplateClickLocal(template)}
               >
@@ -209,9 +202,7 @@ export default function FlyerSidebar({
                   <FaCheckCircle className="absolute top-2 left-2 text-green-500 w-6 h-6" />
                 )}
                 <img
-                  src={`https://supoassets.s3.ap-south-1.amazonaws.com/public/GoogleStudio/assets/Templates/flyer/v2/${encodeURIComponent(
-                    template.name
-                  )}.webp`}
+                  src={`https://supoassets.s3.ap-south-1.amazonaws.com/public/GoogleStudio/assets/Templates/flyer/v2/${encodeURIComponent(template.name)}.webp`}
                   alt={template.name}
                   className="w-full h-40 object-cover rounded-md"
                   draggable={false}
@@ -221,41 +212,37 @@ export default function FlyerSidebar({
           </div>
         )}
 
-        {/* Products Tab */}
+        {/* Products */}
         {activeTab === "products" && (
-  <div className="grid grid-cols-2 gap-4">
-    {products.map((product) => {
-      const isSelected = selectedProduct?.product_name === product.product_name;
-
-      return (
-        <div
-          key={product.product_name}
-          onClick={() => handleProductSelectLocal(product)}
-          className={`relative cursor-pointer  border rounded-lg shadow-sm transition-transform duration-200 bg-white 
-            ${isSelected ? "ring-4 ring-pink-200 border-pink-300 scale-105" : "border-gray-300 hover:shadow-md hover:scale-105"}`}
-        >
-          {/* ✅ Green Tick */}
-          {isSelected && (
-            <FaCheckCircle className="absolute top-2 left-2 text-green-500 w-5 h-5" />
-          )}
-
-          <img
-            src={product.imageUrl}
-            alt={product.product_name}
-            className="w-full h-32 object-contain rounded-md"
-          />
-          <div className="mt-2 text-center">
-            <p className="text-sm font-semibold">{product.product_name}</p>
-            <p className="text-xs text-gray-500">{product.category_name}</p>
+          <div className="grid grid-cols-2 gap-4">
+            {products.map((product) => {
+              const isSelected = selectedProduct?.product_name === product.product_name;
+              return (
+                <div
+                  key={product.product_name}
+                  onClick={() => handleProductSelectLocal(product)}
+                  className={`relative cursor-pointer border rounded-lg shadow-sm transition-transform duration-200 bg-white 
+                    ${isSelected ? "ring-4 ring-pink-200 border-pink-300 scale-105" : "border-gray-300 hover:shadow-md hover:scale-105"}`}
+                >
+                  {isSelected && (
+                    <FaCheckCircle className="absolute top-2 left-2 text-green-500 w-5 h-5" />
+                  )}
+                  <img
+                    src={product.imageUrl}
+                    alt={product.product_name}
+                    className="w-full h-32 object-contain rounded-md"
+                  />
+                  <div className="mt-2 text-center">
+                    <p className="text-sm font-semibold">{product.product_name}</p>
+                    <p className="text-xs text-gray-500">{product.category_name}</p>
+                  </div>
+                </div>
+              );
+            })}
           </div>
-        </div>
-      );
-    })}
-  </div>
-)}
+        )}
 
-
-        {/* Add Detail Tab */}
+        {/* Details */}
         {activeTab === "detail" && (
           <div className="flex flex-col justify-center items-center h-full w-full">
             <div className="w-full space-y-3">
@@ -285,7 +272,7 @@ export default function FlyerSidebar({
             <button
               onClick={handleAddDetails}
               disabled={loading}
-              className={`mt-5 px-6 py-3 ${
+              className={` cursor-pointer mt-5 px-6 py-3 ${
                 loading
                   ? "bg-gray-400"
                   : generated
@@ -293,16 +280,12 @@ export default function FlyerSidebar({
                   : "bg-gradient-to-r from-pink-500 to-orange-400"
               } text-white font-semibold rounded-xl shadow-md hover:scale-105 transition-transform`}
             >
-              {loading
-                ? "Generating..."
-                : generated
-                ? "Generated"
-                : "Confirm & Generate Flyer"}
+              {loading ? "Generating..." : generated ? "Generated" : "Confirm & Generate Flyer"}
             </button>
           </div>
         )}
 
-        {/* Gallery Tab */}
+        {/* Gallery */}
         {activeTab === "gallery" && flyers.length > 0 && (
           <div className="p-4 grid grid-cols-2 sm:grid-cols-3 gap-4">
             {flyers.map((img, index) => (
