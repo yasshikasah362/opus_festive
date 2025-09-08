@@ -92,6 +92,7 @@ export default function AdminUI() {
       </button>
 
       {/* Table */}
+      <div className=" border-2 border-gray-200 rounded-lg overflow-y-auto h-[500px] p-4">
       <table className="w-full border-collapse border border-gray-300 rounded-lg overflow-hidden shadow">
         <thead className="bg-gray-100">
           <tr>
@@ -130,6 +131,7 @@ export default function AdminUI() {
           ))}
         </tbody>
       </table>
+      </div>
 
       {/* Modal */}
       {isModalOpen && (
