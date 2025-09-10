@@ -5,12 +5,14 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { FiMail, FiLock } from "react-icons/fi";
+import OpusLoginModal from "./OpusLoginModal";
 
 
 export default function Login() {
   const router = useRouter();
   const [form, setForm] = useState({ email: "", password: "", remember: false });
   const [loading, setLoading] = useState(false); // NEW: loading state
+  const [isOpusOpen, setIsOpusOpen] = useState(false);
 
   const { data: session } = useSession();
 useEffect(() => {
@@ -42,6 +44,28 @@ useEffect(() => {
       setLoading(false); // Stop loading
     }
   };
+  const handleOpusConfirm = async ({ username, password }) => {
+    setLoading(true);
+    try {
+      const res = await signIn("credentials", {
+        redirect: false,
+        email: username, // using username as email
+        password,
+      });
+
+      if (res?.ok || res?.status === 200) {
+        router.push("/dashboard");
+        setIsOpusOpen(false);
+      } else {
+        alert("Opus Login failed");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Something went wrong.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div
@@ -55,7 +79,7 @@ useEffect(() => {
       />
 
       <motion.div
-        className="w-full max-w-md bg-white/90 backdrop-blur-lg rounded-2xl shadow-2xl p-8 space-y-6 z-10"
+        className="mt-15 w-full max-w-md bg-white/90 backdrop-blur-lg rounded-2xl shadow-2xl p-8 space-y-6 z-10"
         initial={{ opacity: 0, y: 50, scale: 0.95 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.7, ease: "easeOut" }}
@@ -190,6 +214,22 @@ useEffect(() => {
           />
           Login with Google
         </motion.button>
+        {/* Opus Button */}
+      <motion.button
+        onClick={() => setIsOpusOpen(true)}
+        className="w-full flex items-center justify-center border border-gray-300 py-3 rounded-lg hover:shadow-lg transition cursor-pointer bg-white text-gray-700"
+        whileHover={{ scale: 1.03 }}
+        whileTap={{ scale: 0.96 }}
+      >
+        Login with Opus Account
+      </motion.button>
+          {/* Modal */}
+      <OpusLoginModal
+        isOpen={isOpusOpen}
+        onClose={() => setIsOpusOpen(false)}
+        onConfirm={handleOpusConfirm}
+        loading={loading}
+      />
 
         {/* Sign Up Redirect */}
         <div className="text-center text-sm mt-4 text-gray-600">

@@ -10,6 +10,7 @@ import {
   QuestionMarkCircleIcon,
   FunnelIcon,
 } from "@heroicons/react/24/outline";
+import { FaDownload, FaShareAlt,FaSearchPlus,FaSearchMinus, FaTrash, FaEye } from "react-icons/fa";
 
 function MenuItem({ icon, label }) {
   return (
@@ -23,11 +24,13 @@ function MenuItem({ icon, label }) {
 export default function DashboardUI({ username }) {
   const [category, setCategory] = useState("All Category");
   const categories = ["All Category", "Flyer", "Menu", "Brochure", "Poster"];
-  const tabs = ["Upcoming Events", "My Images", "My Uploads"];
+  const tabs = ["Upcoming Events", "My Creations", "My Uploads"];
 
   // ✅ Flyers from localStorage
   const [flyers, setFlyers] = useState([]);
   const [activeTab, setActiveTab] = useState("Upcoming Events");
+  const [selectedFlyer, setSelectedFlyer] = useState(null);
+  const [scale, setScale] = useState(1);
 
   useEffect(() => {
     const stored = JSON.parse(localStorage.getItem("flyers") || "[]");
@@ -42,6 +45,44 @@ export default function DashboardUI({ username }) {
 
     return () => window.removeEventListener("storage", handleStorage);
   }, []);
+
+  // ✅ Delete Function
+  const handleDelete = (idx) => {
+    const updated = flyers.filter((_, i) => i !== idx);
+    setFlyers(updated);
+    localStorage.setItem("flyers", JSON.stringify(updated));
+  };
+
+  // ✅ Share Function (Web Share API)
+ const handleShare = async (flyer) => {
+  try {
+    // Convert base64/URL into a blob
+    const response = await fetch(flyer);
+    const blob = await response.blob();
+
+    const file = new File([blob], "flyer.jpg", { type: blob.type });
+
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      await navigator.share({
+        title: "Check out my flyer",
+        text: "Here is my creation!",
+        files: [file],
+      });
+    } else {
+      // Fallback: copy link
+      navigator.clipboard.writeText(flyer);
+      alert("Flyer link copied to clipboard!");
+    }
+  } catch (error) {
+    console.error("Share failed:", error);
+    alert("Sharing failed. Try downloading instead.");
+  }
+};
+
+//Zoom Control
+const zoomIn = () => setScale((prev) => Math.min(prev + 0.25, 3));
+  const zoomOut = () => setScale((prev) => Math.max(prev - 0.25, 0.5));
+
 
   return (
     <div className="flex h-screen bg-gray-100">
@@ -195,20 +236,63 @@ export default function DashboardUI({ username }) {
             </>
           )}
 
-          {activeTab === "My Images" && (
+          {activeTab === "My Creations" && (
             <>
-              {/* <h2 className=" text-lg font-semibold mb-4">My Images</h2> */}
               {flyers.length === 0 ? (
                 <p className="text-gray-500">No flyers generated yet.</p>
               ) : (
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   {flyers.map((flyer, idx) => (
-                    <img
+                    <div
                       key={idx}
-                      src={flyer}
-                      alt={`Flyer ${idx}`}
-                      className="rounded-xl shadow-md"
-                    />
+                      className="relative group rounded-xl overflow-hidden shadow-md"
+                    >
+                      {/* Image */}
+                      <img
+                        src={flyer}
+                        alt={`Flyer ${idx}`}
+                        className="w-full h-80 object-cover rounded-xl transition-transform duration-300 group-hover:scale-105"
+                      />
+
+                      {/* Overlay on Hover */}
+                      <div className="absolute inset-0  bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        {/* Icons aligned to top-right */}
+                        <div className="absolute top-2 right-2 flex flex-col gap-2">
+                          {/* View */}
+                          <button
+                            onClick={() => setSelectedFlyer(flyer)}
+                            className="cursor-pointer p-2 bg-white rounded-full shadow hover:bg-gray-400"
+                          >
+                            <FaEye className="text-gray-800" />
+                          </button>
+
+                          {/* Download */}
+                          <a
+                            href={flyer}
+                            download={`flyer-${idx}.jpg`}
+                            className="p-2 bg-white rounded-full shadow hover:bg-gray-400"
+                          >
+                            <FaDownload className="text-gray-800" />
+                          </a>
+
+                          {/* Share */}
+                          <button
+                            onClick={() => handleShare(flyer)}
+                            className="cursor-pointer p-2 bg-white rounded-full shadow hover:bg-gray-400"
+                          >
+                            <FaShareAlt className="text-gray-800" />
+                          </button>
+
+                          {/* Delete */}
+                          <button
+                            onClick={() => handleDelete(idx)}
+                            className="cursor-pointer p-2 bg-white rounded-full shadow hover:bg-gray-400"
+                          >
+                            <FaTrash className="text-red-600" />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
                   ))}
                 </div>
               )}
@@ -220,6 +304,47 @@ export default function DashboardUI({ username }) {
           )}
         </div>
       </div>
+
+      {/* ✅ Modal for Viewing Image */}
+     {selectedFlyer && (
+        <div className="fixed inset-0  bg-opacity-70 flex items-center justify-center z-50">
+          <div className="relative bg-white p-4 rounded-xl max-w-5xl max-h-[90vh] flex flex-col items-center">
+            {/* Close button */}
+            <button
+              onClick={() => setSelectedFlyer(null)}
+              className="absolute top-2 right-2 text-black bg-gray-200 p-2 rounded-full"
+            >
+              ✖
+            </button>
+
+            {/* Zoom Controls */}
+            <div className="flex gap-3 mb-2">
+              <button
+                onClick={zoomIn}
+                className="p-2 bg-gray-200 rounded-full hover:bg-gray-300"
+              >
+                <FaSearchPlus />
+              </button>
+              <button
+                onClick={zoomOut}
+                className="p-2 bg-gray-200 rounded-full hover:bg-gray-300"
+              >
+                <FaSearchMinus />
+              </button>
+            </div>
+
+            {/* Zoomable Image */}
+            <div className="overflow-auto max-h-[75vh] max-w-full">
+              <img
+                src={selectedFlyer}
+                alt="Selected Flyer"
+                style={{ transform: `scale(${scale})`, transformOrigin: "center" }}
+                className="transition-transform duration-300 rounded-xl mx-auto"
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
