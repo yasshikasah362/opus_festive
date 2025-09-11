@@ -1,5 +1,5 @@
 "use client";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useEffect } from "react";
 import { FaEdit } from "react-icons/fa";
 import FlyerModal from "./FlyerModal";
 import {
@@ -76,8 +76,14 @@ export default function FlyerCanvas({
   const ps = flyerForm?.currFlyer?.prompt_settings; // shortcut
 
   return (
-    <main className="flex-1 flex h-160 items-center justify-center overflow-hidden relative">
-      <div className="relative bg-gray-200 shadow-lg w-200 h-120 rounded-xl flex items-center justify-center">
+    <main className="flex-1 flex items-center justify-center overflow-hidden relative p-2">
+      <div
+        className="
+          relative bg-gray-200 shadow-lg rounded-xl flex items-center justify-center
+          w-full h-[60vh] sm:h-[70vh] md:h-[80vh] lg:h-[90vh] 
+          max-w-[95%] sm:max-w-[90%] md:max-w-[80%] lg:max-w-[70%]
+        "
+      >
         {selectedTemplate ? (
           <>
             {/* Template Image */}
@@ -93,15 +99,15 @@ export default function FlyerCanvas({
             />
 
             {/* ✅ Render direct from prompt_settings */}
-            <p className="absolute top-[10%] left-1/2 transform -translate-x-1/2 text-2xl font-bold">
+            <p className="absolute top-[10%] left-1/2 -translate-x-1/2 text-base sm:text-lg md:text-xl lg:text-2xl font-bold text-center px-2">
               {ps?.text_section?.headline || "Default Heading"}
             </p>
 
-            <p className="absolute top-[20%] left-1/2 transform -translate-x-1/2 text-lg">
+            <p className="absolute top-[20%] left-1/2 -translate-x-1/2 text-sm sm:text-base md:text-lg text-center px-2">
               {ps?.text_section?.subtext || "Default Subheading"}
             </p>
 
-            <p className="absolute bottom-[20%] left-1/2 transform -translate-x-1/2 text-sm">
+            <p className="absolute bottom-[15%] left-1/2 -translate-x-1/2 text-xs sm:text-sm md:text-base text-center px-2">
               {ps?.call_to_action?.text || "Call to Action"}
             </p>
 
@@ -120,10 +126,10 @@ export default function FlyerCanvas({
                         top: `${pos.top}px`,
                         transform: "translate(-50%, -50%)",
                       }}
-                      className="bg-[#FC6C87] text-white p-1 rounded-full shadow-md cursor-pointer"
+                      className="bg-[#FC6C87] text-white p-1 sm:p-2 rounded-full shadow-md cursor-pointer"
                       onClick={() => setActiveEdit(key)}
                     >
-                      <FaEdit className="w-3 h-3" />
+                      <FaEdit className="w-3 h-3 sm:w-4 sm:h-4" />
                     </button>
                   );
                 }
@@ -140,7 +146,7 @@ export default function FlyerCanvas({
           </>
         ) : (
           <div className="flex items-center justify-center w-full h-full">
-            <span className="text-gray-400 text-lg font-semibold">
+            <span className="text-gray-400 text-base sm:text-lg font-semibold text-center">
               No Template Selected
             </span>
           </div>

@@ -17,14 +17,14 @@ export default function EditModal({
   children,
 }: EditModalProps) {
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-      <div className="bg-white p-6 rounded shadow-lg w-[600px]">
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 px-4">
+      <div className="bg-white p-4 sm:p-6 rounded-lg shadow-lg w-full max-w-xs sm:max-w-md md:max-w-lg lg:max-w-2xl">
         {/* Header */}
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-semibold">{title}</h2>
+          <h2 className="text-lg sm:text-xl font-semibold">{title}</h2>
           <button
             onClick={onClose}
-            className="text-gray-500 hover:text-gray-700"
+            className="text-gray-500 hover:text-gray-700 text-lg"
           >
             ✕
           </button>
@@ -32,7 +32,7 @@ export default function EditModal({
 
         {/* Dropdown */}
         <select
-          className="border px-3 py-2 rounded w-full mb-4"
+          className="border px-3 py-2 rounded w-full mb-4 text-sm sm:text-base"
           onChange={(e) => onSelect(e.target.value)}
         >
           <option value="">Select Option</option>
@@ -44,7 +44,7 @@ export default function EditModal({
         </select>
 
         {/* Content (Template + Editable) */}
-        <div className="space-y-4">{children}</div>
+        <div className="space-y-4 text-sm sm:text-base">{children}</div>
       </div>
     </div>
   );

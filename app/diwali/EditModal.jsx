@@ -44,15 +44,17 @@ const EditModal = ({ isOpen, onClose, type, onSave }) => {
   const handleSelect = (value) => {
     setFormData((prev) => ({
       ...prev,
-      [type]: value, // ✅ type ke hisaab se field update hoga
+      [type]: value, // ✅ Update dynamically based on type
     }));
   };
-console.log("selected data,",formData);
+
+  console.log("selected data,", formData);
+
   return (
-    <div className="absolute inset-0 flex items-center justify-center z-50">
+    <div className="fixed inset-0 flex items-center justify-center z-50 px-4 sm:px-6">
       {/* Overlay */}
       <div
-        className={`absolute inset-0 bg-black/40 rounded-xl transition-opacity duration-300 ${
+        className={`absolute inset-0 bg-black/40 transition-opacity duration-300 ${
           isOpen ? "opacity-100" : "opacity-0"
         }`}
         onClick={onClose}
@@ -60,11 +62,12 @@ console.log("selected data,",formData);
 
       {/* Modal */}
       <div
-        className={`relative bg-white rounded-2xl shadow-2xl p-6 w-[90%] h-[90%] transform transition-all duration-300 overflow-y-auto ${
-          isOpen ? "scale-100 opacity-100" : "scale-90 opacity-0"
-        }`}
+        className={`relative bg-white rounded-2xl shadow-2xl p-5 sm:p-6 w-full max-w-lg sm:max-w-xl lg:max-w-2xl transform transition-all duration-300 overflow-y-auto max-h-[90vh]
+          ${isOpen ? "scale-100 opacity-100" : "scale-95 opacity-0"}
+        `}
       >
-        <h2 className="text-xl font-bold mb-4 text-gray-800 pb-2">
+        {/* Header */}
+        <h2 className="text-lg sm:text-xl font-bold mb-4 text-gray-800">
           Edit{" "}
           {type === "headline"
             ? "Heading"
@@ -83,7 +86,7 @@ console.log("selected data,",formData);
             <div
               key={index}
               onClick={() => handleSelect(opt)}
-              className={`px-4 py-2 border rounded-lg cursor-pointer transition 
+              className={`px-4 py-2 text-sm sm:text-base border rounded-lg cursor-pointer transition 
                 ${
                   formData[type] === opt
                     ? "bg-pink-100 border-pink-500 text-pink-600 font-medium"
@@ -96,19 +99,19 @@ console.log("selected data,",formData);
         </div>
 
         {/* Actions */}
-        <div className="flex justify-end gap-3">
+        <div className="flex justify-end gap-2 sm:gap-3">
           <button
             onClick={onClose}
-            className="px-4 py-2 rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300 transition"
+            className="px-3 py-2 sm:px-4 sm:py-2 rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300 transition text-sm sm:text-base"
           >
             Cancel
           </button>
           <button
             onClick={() => {
-              onSave(formData); // ✅ pura formData bhejna
+              onSave(formData);
               onClose();
             }}
-            className="px-4 py-2 rounded-lg bg-[#FC6C87] text-white hover:bg-pink-600 transition shadow-md"
+            className="px-3 py-2 sm:px-4 sm:py-2 rounded-lg bg-[#FC6C87] text-white hover:bg-pink-600 transition shadow-md text-sm sm:text-base"
           >
             Confirm
           </button>

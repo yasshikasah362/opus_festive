@@ -1,6 +1,7 @@
 import { authOptions } from "@/lib/authOptions";
 import { getServerSession } from "next-auth";
-import DashboardUI from "./DashboardUI";
+import { redirect } from "next/navigation";
+import DashboardUI from './DashboardUI';
 
 export default async function Dashboard() {
   const session = await getServerSession(authOptions);
@@ -27,5 +28,6 @@ export default async function Dashboard() {
     );
   }
 
+  // ✅ Agar user authenticated hai to direct redirect
   return <DashboardUI username={session.user.name} />;
 }

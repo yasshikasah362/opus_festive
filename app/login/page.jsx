@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { FiMail, FiLock } from "react-icons/fi";
 import OpusLoginModal from "./OpusLoginModal";
+import { signin } from "../api/auth/auth";
 
 
 export default function Login() {
@@ -44,24 +45,25 @@ useEffect(() => {
       setLoading(false); // Stop loading
     }
   };
+
+  // ✅ Opus Login Handler
   const handleOpusConfirm = async ({ username, password }) => {
     setLoading(true);
     try {
-      const res = await signIn("credentials", {
-        redirect: false,
-        email: username, // using username as email
-        password,
-      });
+      const res = await signin(username, password);
 
-      if (res?.ok || res?.status === 200) {
-        router.push("/dashboard");
+      if (res.data && res.data.status === 200) {
+        // store token/session if needed
+        localStorage.setItem("opusToken", res.data.token ?? "");
+        console.log('token generated',res.data.token); 
         setIsOpusOpen(false);
+        router.push("/dashboard");
       } else {
-        alert("Opus Login failed");
+        alert(res.data?.message || "Opus Login failed");
       }
     } catch (err) {
       console.error(err);
-      alert("Something went wrong.");
+      alert("Something went wrong. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -214,7 +216,7 @@ useEffect(() => {
           />
           Login with Google
         </motion.button>
-        {/* Opus Button */}
+         {/* Opus Button */}
       <motion.button
         onClick={() => setIsOpusOpen(true)}
         className="w-full flex items-center justify-center border border-gray-300 py-3 rounded-lg hover:shadow-lg transition cursor-pointer bg-white text-gray-700"
