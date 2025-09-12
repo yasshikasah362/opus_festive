@@ -1,12 +1,25 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { FiLock } from "react-icons/fi";
 import { FaInstagram, FaFacebookF } from "react-icons/fa";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";  
+
+
+
 
 export default function OpusLoginModal({ isOpen, onClose, onConfirm, loading }) {
   const [form, setForm] = useState({ username: "", password: "" });
+
+  const { data: session } = useSession();
+  const router = useRouter(); 
+ useEffect(() => {
+   if (session) router.push("/dashboard/ui");
+ }, [session]);
+
+
 
   if (!isOpen) return null;
 
@@ -49,10 +62,11 @@ export default function OpusLoginModal({ isOpen, onClose, onConfirm, loading }) 
 
         {/* Form */}
         <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            onConfirm(form);
-          }}
+          onSubmit={async (e) => {
+    e.preventDefault();
+    // 👉 just send the form values to parent, don't call signin here
+    onConfirm(form);
+  }}
           className="mt-6 space-y-4"
         >
           {/* Username */}

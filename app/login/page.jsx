@@ -47,7 +47,7 @@ useEffect(() => {
   };
 
   // ✅ Opus Login Handler
-  const handleOpusConfirm = async ({ username, password }) => {
+  const handleOpusConfirm = async ({ username, password, }) => {
     setLoading(true);
     try {
       const res = await signin(username, password);
@@ -55,9 +55,10 @@ useEffect(() => {
       if (res.data && res.data.status === 200) {
         // store token/session if needed
         localStorage.setItem("opusToken", res.data.token ?? "");
+        window.dispatchEvent(new Event("opus-login"));
         console.log('token generated',res.data.token); 
         setIsOpusOpen(false);
-        router.push("/dashboard");
+        router.push("/dashboard/ui");
       } else {
         alert(res.data?.message || "Opus Login failed");
       }

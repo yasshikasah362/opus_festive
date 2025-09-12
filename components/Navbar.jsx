@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FaUserCircle } from "react-icons/fa";
 import { HiMenu, HiX } from "react-icons/hi"; // hamburger + close icons
 
@@ -12,15 +12,44 @@ export default function Navbar() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [opusToken, setOpusToken] = useState(null);
+
+  // 👇 token initialize + events listen
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const token = localStorage.getItem("opusToken");
+      setOpusToken(token);
+
+      // listen for login/logout events
+      const handleLogin = () => setOpusToken(localStorage.getItem("opusToken"));
+      const handleLogout = () => setOpusToken(null);
+
+      window.addEventListener("opus-login", handleLogin);
+      window.addEventListener("opus-logout", handleLogout);
+
+      return () => {
+        window.removeEventListener("opus-login", handleLogin);
+        window.removeEventListener("opus-logout", handleLogout);
+      };
+    }
+  }, []);
 
   const handleNavigation = (path) => {
     setLoading(true);
     setTimeout(() => {
       router.push(path);
       setLoading(false);
-      setIsMenuOpen(false); // close menu after navigation
+      setIsMenuOpen(false);
     }, 500);
   };
+
+  const handleOpusLogout = () => {
+    localStorage.removeItem("opusToken");
+    window.dispatchEvent(new Event("opus-logout")); // 👈 notify Navbar
+    router.push("/login");
+  };
+
+  const isLoggedIn = session || opusToken;
 
   return (
     <>
@@ -72,14 +101,14 @@ export default function Navbar() {
 
             {/* Desktop Right Side */}
             <div className="hidden md:flex items-center space-x-4">
-              {session ? (
+              {isLoggedIn ? (
                 <>
                   <FaUserCircle className="text-2xl text-gray-700" />
                   <span className="font-medium text-gray-700">
-                    {session.user?.name || "User"}
+                    {session?.user?.name || "Opus User"}
                   </span>
                   <button
-                    onClick={() => signOut()}
+                    onClick={() => (session ? signOut() : handleOpusLogout())}
                     className="px-5 py-2 rounded-full transition-all duration-300 shadow cursor-pointer bg-[var(--primary-color)] text-[var(--button-bg)] hover:shadow-lg hover:scale-105"
                   >
                     Logout
@@ -132,16 +161,16 @@ export default function Navbar() {
                 </button>
               ))}
 
-              {session ? (
+              {isLoggedIn ? (
                 <>
                   <div className="flex items-center space-x-2">
                     <FaUserCircle className="text-2xl text-gray-700" />
                     <span className="font-medium text-gray-700">
-                      {session.user?.name || "User"}
+                      {session?.user?.name || "Opus User"}
                     </span>
                   </div>
                   <button
-                    onClick={() => signOut()}
+                    onClick={() => (session ? signOut() : handleOpusLogout())}
                     className="px-5 py-2 rounded-full bg-[var(--primary-color)] text-[var(--button-bg)] shadow hover:shadow-lg hover:scale-105"
                   >
                     Logout
