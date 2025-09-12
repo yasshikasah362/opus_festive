@@ -223,6 +223,11 @@ useEffect(() => {
         whileHover={{ scale: 1.03 }}
         whileTap={{ scale: 0.96 }}
       >
+         <img
+            src="https://supoassets.s3.ap-south-1.amazonaws.com/public/assets/icon/favicon.png"
+            alt="Opus"
+            className="w-6 h-6 mr-2"
+          />
         Login with Opus Account
       </motion.button>
           {/* Modal */}
