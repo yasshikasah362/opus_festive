@@ -5,7 +5,7 @@ import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { FaUserCircle } from "react-icons/fa";
-import { HiMenu, HiX } from "react-icons/hi"; // hamburger + close icons
+import { HiMenu, HiX } from "react-icons/hi"; 
 
 export default function Navbar() {
   const { data: session } = useSession();
@@ -45,7 +45,7 @@ export default function Navbar() {
 
   const handleOpusLogout = () => {
     localStorage.removeItem("opusToken");
-    window.dispatchEvent(new Event("opus-logout")); // 👈 notify Navbar
+    window.dispatchEvent(new Event("opus-logout")); 
     router.push("/login");
   };
 

@@ -9,7 +9,7 @@ export const signin = (username, password, isGetSessionData = false) => {
     {
       username,
       password,
-       deviceId: uuidv4(),
+      deviceId: uuidv4(),
       isGetSessionData,
     },
     {

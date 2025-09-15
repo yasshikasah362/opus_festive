@@ -53,7 +53,7 @@ useEffect(() => {
       const res = await signin(username, password);
 
       if (res.data && res.data.status === 200) {
-        // store token/session if needed
+      
         localStorage.setItem("opusToken", res.data.token ?? "");
         window.dispatchEvent(new Event("opus-login"));
         console.log('token generated',res.data.token); 
