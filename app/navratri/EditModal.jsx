@@ -87,7 +87,7 @@ console.log("selected data,",formData);
         </div>
 
         {/* Body */}
-        <div className="p-4 space-y-3 overflow-y-auto max-h-[60vh] sm:max-h-[70vh]">
+        <div className="p-4 space-y-3 overflow-y-auto max-h-[60vh] sm:max-h-[50vh]">
           {options?.map((opt, index) => (
             <div
               key={index}

@@ -8,22 +8,59 @@ import { FiMail, FiLock } from "react-icons/fi";
 import OpusLoginModal from "./OpusLoginModal";
 import { signin } from "../api/auth/auth";
 
-
 export default function Login() {
   const router = useRouter();
   const [form, setForm] = useState({ email: "", password: "", remember: false });
-  const [loading, setLoading] = useState(false); // NEW: loading state
+  const [loading, setLoading] = useState(false);
   const [isOpusOpen, setIsOpusOpen] = useState(false);
 
+  const [savedUsers, setSavedUsers] = useState([]);
+  const [suggestions, setSuggestions] = useState([]);
+  
   const { data: session } = useSession();
-useEffect(() => {
-  if (session) router.push("/dashboard");
-}, [session]);
 
+  // Redirect if logged in
+  useEffect(() => {
+    if (session) router.push("/dashboard");
+  }, [session]);
 
+  // Load saved users for autofill
+  useEffect(() => {
+    const saved = JSON.parse(localStorage.getItem("savedUsers") || "[]");
+    setSavedUsers(saved);
+
+    // Autofill if any remembered user
+    const remembered = saved.find(u => u.remember);
+    if (remembered) {
+      setForm({ email: remembered.email, password: remembered.password, remember: true });
+    }
+  }, []);
+
+  // Handle email input change + suggestions
+  const handleEmailChange = (e) => {
+    const value = e.target.value;
+    setForm({ ...form, email: value });
+
+    if (!value) {
+      setSuggestions([]);
+      return;
+    }
+
+    const filtered = savedUsers.filter(user =>
+      user.email.toLowerCase().startsWith(value.toLowerCase())
+    );
+    setSuggestions(filtered);
+  };
+
+  const handleSelectSuggestion = (user) => {
+    setForm({ email: user.email, password: user.password, remember: true });
+    setSuggestions([]);
+  };
+
+  // Handle form submit
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true); // Start loading
+    setLoading(true);
 
     try {
       const res = await signIn("credentials", {
@@ -34,6 +71,12 @@ useEffect(() => {
       });
 
       if (res?.ok || res?.status === 200) {
+        // Save user if "Remember Me" checked
+        if (form.remember) {
+          const newSaved = savedUsers.filter(u => u.email !== form.email);
+          newSaved.push({ ...form });
+          localStorage.setItem("savedUsers", JSON.stringify(newSaved));
+        }
         router.push("/dashboard");
       } else {
         alert("Login failed");
@@ -42,21 +85,19 @@ useEffect(() => {
       console.error(error);
       alert("Something went wrong. Please try again.");
     } finally {
-      setLoading(false); // Stop loading
+      setLoading(false);
     }
   };
 
-  // ✅ Opus Login Handler
-  const handleOpusConfirm = async ({ username, password, }) => {
+  // Opus login handler
+  const handleOpusConfirm = async ({ username, password }) => {
     setLoading(true);
     try {
       const res = await signin(username, password);
 
       if (res.data && res.data.status === 200) {
-      
         localStorage.setItem("opusToken", res.data.token ?? "");
         window.dispatchEvent(new Event("opus-login"));
-        console.log('token generated',res.data.token); 
         setIsOpusOpen(false);
         router.push("/dashboard/ui");
       } else {
@@ -101,7 +142,7 @@ useEffect(() => {
           className="space-y-4"
           initial="hidden"
           autoComplete="on"
-          method="post" 
+          method="post"
           animate="show"
           variants={{
             hidden: {},
@@ -121,13 +162,27 @@ useEffect(() => {
               type="email"
               name="email"
               placeholder="Enter Email Address"
-              autoComplete="email" 
+              autoComplete="off"
               value={form.email}
-              onChange={(e) => setForm({ ...form, email: e.target.value })}
+              onChange={handleEmailChange}
               className="w-full pl-10 pr-4 py-3 rounded-lg border transition focus:outline-none focus:ring-2"
               style={{ borderColor: "var(--input-border)" }}
               required
             />
+            {/* Autofill Suggestions */}
+            {suggestions.length > 0 && (
+              <ul className="absolute top-full left-0 w-full bg-white border border-gray-300 rounded-b-lg z-20 max-h-40 overflow-auto">
+                {suggestions.map((user, idx) => (
+                  <li
+                    key={idx}
+                    className="px-3 py-2 hover:bg-gray-100 cursor-pointer"
+                    onClick={() => handleSelectSuggestion(user)}
+                  >
+                    {user.email}
+                  </li>
+                ))}
+              </ul>
+            )}
           </motion.div>
 
           {/* Password */}
@@ -143,7 +198,7 @@ useEffect(() => {
               type="password"
               placeholder="Password"
               name="password"
-              autoComplete="current-password" 
+              autoComplete="current-password"
               value={form.password}
               onChange={(e) => setForm({ ...form, password: e.target.value })}
               className="w-full pl-10 pr-4 py-3 rounded-lg border transition focus:outline-none focus:ring-2"
@@ -217,27 +272,29 @@ useEffect(() => {
           />
           Login with Google
         </motion.button>
-         {/* Opus Button */}
-      <motion.button
-        onClick={() => setIsOpusOpen(true)}
-        className="w-full flex items-center justify-center border border-gray-300 py-3 rounded-lg hover:shadow-lg transition cursor-pointer bg-white text-gray-700"
-        whileHover={{ scale: 1.03 }}
-        whileTap={{ scale: 0.96 }}
-      >
-         <img
+
+        {/* Opus Button */}
+        <motion.button
+          onClick={() => setIsOpusOpen(true)}
+          className="w-full flex items-center justify-center border border-gray-300 py-3 rounded-lg hover:shadow-lg transition cursor-pointer bg-white text-gray-700"
+          whileHover={{ scale: 1.03 }}
+          whileTap={{ scale: 0.96 }}
+        >
+          <img
             src="https://supoassets.s3.ap-south-1.amazonaws.com/public/assets/icon/favicon.png"
             alt="Opus"
             className="w-6 h-6 mr-2"
           />
-        Login with Opus Account
-      </motion.button>
-          {/* Modal */}
-      <OpusLoginModal
-        isOpen={isOpusOpen}
-        onClose={() => setIsOpusOpen(false)}
-        onConfirm={handleOpusConfirm}
-        loading={loading}
-      />
+          Login with Opus Account
+        </motion.button>
+
+        {/* Modal */}
+        <OpusLoginModal
+          isOpen={isOpusOpen}
+          onClose={() => setIsOpusOpen(false)}
+          onConfirm={handleOpusConfirm}
+          loading={loading}
+        />
 
         {/* Sign Up Redirect */}
         <div className="text-center text-sm mt-4 text-gray-600">

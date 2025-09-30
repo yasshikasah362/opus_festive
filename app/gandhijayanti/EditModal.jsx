@@ -60,7 +60,7 @@ console.log("selected data,",formData);
 
       {/* Modal */}
       <div
-        className={`relative bg-white rounded-2xl shadow-2xl p-6 w-[90%] h-[90%] transform transition-all duration-300 overflow-y-auto ${
+        className={`relative bg-white rounded-2xl shadow-2xl p-6 w-[50%] h-[80%] transform transition-all duration-300 overflow-y-auto ${
           isOpen ? "scale-100 opacity-100" : "scale-90 opacity-0"
         }`}
       >

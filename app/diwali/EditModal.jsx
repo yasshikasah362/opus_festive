@@ -62,7 +62,7 @@ const EditModal = ({ isOpen, onClose, type, onSave }) => {
 
       {/* Modal */}
       <div
-        className={`relative bg-white rounded-2xl shadow-2xl p-5 sm:p-6 w-full max-w-lg sm:max-w-xl lg:max-w-2xl transform transition-all duration-300 overflow-y-auto max-h-[90vh]
+        className={`relative bg-white rounded-2xl shadow-2xl p-5 sm:p-6 w-full max-w-lg sm:max-w-xl lg:max-w-2xl transform transition-all duration-300 overflow-y-auto max-h-[60vh]
           ${isOpen ? "scale-100 opacity-100" : "scale-95 opacity-0"}
         `}
       >
