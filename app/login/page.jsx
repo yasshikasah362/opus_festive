@@ -99,7 +99,8 @@ export default function Login() {
         localStorage.setItem("opusToken", res.data.token ?? "");
         window.dispatchEvent(new Event("opus-login"));
         setIsOpusOpen(false);
-        router.push("/dashboard/ui");
+        router.push("/dashboard"); 
+        //dashboard/ui
       } else {
         alert(res.data?.message || "Opus Login failed");
       }

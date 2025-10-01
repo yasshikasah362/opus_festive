@@ -3,8 +3,10 @@
 import { motion } from 'framer-motion';
 import './globals.css';
 import FeaturesPage from '../components/FeaturesPage';
+import { useRouter } from "next/navigation";
 
 const HomePage = () => {
+  const router = useRouter();
   return (
     <>
       <div
@@ -48,17 +50,19 @@ const HomePage = () => {
               Make every occasion stand out!
             </motion.p>
 
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="font-semibold px-5 sm:px-6 py-2 sm:py-3 rounded-full shadow transition-all text-sm sm:text-base"
-              style={{
-                backgroundColor: "var(--button-bg)",
-                color: "var(--button-text)",
-              }}
-            >
-              Get Started for Free
-            </motion.button>
+           <motion.button
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
+      onClick={() => router.push("/dashboard")}
+      className="cursor-pointer font-semibold px-5 sm:px-6 py-2 sm:py-3 rounded-full shadow transition-all text-sm sm:text-base"
+      style={{
+        backgroundColor: "var(--button-bg)",
+        color: "var(--button-text)",
+      }}
+    >
+      Get Started for Free
+    </motion.button>
+
           </motion.div>
 
           {/* Image Section */}
