@@ -50,71 +50,73 @@ const EditModal = ({ isOpen, onClose, type, onSave }) => {
 console.log("selected data,",formData);
   return (
     <div className="absolute inset-0 flex items-center justify-center z-50">
-      {/* Overlay */}
-      <div
-        className={`absolute inset-0 bg-black/40 rounded-xl transition-opacity duration-300 ${
-          isOpen ? "opacity-100" : "opacity-0"
-        }`}
-        onClick={onClose}
-      />
+  {/* Overlay */}
+  <div
+    className={`absolute inset-0 bg-black/40 rounded-xl transition-opacity duration-300 ${
+      isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
+    }`}
+    onClick={onClose}
+  />
 
-      {/* Modal */}
-      <div
-        className={`relative bg-white rounded-2xl shadow-2xl p-6 w-[50%] h-[80%] transform transition-all duration-300 overflow-y-auto ${
-          isOpen ? "scale-100 opacity-100" : "scale-90 opacity-0"
-        }`}
-      >
-        <h2 className="text-xl font-bold mb-4 text-gray-800 pb-2">
-          Edit{" "}
-          {type === "headline"
-            ? "Heading"
-            : type === "subtext"
-            ? "Subheading"
-            : type === "offer"
-            ? "Offer Text"
-            : type === "offer_tag"
-            ? "Offer Tag"
-            : ""}
-        </h2>
+  {/* Modal */}
+  <div
+    className={`relative bg-white rounded-2xl shadow-2xl p-4 sm:p-6 md:p-8 w-[90%] sm:w-[70%] md:w-[50%] max-w-[700px] 
+      h-[80%] sm:h-[75%] md:h-[70%] transform transition-all duration-300 overflow-y-auto ${
+        isOpen ? "scale-100 opacity-100" : "scale-90 opacity-0 pointer-events-none"
+      }`}
+  >
+    <h2 className="text-lg sm:text-xl md:text-2xl font-bold mb-4 text-gray-800 pb-2">
+      Edit{" "}
+      {type === "headline"
+        ? "Heading"
+        : type === "subtext"
+        ? "Subheading"
+        : type === "offer"
+        ? "Offer Text"
+        : type === "offer_tag"
+        ? "Offer Tag"
+        : ""}
+    </h2>
 
-        {/* ✅ Options list */}
-        <div className="space-y-2 mb-6">
-          {options?.map((opt, index) => (
-            <div
-              key={index}
-              onClick={() => handleSelect(opt)}
-              className={`px-4 py-2 border rounded-lg cursor-pointer transition 
-                ${
-                  formData[type] === opt
-                    ? "bg-pink-100 border-pink-500 text-pink-600 font-medium"
-                    : "hover:bg-gray-100 border-gray-300 text-gray-700"
-                }`}
-            >
-              {opt}
-            </div>
-          ))}
+    {/* Options list */}
+    <div className="space-y-2 mb-6">
+      {options?.map((opt, index) => (
+        <div
+          key={index}
+          onClick={() => handleSelect(opt)}
+          className={`px-3 sm:px-4 py-2 border rounded-lg cursor-pointer transition 
+            ${
+              formData[type] === opt
+                ? "bg-pink-100 border-pink-500 text-pink-600 font-medium"
+                : "hover:bg-gray-100 border-gray-300 text-gray-700"
+            }`}
+        >
+          {opt}
         </div>
-
-        {/* Actions */}
-        <div className="flex justify-end gap-3">
-          <button
-            onClick={onClose}
-            className="px-4 py-2 rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300 transition"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={() => {
-              onSave(formData); // ✅ pura formData bhejna
-              onClose();
-            }}
-            className="px-4 py-2 rounded-lg bg-[#FC6C87] text-white hover:bg-pink-600 transition shadow-md"
-          >
-            Confirm
-          </button>
-        </div>
-      </div>
+      ))}
     </div>
+
+    {/* Actions */}
+    <div className="flex justify-end gap-2 sm:gap-3">
+      <button
+        onClick={onClose}
+        className="px-3 sm:px-4 py-2 rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300 transition text-sm sm:text-base"
+      >
+        Cancel
+      </button>
+      <button
+        onClick={() => {
+          onSave(formData); // ✅ Send full formData
+          onClose();
+        }}
+        className="px-3 sm:px-4 py-2 rounded-lg bg-gradient-to-r bg-pink-500  text-white hover:opacity-90 transition shadow-md text-sm sm:text-base"
+      >
+        Confirm
+      </button>
+    </div>
+  </div>
+</div>
+
   );
 };
 

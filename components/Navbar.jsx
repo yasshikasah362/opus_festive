@@ -5,7 +5,7 @@ import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { FaUserCircle } from "react-icons/fa";
-import { HiMenu, HiX } from "react-icons/hi"; 
+import { HiMenu, HiX } from "react-icons/hi";
 
 export default function Navbar() {
   const { data: session } = useSession();
@@ -14,13 +14,12 @@ export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [opusToken, setOpusToken] = useState(null);
 
-  // 👇 token initialize + events listen
+  // token initialize + event listeners
   useEffect(() => {
     if (typeof window !== "undefined") {
       const token = localStorage.getItem("opusToken");
       setOpusToken(token);
 
-      // listen for login/logout events
       const handleLogin = () => setOpusToken(localStorage.getItem("opusToken"));
       const handleLogout = () => setOpusToken(null);
 
@@ -45,7 +44,7 @@ export default function Navbar() {
 
   const handleOpusLogout = () => {
     localStorage.removeItem("opusToken");
-    window.dispatchEvent(new Event("opus-logout")); 
+    window.dispatchEvent(new Event("opus-logout"));
     router.push("/login");
   };
 
@@ -85,18 +84,22 @@ export default function Navbar() {
 
             {/* Desktop Links */}
             <div className="hidden md:flex items-center space-x-6">
-              {[
-                { label: "Dashboard", href: "/dashboard" },
-                { label: "Admin", href: "/admin" },
-              ].map((item) => (
-                <button
-                  key={item.href}
-                  onClick={() => handleNavigation(item.href)}
-                  className="font-medium relative px-2 py-1 transition-all duration-200 text-[var(--text-default)] hover:text-[var(--primary-color)] hover:scale-105 hover:underline hover:underline-offset-4 cursor-pointer"
-                >
-                  {item.label}
-                </button>
-              ))}
+              {isLoggedIn && (
+                <>
+                  {[
+                    { label: "Dashboard", href: "/dashboard" },
+                    { label: "Admin", href: "/admin" },
+                  ].map((item) => (
+                    <button
+                      key={item.href}
+                      onClick={() => handleNavigation(item.href)}
+                      className="font-medium relative px-2 py-1 transition-all duration-200 text-[var(--text-default)] hover:text-[var(--primary-color)] hover:scale-105 hover:underline hover:underline-offset-4 cursor-pointer"
+                    >
+                      {item.label}
+                    </button>
+                  ))}
+                </>
+              )}
             </div>
 
             {/* Desktop Right Side */}
@@ -148,18 +151,22 @@ export default function Navbar() {
         {isMenuOpen && (
           <div className="md:hidden bg-white shadow-lg border-t">
             <div className="flex flex-col items-center py-4 space-y-4">
-              {[
-                { label: "Dashboard", href: "/dashboard" },
-                { label: "Admin", href: "/admin" },
-              ].map((item) => (
-                <button
-                  key={item.href}
-                  onClick={() => handleNavigation(item.href)}
-                  className="font-medium text-lg text-gray-700 hover:text-[var(--primary-color)]"
-                >
-                  {item.label}
-                </button>
-              ))}
+              {isLoggedIn && (
+                <>
+                  {[
+                    { label: "Dashboard", href: "/dashboard" },
+                    { label: "Admin", href: "/admin" },
+                  ].map((item) => (
+                    <button
+                      key={item.href}
+                      onClick={() => handleNavigation(item.href)}
+                      className="font-medium text-lg text-gray-700 hover:text-[var(--primary-color)]"
+                    >
+                      {item.label}
+                    </button>
+                  ))}
+                </>
+              )}
 
               {isLoggedIn ? (
                 <>

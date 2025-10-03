@@ -123,12 +123,10 @@ export default function FlyerSidebar({
       const data = await res.json();
 
       if (data.flyerImage) {
-        // ✅ Local state
         setFlyers((prev) => [...prev, data.flyerImage]);
         setGenerated(true);
         setTabStatus((prev) => ({ ...prev, detail: true }));
 
-        // ✅ Save to localStorage also (for DashboardUI)
         const existing = JSON.parse(localStorage.getItem("flyers") || "[]");
         const updated = [...existing, data.flyerImage];
         localStorage.setItem("flyers", JSON.stringify(updated));
@@ -162,23 +160,36 @@ export default function FlyerSidebar({
   >
     {menuItems.map((item) => {
       const isActive = activeTab === item.id;
+      const isCompleted = tabStatus[item.id];
+
+      // Step unlock logic
+      let isDisabled = false;
+      if (item.id === "products" && !tabStatus.templates) isDisabled = true;
+      if (item.id === "detail" && !tabStatus.products) isDisabled = true;
+      if (item.id === "gallery" && !tabStatus.detail) isDisabled = true;
+
       return (
         <button
           key={item.id}
-          onClick={() => setActiveTab(item.id)}
-          className={`relative cursor-pointer flex flex-col items-center justify-center w-20 h-24 rounded-lg border-2 p-2 mb-2 transition-transform duration-200
+          onClick={() => {
+            if (!isDisabled) setActiveTab(item.id);
+          }}
+          disabled={isDisabled}
+          className={`cursor-pointer relative flex flex-col items-center justify-center w-20 h-24 rounded-lg border-2 p-2 mb-2 transition-transform duration-200
             ${
               isActive
                 ? "bg-gradient-to-tr from-pink-500 to-orange-400 text-white shadow-lg scale-105 border-pink-400"
+                : isDisabled
+                ? "bg-gray-200 text-gray-400 border-gray-300 cursor-not-allowed"
                 : "bg-white hover:shadow-lg hover:scale-105 text-gray-700 border-gray-400"
             }`}
         >
           {item.id !== "gallery" && (
             <span className="absolute top-2 left-1">
-              {tabStatus[item.id] ? (
-                <FaCheckCircle className="text-green-500 w-5 h-5" />
+              {isCompleted ? (
+                <FaCheckCircle className="text-green-500 w-4 h-4" />
               ) : (
-                <FaExclamationCircle className="text-yellow-500 w-5 h-5" />
+                <FaExclamationCircle className="text-yellow-500 w-4 h-4" />
               )}
             </span>
           )}
@@ -254,11 +265,11 @@ export default function FlyerSidebar({
                 alt={product.product_name}
                 className="w-full h-24 sm:h-32 object-contain rounded-md"
               />
-              <div className="mt-2 text-center">
+              <div className="mt-2 text-center mb-4">
                 <p className="text-sm font-semibold">
                   {product.product_name}
                 </p>
-                <p className="text-xs text-gray-500">{product.category_name}</p>
+                {/* <p className="text-xs text-gray-500">{product.category_name}</p> */}
               </div>
             </div>
           );
@@ -329,6 +340,5 @@ export default function FlyerSidebar({
     )}
   </aside>
 </>
-
   );
 }

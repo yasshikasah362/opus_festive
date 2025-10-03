@@ -73,8 +73,6 @@ export default function FlyerCanvas({
     Flyer_Background_color,
   };
 
-  const ps = flyerForm?.currFlyer?.prompt_settings; // shortcut
-
   return (
     <main className="flex-1 flex items-center justify-center overflow-hidden relative p-2">
       <div
@@ -98,18 +96,7 @@ export default function FlyerCanvas({
               onLoad={handleImageLoad}
             />
 
-            {/* ✅ Render direct from prompt_settings */}
-            <p className="absolute top-[10%] left-1/2 -translate-x-1/2 text-base sm:text-lg md:text-xl lg:text-2xl font-bold text-center px-2">
-              {ps?.text_section?.headline || "Default Heading"}
-            </p>
-
-            <p className="absolute top-[20%] left-1/2 -translate-x-1/2 text-sm sm:text-base md:text-lg text-center px-2">
-              {ps?.text_section?.subtext || "Default Subheading"}
-            </p>
-
-            <p className="absolute bottom-[15%] left-1/2 -translate-x-1/2 text-xs sm:text-sm md:text-base text-center px-2">
-              {ps?.call_to_action?.text || "Call to Action"}
-            </p>
+           
 
             {/* Edit Buttons */}
             {imgLoaded &&

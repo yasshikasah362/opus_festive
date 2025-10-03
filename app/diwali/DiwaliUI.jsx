@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { FaRegImages, FaHeading, FaTag, FaCheckCircle } from "react-icons/fa";
+import { FaRegImages, FaHeading, FaTag, FaCheckCircle, FaExclamationCircle } from "react-icons/fa";
 import { MdNoteAdd, MdPhotoLibrary, MdGridView, MdSubtitles } from "react-icons/md";
 import { RiPriceTag3Fill } from "react-icons/ri";
 import EditModal from "./EditModal";
@@ -62,85 +62,114 @@ const DiwaliUI = ({ username }) => {
     }
   };
 
+  const steps = [
+    { key: "templates", icon: <FaRegImages size={22} />, label: "1. Templates", completed: isTemplateSelected, disabled: false },
+    { key: "product", icon: <MdGridView size={22} />, label: "2. Products", completed: isProductSelected, disabled: !isTemplateSelected },
+    { key: "details", icon: <MdNoteAdd size={22} />, label: "3. Details", completed: isDetailsConfirmed, disabled: !isProductSelected },
+    { key: "gallery", icon: <MdPhotoLibrary size={22} />, label: "4. Result", completed: false, disabled: !isDetailsConfirmed },
+  ];
+
   return (
-<div className="flex flex-col h-screen">
+   <div className="flex flex-col h-screen">
   {/* Navbar */}
   <div className="h-12 sm:h-14 md:h-16 bg-gradient-to-r from-pink-600 to-orange-500 text-white flex items-center justify-center text-sm sm:text-base md:text-lg font-semibold shadow-md">
-   
+    Welcome {username}
   </div>
+
+  {/* Mobile Selected Template Preview */}
+   <div className="sm:hidden mb-2">
+          {selectedTemplate ? (
+            <div className="relative w-full max-w-full h-[220px] rounded-xl shadow-md overflow-hidden flex justify-center">
+               <img
+        src={diwali.find((d) => d.id === selectedTemplate.id)?.img}
+        alt={selectedTemplate.name}
+        className="w-full h-full object-cover rounded-md"
+      />
+
+              {/* Floating Edit Buttons */}
+              <div className="absolute top-7 left-2 flex flex-col gap-2 z-50">
+                {[
+                  { icon: <FaHeading size={14} />, type: "headline" },
+                  { icon: <MdSubtitles size={14} />, type: "subtext" },
+                  { icon: <RiPriceTag3Fill size={14} />, type: "offer" },
+                  { icon: <FaTag size={14} />, type: "offer_tag" },
+                ].map((btn, i) => {
+                  const isSaved = savedData[selectedTemplate?.id]?.[btn.type];
+                  return (
+                    <button
+                      key={i}
+                      onClick={() => {
+                        setModalType(btn.type);
+                        setIsModalOpen(true);
+                      }}
+                      className={`p-2 rounded-full shadow-md hover:scale-110 transition ${
+                        isSaved
+                          ? "bg-pink-600/70 text-white ring-2 ring-pink-600"
+                          : "bg-white text-black"
+                      }`}
+                    >
+                      {btn.icon}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          ) : (
+            <div className="w-full h-[220px] bg-gray-200 rounded-xl flex items-center justify-center text-gray-500 text-sm">
+              No Template Selected
+            </div>
+          )}
+        </div>
 
   {/* Main Content */}
   <div className="flex flex-1 flex-col sm:flex-row overflow-hidden">
-    {/* Sidebar for desktop/tablet */}
+    {/* Sidebar for desktop */}
     <div className="hidden sm:flex w-20 md:w-32 flex-col py-4 bg-gray-100 border-r border-gray-200 shadow-xl space-y-4">
-      {[
-        { key: "templates", icon: <FaRegImages size={22} />, label: "Templates", completed: isTemplateSelected },
-        { key: "product", icon: <MdGridView size={22} />, label: "Products", completed: isProductSelected },
-        { key: "details", icon: <MdNoteAdd size={22} />, label: "Details", completed: isDetailsConfirmed },
-        { key: "gallery", icon: <MdPhotoLibrary size={22} />, label: "Result", completed: false },
-      ].map((item) => (
-        <div
-          key={item.key}
-          onClick={() => setActive(item.key)}
-          className={`cursor-pointer flex flex-col items-center gap-1 p-3 rounded-xl transition-all duration-200 relative group ${
-            active === item.key
-              ? "bg-gradient-to-tr from-pink-500 to-orange-400 text-white shadow-lg scale-105"
-              : "bg-white hover:shadow-md hover:scale-105 text-gray-700"
-          }`}
-        >
-          <div className="relative">
-            {item.icon}
-            {item.completed && (
-              <FaCheckCircle className="absolute -top-1 -left-5 text-green-400 text-sm" />
-            )}
-          </div>
-          <span className="font-medium text-center text-xs md:text-sm">{item.label}</span>
-        </div>
-      ))}
+     {selectedTemplate && (
+  <div className="sm:hidden relative bg-white/80 backdrop-blur-md shadow-2xl w-full p-2 flex flex-col items-center justify-center overflow-hidden rounded-xl">
+    <div className="flex w-full h-48">
+      {/* Left buttons */}
+      <div className="flex flex-col gap-2 p-1">
+        {[
+          { icon: <FaHeading size={16} />, type: "headline" },
+          { icon: <MdSubtitles size={16} />, type: "subtext" },
+          { icon: <RiPriceTag3Fill size={16} />, type: "offer" },
+          { icon: <FaTag size={16} />, type: "offer_tag" },
+        ].map((btn, i) => (
+          <button
+            key={i}
+            onClick={() => {
+              setModalType(btn.type);
+              setIsModalOpen(true);
+            }}
+            className={`p-2 rounded-full shadow-md hover:scale-110 transition ${
+              savedData[selectedTemplate?.id]?.[btn.type]
+                ? "bg-pink-600/70 text-white ring-2 ring-pink-600"
+                : "bg-white text-black"
+            }`}
+          >
+            {btn.icon}
+          </button>
+        ))}
+      </div>
+
+      {/* Template Image */}
+      <div className="flex-1 flex items-center justify-center">
+        <img
+          src={diwali.find((d) => d.id === selectedTemplate.id)?.img}
+          alt={selectedTemplate.name}
+          className="w-full h-full object-cover rounded-md"
+        />
+      </div>
+    </div>
+  </div>
+)}
+
     </div>
 
     {/* Middle Panel */}
     <div className="flex-1 flex flex-col sm:flex-row overflow-hidden">
-      {/* Mobile Selected Template */}
-      {selectedTemplate && (
-        <div className="sm:hidden w-full p-1 bg-gray-50 flex justify-center ">
-          <div className="relative mt-4 w-full max-w-[95%] h-auto max-h-[40vh] rounded-xl flex items-center justify-center">
-            <img
-              src={diwali.find((d) => d.id === selectedTemplate.id)?.img}
-              alt={selectedTemplate.name}
-              className="w-full h-full object-cover rounded-xl shadow-md"
-            />
-            {/* Floating edit buttons */}
-            <div className="absolute top-2 left-2 flex flex-col gap-2 z-50">
-              {[
-                { icon: <FaHeading size={14} />, type: "headline" },
-                { icon: <MdSubtitles size={14} />, type: "subtext" },
-                { icon: <RiPriceTag3Fill size={14} />, type: "offer" },
-                { icon: <FaTag size={14} />, type: "offer_tag" },
-              ].map((btn, i) => (
-                <button
-                  key={i}
-                  onClick={() => {
-                    setModalType(btn.type);
-                    setIsModalOpen(true);
-                  }}
-                  className={`p-2 rounded-full shadow-md hover:scale-110 transition relative group ${
-                    savedData[selectedTemplate?.id]?.[btn.type]
-                      ? "bg-pink-600/70 text-white ring-2 ring-pink-600"
-                      : "bg-white text-black"
-                  }`}
-                >
-                  {btn.icon}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Tab Content */}
       <div className="w-full sm:w-64 md:w-72 lg:w-80 bg-white border-r border-gray-200 p-3 sm:p-5 overflow-y-auto flex flex-col">
-    
         {active === "templates" && (
           <div className="grid gap-3 sm:gap-4 grid-cols-2">
             {templates.map((temp, index) => (
@@ -162,7 +191,7 @@ const DiwaliUI = ({ username }) => {
                   className="w-full h-24 sm:h-28 md:h-32 object-cover"
                 />
                 {selectedTemplate?.id === temp.id && (
-                  <FaCheckCircle className="absolute top-2 left-2 text-green-400 text-lg drop-shadow-lg" />
+                  <FaCheckCircle className="absolute top-2 left-2 text-green-400 text-lg drop-shadow-lg w-4 h-4" />
                 )}
               </div>
             ))}
@@ -266,25 +295,21 @@ const DiwaliUI = ({ username }) => {
     </div>
   </div>
 
-  {/* Bottom navbar for mobile */}
+  {/* Mobile bottom navbar */}
   <div className="sm:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg flex justify-around py-2">
-    {[
-      { key: "templates", icon: <FaRegImages size={18} />, label: "Templates", completed: isTemplateSelected },
-      { key: "product", icon: <MdGridView size={18} />, label: "Products", completed: isProductSelected },
-      { key: "details", icon: <MdNoteAdd size={18} />, label: "Details", completed: isDetailsConfirmed },
-      { key: "gallery", icon: <MdPhotoLibrary size={18} />, label: "Result", completed: false },
-    ].map((item) => (
+    {steps.map((item) => (
       <button
         key={item.key}
-        onClick={() => setActive(item.key)}
+        onClick={() => !item.disabled && setActive(item.key)}
         className={`cursor-pointer flex flex-col items-center text-xs ${
-          active === item.key ? "text-pink-600 font-semibold" : "text-gray-600"
+          item.disabled ? "text-gray-300 cursor-not-allowed" : active === item.key ? "text-pink-600 font-semibold" : "text-gray-600"
         }`}
       >
         <div className="relative">
-          {item.icon}
-          {item.completed && (
+          {item.completed ? (
             <FaCheckCircle className="absolute -top-1 -right-2 text-green-400 text-xs" />
+          ) : (
+            <FaExclamationCircle className="absolute -top-1 -right-2 text-yellow-500 text-xs" />
           )}
         </div>
         {item.label}
@@ -292,7 +317,6 @@ const DiwaliUI = ({ username }) => {
     ))}
   </div>
 
-  {/* Edit Modal */}
   <EditModal
     isOpen={isModalOpen}
     onClose={() => setIsModalOpen(false)}
@@ -304,21 +328,12 @@ const DiwaliUI = ({ username }) => {
         [selectedTemplate.id]: {
           ...(prev[selectedTemplate.id] || {}),
           [modalType]: val,
-        },
-      }));
-      setIsModalOpen(false);
-    }}
-  />
-</div>
-
-
-
-
-
-
-
-
-
+            },
+          }));
+          setIsModalOpen(false);
+        }}
+      />
+    </div>
   );
 };
 
