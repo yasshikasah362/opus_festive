@@ -101,7 +101,7 @@ export default function Navbar() {
               {isLoggedIn &&
                 [
                   { label: "Dashboard", href: "/dashboard" },
-                  { label: "Admin", href: "/admin" },
+                  // { label: "Admin", href: "/admin" },
                 ].map((item) => (
                   <button
                     key={item.href}
@@ -129,44 +129,43 @@ export default function Navbar() {
                   </button>
 
                   {/* Right Panel */}
-                  {isUserPanelOpen && (
-                    <div className="fixed top-0 right-0 w-64 h-full bg-white shadow-xl border-l p-4 flex flex-col space-y-4 z-50 animate-slide-in">
-                      <div className="flex items-center space-x-2">
-                        <FaUserCircle className="text-2xl text-gray-700" />
-                        <span className="font-semibold text-gray-800">
-                          {session?.user?.name || "Opus User"}
-                        </span>
-                      </div>
-                      <button
-                        onClick={() => handleNavigation("/admin")}
-                        className="flex items-center space-x-2 px-3 py-2 rounded hover:bg-gray-100"
-                      >
-                        <FiLogOut />
-                        <span>Admin Dashboard</span>
-                      </button>
-                      <button
-                        onClick={clearCache}
-                        className="flex items-center space-x-2 px-3 py-2 rounded hover:bg-gray-100"
-                      >
-                        <FiTrash2 />
-                        <span>Clear Cache</span>
-                      </button>
-                      <button
-                        onClick={refreshPage}
-                        className="flex items-center space-x-2 px-3 py-2 rounded hover:bg-gray-100"
-                      >
-                        <FiRefreshCcw />
-                        <span>Refresh</span>
-                      </button>
-                      <button
-                        onClick={() => (session ? signOut() : handleOpusLogout())}
-                        className="flex items-center space-x-2 px-3 py-2 rounded hover:bg-gray-100 text-red-600"
-                      >
-                        <FiLogOut />
-                        <span>Logout</span>
-                      </button>
-                    </div>
-                  )}
+                 {isUserPanelOpen && (
+  <div className="fixed top-0 right-0 w-64 h-full bg-white shadow-xl border-l p-4 flex flex-col space-y-4 z-50 animate-slide-in">
+    {/* Close Button */}
+    <div className="flex justify-end">
+      <button
+        onClick={() => setIsUserPanelOpen(false)}
+        className="text-gray-500 hover:text-gray-800 cursor-pointer"
+      >
+        <HiX className="text-2xl" />
+      </button>
+    </div>
+
+    <div className="flex items-center space-x-2">
+      <FaUserCircle className="text-2xl text-gray-700" />
+      <span className="font-semibold text-gray-800">
+        {session?.user?.name || "Opus User"}
+      </span>
+    </div>
+
+    <button
+      onClick={() => handleNavigation("/admin")}
+      className="flex items-center space-x-2 px-3 py-2 rounded hover:bg-gray-100"
+    >
+      <FiLogOut />
+      <span>Admin Dashboard</span>
+    </button>
+
+    <button
+      onClick={() => (session ? signOut() : handleOpusLogout())}
+      className="flex items-center space-x-2 px-3 py-2 rounded hover:bg-gray-100 text-red-600"
+    >
+      <FiLogOut />
+      <span>Logout</span>
+    </button>
+  </div>
+)}
+
                 </>
               ) : (
                 <>
@@ -201,11 +200,11 @@ export default function Navbar() {
         {/* Mobile Dropdown Menu */}
         {isMenuOpen && (
           <div className="md:hidden bg-white shadow-lg border-t">
-            <div className="flex flex-col items-center py-4 space-y-4">
+            <div className="flex flex-col items-center py-4 space-y-4 ">
               {isLoggedIn &&
                 [
                   { label: "Dashboard", href: "/dashboard" },
-                  { label: "Admin", href: "/admin" },
+                  // { label: "Admin", href: "/admin" },
                 ].map((item) => (
                   <button
                     key={item.href}
