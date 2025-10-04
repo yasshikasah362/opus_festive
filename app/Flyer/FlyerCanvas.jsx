@@ -1,6 +1,8 @@
 "use client";
-import { useRef, useEffect } from "react";
-import { FaEdit } from "react-icons/fa";
+import { useRef, useEffect, useState } from "react";
+import { FaHeading, FaTag } from "react-icons/fa";
+import { MdSubtitles } from "react-icons/md";
+import { RiPriceTag3Fill } from "react-icons/ri";
 import FlyerModal from "./FlyerModal";
 import {
   Flyer_Heading,
@@ -22,6 +24,9 @@ export default function FlyerCanvas({
   setFlyerForm,
 }) {
   const imgRef = useRef(null);
+  const [confirmedEdits, setConfirmedEdits] = useState({}); // ✅ Track confirmed fields
+  
+
 
   useEffect(() => {
     if (selectedTemplate) setImgLoaded(false);
@@ -73,12 +78,19 @@ export default function FlyerCanvas({
     Flyer_Background_color,
   };
 
+  const iconPanel = [
+    { key: "heading", label: "Heading", icon: <FaHeading size={14} /> },
+    { key: "sub_heading", label: "Subheading", icon: <MdSubtitles size={14} /> },
+    { key: "offer_text", label: "Offer", icon: <RiPriceTag3Fill size={14} /> },
+    { key: "call_to_action", label: "CTA", icon: <FaTag size={14} /> },
+  ];
+
   return (
     <main className="flex-1 flex items-center justify-center overflow-hidden relative p-2">
       <div
         className="
           relative bg-gray-200 shadow-lg rounded-xl flex items-center justify-center
-          w-full h-[60vh] sm:h-[70vh] md:h-[80vh] lg:h-[90vh] 
+          w-full h-[60vh] sm:h-[70vh] md:h-[80vh] lg:h-[90vh]
           max-w-[95%] sm:max-w-[90%] md:max-w-[80%] lg:max-w-[70%]
         "
       >
@@ -96,40 +108,46 @@ export default function FlyerCanvas({
               onLoad={handleImageLoad}
             />
 
-           
+            {/* Left Vertical Icon Panel */}
+            <div className="absolute left-3 top-1/2 -translate-y-1/2 flex flex-col gap-4 bg-white/80 backdrop-blur-sm p-3 rounded-xl shadow-md">
+              {iconPanel.map((item) => {
+                const isActive = activeEdit === item.key;
+                const confirmed = confirmedEdits[item.key];
 
-            {/* Edit Buttons */}
-            {imgLoaded &&
-              selectedTemplate.annotations &&
-              Object.entries(selectedTemplate.annotations).map(
-                ([key, value]) => {
-                  const pos = getScaledPosition(value);
-                  return (
-                    <button
-                      key={key}
-                      style={{
-                        position: "absolute",
-                        left: `${pos.left}px`,
-                        top: `${pos.top}px`,
-                        transform: "translate(-50%, -50%)",
-                      }}
-                      className="bg-[#FC6C87] text-white p-1 sm:p-2 rounded-full shadow-md cursor-pointer"
-                      onClick={() => setActiveEdit(key)}
-                    >
-                      <FaEdit className="w-3 h-3 sm:w-4 sm:h-4" />
-                    </button>
-                  );
-                }
-              )}
+                const bgColor = confirmed || isActive ? "#FC6C87" : "#ffffff";
+                const iconColor = confirmed || isActive ? "#ffffff" : "#000000";
+
+                return (
+                  <button
+                    key={item.key}
+                    onClick={() => setActiveEdit(item.key)}
+                    title={`Edit ${item.label}`}
+                    style={{
+                      backgroundColor: bgColor,
+                      color: iconColor,
+                    }}
+                    className={`w-9 h-9 flex items-center justify-center rounded-full shadow transition-all duration-200 hover:scale-105 ${
+                      isActive ? "ring-2 ring-[#FC6C87]" : ""
+                    }`}
+                  >
+                    {item.icon}
+                  </button>
+                );
+              })}
+            </div>
 
             {/* Modal */}
             <FlyerModal
-              activeEdit={activeEdit}
-              setActiveEdit={setActiveEdit}
-              data={data}
-              flyerForm={flyerForm}
-              setFlyerForm={setFlyerForm}
-            />
+  activeEdit={activeEdit}
+  setActiveEdit={setActiveEdit}
+  data={data}
+  flyerForm={flyerForm}
+  setFlyerForm={setFlyerForm}
+  onConfirmEdit={(key) =>
+    setConfirmedEdits((prev) => ({ ...prev, [key]: true }))
+  } // ✅ mark as confirmed
+/>
+
           </>
         ) : (
           <div className="flex items-center justify-center w-full h-full">

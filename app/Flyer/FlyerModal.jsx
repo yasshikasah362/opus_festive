@@ -8,6 +8,7 @@ export default function FlyerModal({
   data,
   flyerForm,
   setFlyerForm,
+  onConfirmEdit, // ✅ new prop from parent
 }) {
   if (!activeEdit) return null;
 
@@ -35,6 +36,7 @@ export default function FlyerModal({
   const handleConfirm = () => {
     if (!selectedValue) return;
 
+    // ✅ Update flyerForm as before
     setFlyerForm((prev) => {
       const updatedFlyer = { ...prev.currFlyer };
 
@@ -61,6 +63,11 @@ export default function FlyerModal({
 
       return { ...prev, currFlyer: updatedFlyer };
     });
+
+    // ✅ Tell parent which edit was confirmed
+    if (onConfirmEdit) {
+      onConfirmEdit(activeEdit);
+    }
 
     setActiveEdit(null); // close modal
   };
@@ -107,8 +114,8 @@ export default function FlyerModal({
                     className={`w-full py-2 sm:py-3 px-3 border rounded-lg transition text-base sm:text-lg text-left
                       ${
                         selectedValue === opt
-                          ? "bg-gray-200 border-gray-400"
-                          : "hover:bg-gray-100"
+                          ? "bg-pink-100 border-pink-500 text-pink-600 font-medium"
+                          : "hover:bg-gray-100 border-gray-300 text-gray-700"
                       }`}
                     onClick={() => setSelectedValue(opt)}
                   >
@@ -127,7 +134,7 @@ export default function FlyerModal({
               </div>
 
               <button
-                className="mt-4 sm:mt-6 bg-[#FC6C87] text-white py-2 sm:py-3 px-4 rounded-lg hover:bg-[#FF9A8B] transition text-base sm:text-lg"
+                className="cursor-pointer mt-4 sm:mt-6 bg-[#FC6C87] text-white py-2 sm:py-3 px-4 rounded-lg hover:bg-[#FF9A8B] transition text-base sm:text-lg"
                 onClick={handleConfirm}
                 disabled={loading}
               >

@@ -225,7 +225,7 @@ export default function FlyerSidebar({
             onClick={() => handleTemplateClickLocal(template)}
           >
             {selectedTemplate?.id === template.id && (
-              <FaCheckCircle className="absolute top-2 left-2 text-green-500 w-6 h-6" />
+              <FaCheckCircle className="absolute top-2 left-2 text-green-500 w-4 h-4" />
             )}
             <img
               src={`https://supoassets.s3.ap-south-1.amazonaws.com/public/GoogleStudio/assets/Templates/flyer/v2/${encodeURIComponent(

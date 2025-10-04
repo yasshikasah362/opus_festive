@@ -6,12 +6,14 @@ import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { FaUserCircle } from "react-icons/fa";
 import { HiMenu, HiX } from "react-icons/hi";
+import { FiLogOut, FiTrash2, FiRefreshCcw } from "react-icons/fi";
 
 export default function Navbar() {
   const { data: session } = useSession();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isUserPanelOpen, setIsUserPanelOpen] = useState(false);
   const [opusToken, setOpusToken] = useState(null);
 
   // token initialize + event listeners
@@ -39,13 +41,24 @@ export default function Navbar() {
       router.push(path);
       setLoading(false);
       setIsMenuOpen(false);
-    }, 500);
+      setIsUserPanelOpen(false);
+    }, 300);
   };
 
   const handleOpusLogout = () => {
     localStorage.removeItem("opusToken");
     window.dispatchEvent(new Event("opus-logout"));
     router.push("/login");
+  };
+
+  const clearCache = () => {
+    localStorage.clear();
+    sessionStorage.clear();
+    alert("Cache cleared!");
+  };
+
+  const refreshPage = () => {
+    window.location.reload();
   };
 
   const isLoggedIn = session || opusToken;
@@ -69,10 +82,11 @@ export default function Navbar() {
         </div>
       )}
 
+      {/* Navbar */}
       <nav className="fixed top-0 left-0 w-full z-50 transition-all duration-300 bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
-            {/* Left - Logo */}
+            {/* Logo */}
             <div className="flex items-center space-x-6">
               <Link
                 href="/"
@@ -84,38 +98,75 @@ export default function Navbar() {
 
             {/* Desktop Links */}
             <div className="hidden md:flex items-center space-x-6">
-              {isLoggedIn && (
-                <>
-                  {[
-                    { label: "Dashboard", href: "/dashboard" },
-                    { label: "Admin", href: "/admin" },
-                  ].map((item) => (
-                    <button
-                      key={item.href}
-                      onClick={() => handleNavigation(item.href)}
-                      className="font-medium relative px-2 py-1 transition-all duration-200 text-[var(--text-default)] hover:text-[var(--primary-color)] hover:scale-105 hover:underline hover:underline-offset-4 cursor-pointer"
-                    >
-                      {item.label}
-                    </button>
-                  ))}
-                </>
-              )}
+              {isLoggedIn &&
+                [
+                  { label: "Dashboard", href: "/dashboard" },
+                  { label: "Admin", href: "/admin" },
+                ].map((item) => (
+                  <button
+                    key={item.href}
+                    onClick={() => handleNavigation(item.href)}
+                    className="font-medium relative px-2 py-1 transition-all duration-200 text-[var(--text-default)] hover:text-[var(--primary-color)] hover:scale-105 hover:underline hover:underline-offset-4 cursor-pointer"
+                  >
+                    {item.label}
+                  </button>
+                ))}
             </div>
 
             {/* Desktop Right Side */}
-            <div className="hidden md:flex items-center space-x-4">
+            <div className="hidden md:flex items-center space-x-4 relative">
               {isLoggedIn ? (
                 <>
-                  <FaUserCircle className="text-2xl text-gray-700" />
-                  <span className="font-medium text-gray-700">
-                    {session?.user?.name || "Opus User"}
-                  </span>
+                  {/* User Icon + Name */}
                   <button
-                    onClick={() => (session ? signOut() : handleOpusLogout())}
-                    className="px-5 py-2 rounded-full transition-all duration-300 shadow cursor-pointer bg-[var(--primary-color)] text-[var(--button-bg)] hover:shadow-lg hover:scale-105"
+                    onClick={() => setIsUserPanelOpen(!isUserPanelOpen)}
+                    className="cursor-pointer flex items-center space-x-2 focus:outline-none"
                   >
-                    Logout
+                    <FaUserCircle className="text-2xl text-gray-700" />
+                    <span className="font-medium text-gray-700">
+                      {session?.user?.name || "Opus User"}
+                    </span>
                   </button>
+
+                  {/* Right Panel */}
+                  {isUserPanelOpen && (
+                    <div className="fixed top-0 right-0 w-64 h-full bg-white shadow-xl border-l p-4 flex flex-col space-y-4 z-50 animate-slide-in">
+                      <div className="flex items-center space-x-2">
+                        <FaUserCircle className="text-2xl text-gray-700" />
+                        <span className="font-semibold text-gray-800">
+                          {session?.user?.name || "Opus User"}
+                        </span>
+                      </div>
+                      <button
+                        onClick={() => handleNavigation("/admin")}
+                        className="flex items-center space-x-2 px-3 py-2 rounded hover:bg-gray-100"
+                      >
+                        <FiLogOut />
+                        <span>Admin Dashboard</span>
+                      </button>
+                      <button
+                        onClick={clearCache}
+                        className="flex items-center space-x-2 px-3 py-2 rounded hover:bg-gray-100"
+                      >
+                        <FiTrash2 />
+                        <span>Clear Cache</span>
+                      </button>
+                      <button
+                        onClick={refreshPage}
+                        className="flex items-center space-x-2 px-3 py-2 rounded hover:bg-gray-100"
+                      >
+                        <FiRefreshCcw />
+                        <span>Refresh</span>
+                      </button>
+                      <button
+                        onClick={() => (session ? signOut() : handleOpusLogout())}
+                        className="flex items-center space-x-2 px-3 py-2 rounded hover:bg-gray-100 text-red-600"
+                      >
+                        <FiLogOut />
+                        <span>Logout</span>
+                      </button>
+                    </div>
+                  )}
                 </>
               ) : (
                 <>
@@ -151,22 +202,19 @@ export default function Navbar() {
         {isMenuOpen && (
           <div className="md:hidden bg-white shadow-lg border-t">
             <div className="flex flex-col items-center py-4 space-y-4">
-              {isLoggedIn && (
-                <>
-                  {[
-                    { label: "Dashboard", href: "/dashboard" },
-                    { label: "Admin", href: "/admin" },
-                  ].map((item) => (
-                    <button
-                      key={item.href}
-                      onClick={() => handleNavigation(item.href)}
-                      className="font-medium text-lg text-gray-700 hover:text-[var(--primary-color)]"
-                    >
-                      {item.label}
-                    </button>
-                  ))}
-                </>
-              )}
+              {isLoggedIn &&
+                [
+                  { label: "Dashboard", href: "/dashboard" },
+                  { label: "Admin", href: "/admin" },
+                ].map((item) => (
+                  <button
+                    key={item.href}
+                    onClick={() => handleNavigation(item.href)}
+                    className="font-medium text-lg text-gray-700 hover:text-[var(--primary-color)]"
+                  >
+                    {item.label}
+                  </button>
+                ))}
 
               {isLoggedIn ? (
                 <>
@@ -203,6 +251,21 @@ export default function Navbar() {
           </div>
         )}
       </nav>
+
+      {/* Tailwind Animations */}
+      <style jsx>{`
+        .animate-slide-in {
+          animation: slide-in 0.3s forwards;
+        }
+        @keyframes slide-in {
+          from {
+            transform: translateX(100%);
+          }
+          to {
+            transform: translateX(0);
+          }
+        }
+      `}</style>
     </>
   );
 }
