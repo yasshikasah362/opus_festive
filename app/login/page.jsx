@@ -114,200 +114,157 @@ export default function Login() {
 
   return (
     <div
-      className="flex items-center justify-center min-h-screen px-4 relative overflow-hidden"
-      style={{ background: "var(--primary-gradient)" }}
+  className="flex items-center justify-center min-h-screen px-4 relative overflow-hidden"
+  style={{ background: "var(--primary-gradient)" }}
+>
+  {/* Background texture */}
+  <div
+    className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/flowers.png')] opacity-120 mix-blend-overlay"
+    aria-hidden="true"
+  />
+
+  <motion.div
+    className="w-full max-w-xs sm:max-w-sm md:max-w-md bg-white/90 backdrop-blur-lg rounded-2xl shadow-2xl p-4 sm:p-6 md:p-8 space-y-4 z-10"
+    initial={{ opacity: 0, y: 50, scale: 0.95 }}
+    animate={{ opacity: 1, y: 0, scale: 1 }}
+    transition={{ duration: 0.7, ease: "easeOut" }}
+  >
+    {/* Heading */}
+    <motion.h2
+      className="text-xl sm:text-2xl md:text-3xl font-bold text-center"
+      style={{ color: "var(--primary-color)" }}
     >
-      {/* Background texture */}
-      <div
-        className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/flowers.png')] opacity-120 mix-blend-overlay"
-        aria-hidden="true"
-      />
+      Login
+    </motion.h2>
+    <h4 className="text-xs sm:text-sm md:text-base text-center">
+      Please enter your email address and password
+    </h4>
 
+    {/* Login Form */}
+    <motion.form
+      onSubmit={handleSubmit}
+      className="space-y-3 sm:space-y-4"
+      initial="hidden"
+      autoComplete="on"
+      method="post"
+      animate="show"
+      variants={{
+        hidden: {},
+        show: { transition: { staggerChildren: 0.1 } },
+      }}
+    >
+      {/* Email */}
       <motion.div
-        className="mt-15 w-full max-w-md bg-white/90 backdrop-blur-lg rounded-2xl shadow-2xl p-8 space-y-6 z-10"
-        initial={{ opacity: 0, y: 50, scale: 0.95 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        transition={{ duration: 0.7, ease: "easeOut" }}
+        className="relative"
+        variants={{ hidden: { opacity: 0, y: 10 }, show: { opacity: 1, y: 0 } }}
       >
-        <motion.h2
-          className="text-3xl font-bold text-center"
-          style={{ color: "var(--primary-color)" }}
-        >
-          Login
-        </motion.h2>
-        <h4>Please enter your email address and password</h4>
-
-        {/* Login Form */}
-        <motion.form
-          onSubmit={handleSubmit}
-          className="space-y-4"
-          initial="hidden"
-          autoComplete="on"
-          method="post"
-          animate="show"
-          variants={{
-            hidden: {},
-            show: { transition: { staggerChildren: 0.15 } },
-          }}
-        >
-          {/* Email */}
-          <motion.div
-            className="relative"
-            variants={{
-              hidden: { opacity: 0, y: 20 },
-              show: { opacity: 1, y: 0 },
-            }}
-          >
-            <FiMail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
-            <input
-              type="email"
-              name="email"
-              placeholder="Enter Email Address"
-              autoComplete="off"
-              value={form.email}
-              onChange={handleEmailChange}
-              className="w-full pl-10 pr-4 py-3 rounded-lg border transition focus:outline-none focus:ring-2"
-              style={{ borderColor: "var(--input-border)" }}
-              required
-            />
-            {/* Autofill Suggestions */}
-            {suggestions.length > 0 && (
-              <ul className="absolute top-full left-0 w-full bg-white border border-gray-300 rounded-b-lg z-20 max-h-40 overflow-auto">
-                {suggestions.map((user, idx) => (
-                  <li
-                    key={idx}
-                    className="px-3 py-2 hover:bg-gray-100 cursor-pointer"
-                    onClick={() => handleSelectSuggestion(user)}
-                  >
-                    {user.email}
-                  </li>
-                ))}
-              </ul>
-            )}
-          </motion.div>
-
-          {/* Password */}
-          <motion.div
-            className="relative"
-            variants={{
-              hidden: { opacity: 0, y: 20 },
-              show: { opacity: 1, y: 0 },
-            }}
-          >
-            <FiLock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
-            <input
-              type="password"
-              placeholder="Password"
-              name="password"
-              autoComplete="current-password"
-              value={form.password}
-              onChange={(e) => setForm({ ...form, password: e.target.value })}
-              className="w-full pl-10 pr-4 py-3 rounded-lg border transition focus:outline-none focus:ring-2"
-              style={{ borderColor: "var(--input-border)" }}
-              required
-            />
-          </motion.div>
-
-          {/* Remember Me */}
-          <motion.div
-            className="flex items-center space-x-2"
-            variants={{
-              hidden: { opacity: 0, y: 20 },
-              show: { opacity: 1, y: 0 },
-            }}
-          >
-            <input
-              type="checkbox"
-              id="remember"
-              checked={form.remember}
-              onChange={(e) => setForm({ ...form, remember: e.target.checked })}
-              className="h-4 w-4 text-[var(--primary-color)] focus:ring-[var(--primary-color)] border-gray-300 rounded cursor-pointer"
-            />
-            <label
-              htmlFor="remember"
-              className="text-sm text-gray-600 cursor-pointer"
-            >
-              Remember Me
-            </label>
-          </motion.div>
-
-          {/* Login Button */}
-          <motion.button
-            type="submit"
-            disabled={loading}
-            className={`w-full font-semibold py-3 rounded-lg shadow-md transition cursor-pointer ${
-              loading ? "opacity-70 cursor-not-allowed" : ""
-            }`}
-            style={{
-              backgroundColor: "var(--primary-color)",
-              color: "var(--text-color)",
-            }}
-            whileHover={!loading ? { scale: 1.03 } : {}}
-            whileTap={!loading ? { scale: 0.96 } : {}}
-          >
-            {loading ? "Logging in..." : "Login"}
-          </motion.button>
-        </motion.form>
-
-        {/* Divider */}
-        <div
-          className="flex items-center gap-2 text-sm"
-          style={{ color: "var(--text-gray)" }}
-        >
-          <hr className="flex-grow border-t" />
-          <span>or</span>
-          <hr className="flex-grow border-t" />
-        </div>
-
-        {/* Google Sign-In */}
-        <motion.button
-          onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
-          className="w-full flex items-center justify-center gap-3 border border-gray-300 py-3 rounded-lg hover:shadow-lg transition cursor-pointer bg-white text-gray-700"
-          whileHover={{ scale: 1.03 }}
-          whileTap={{ scale: 0.96 }}
-        >
-          <img
-            src="https://www.svgrepo.com/show/475656/google-color.svg"
-            alt="Google"
-            className="w-5 h-5"
-          />
-          Login with Google
-        </motion.button>
-
-        {/* Opus Button */}
-        <motion.button
-          onClick={() => setIsOpusOpen(true)}
-          className="w-full flex items-center justify-center border border-gray-300 py-3 rounded-lg hover:shadow-lg transition cursor-pointer bg-white text-gray-700"
-          whileHover={{ scale: 1.03 }}
-          whileTap={{ scale: 0.96 }}
-        >
-          <img
-            src="https://supoassets.s3.ap-south-1.amazonaws.com/public/assets/icon/favicon.png"
-            alt="Opus"
-            className="w-6 h-6 mr-2"
-          />
-          Login with Opus Account
-        </motion.button>
-
-        {/* Modal */}
-        <OpusLoginModal
-          isOpen={isOpusOpen}
-          onClose={() => setIsOpusOpen(false)}
-          onConfirm={handleOpusConfirm}
-          loading={loading}
+        <FiMail className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-500" />
+        <input
+          type="email"
+          name="email"
+          placeholder="Enter Email Address"
+          autoComplete="off"
+          value={form.email}
+          onChange={handleEmailChange}
+          className="w-full pl-8 pr-3 py-2 sm:py-2.5 rounded-lg border transition focus:outline-none focus:ring-2 text-sm sm:text-sm"
+          style={{ borderColor: "var(--input-border)" }}
+          required
         />
-
-        {/* Sign Up Redirect */}
-        <div className="text-center text-sm mt-4 text-gray-600">
-          Don't have an account?{" "}
-          <button
-            onClick={() => router.push("/register")}
-            className="text-[var(--primary-color)] font-medium hover:underline cursor-pointer"
-          >
-            Sign Up now
-          </button>
-        </div>
       </motion.div>
+
+      {/* Password */}
+      <motion.div
+        className="relative"
+        variants={{ hidden: { opacity: 0, y: 10 }, show: { opacity: 1, y: 0 } }}
+      >
+        <FiLock className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-500" />
+        <input
+          type="password"
+          placeholder="Password"
+          name="password"
+          autoComplete="current-password"
+          value={form.password}
+          onChange={(e) => setForm({ ...form, password: e.target.value })}
+          className="w-full pl-8 pr-3 py-2 sm:py-2.5 rounded-lg border transition focus:outline-none focus:ring-2 text-sm sm:text-sm"
+          style={{ borderColor: "var(--input-border)" }}
+          required
+        />
+      </motion.div>
+
+      {/* Remember Me */}
+      <motion.div
+        className="flex items-center space-x-2 text-xs sm:text-sm"
+        variants={{ hidden: { opacity: 0, y: 10 }, show: { opacity: 1, y: 0 } }}
+      >
+        <input
+          type="checkbox"
+          id="remember"
+          checked={form.remember}
+          onChange={(e) => setForm({ ...form, remember: e.target.checked })}
+          className="h-3 w-3 sm:h-4 sm:w-4 text-[var(--primary-color)] focus:ring-[var(--primary-color)] border-gray-300 rounded cursor-pointer"
+        />
+        <label htmlFor="remember" className="cursor-pointer">
+          Remember Me
+        </label>
+      </motion.div>
+
+      {/* Login Button */}
+      <motion.button
+        type="submit"
+        disabled={loading}
+        className={`w-full font-semibold py-2 sm:py-3 rounded-lg shadow-md transition ${
+          loading ? "opacity-70 cursor-not-allowed" : "cursor-pointer"
+        } text-sm sm:text-sm`}
+        style={{ backgroundColor: "var(--primary-color)", color: "var(--text-color)" }}
+        whileHover={!loading ? { scale: 1.02 } : {}}
+        whileTap={!loading ? { scale: 0.96 } : {}}
+      >
+        {loading ? "Logging in..." : "Login"}
+      </motion.button>
+    </motion.form>
+
+    {/* Google */}
+    <motion.button
+      onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
+      className="w-full flex items-center justify-center gap-2 sm:gap-3 border border-gray-300 py-2 sm:py-2.5 rounded-lg hover:shadow-lg transition cursor-pointer bg-white text-gray-700 text-sm sm:text-sm"
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.96 }}
+    >
+      <img
+        src="https://www.svgrepo.com/show/475656/google-color.svg"
+        alt="Google"
+        className="w-4 h-4 sm:w-5 sm:h-5"
+      />
+      Login with Google
+    </motion.button>
+
+    {/* Opus */}
+    <motion.button
+      onClick={() => setIsOpusOpen(true)}
+      className="w-full flex items-center justify-center gap-2 sm:gap-3 border border-gray-300 py-2 sm:py-2.5 rounded-lg hover:shadow-lg transition cursor-pointer bg-white text-gray-700 text-sm sm:text-sm"
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.96 }}
+    >
+      <img
+        src="https://supoassets.s3.ap-south-1.amazonaws.com/public/assets/icon/favicon.png"
+        alt="Opus"
+        className="w-5 h-5 sm:w-6 mr-1"
+      />
+      Login with Opus Account
+    </motion.button>
+
+    {/* Sign Up */}
+    <div className="text-center text-xs sm:text-sm mt-3 text-gray-600">
+      Don't have an account?{" "}
+      <button
+        onClick={() => router.push("/register")}
+        className="text-[var(--primary-color)] font-medium hover:underline cursor-pointer text-xs sm:text-sm"
+      >
+        Sign Up now
+      </button>
     </div>
+  </motion.div>
+</div>
+
   );
 }

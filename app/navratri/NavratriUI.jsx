@@ -195,20 +195,40 @@ const Navratri = ({ username }) => {
           )}
 
           {/* Details */}
-          {active === "details" && (
-            <div className="space-y-3">
-              <h3 className="text-base sm:text-lg font-semibold mb-2">Add Details</h3>
-              <input type="text" placeholder="Enter Name" className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-pink-400 outline-none" />
-              <input type="text" placeholder="Enter Mobile Number" className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-pink-400 outline-none" />
-              <input type="text" placeholder="Enter Address" className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-pink-400 outline-none" />
-              <button
-                onClick={handleConfirmDetails}
-                className="w-full bg-gradient-to-r from-pink-500 to-orange-400 text-white py-2 rounded-lg shadow-md hover:opacity-90 transition"
-              >
-                Confirm and Generate
-              </button>
-            </div>
-          )}
+         {active === "details" && (
+  <div className="space-y-3">
+    <h3 className="text-base sm:text-lg font-semibold mb-2">Add Details</h3>
+
+    <input
+      type="text"
+      name="name"
+      placeholder="Enter Name"
+      className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-pink-400 outline-none"
+    />
+
+    <input
+      type="text"
+      name="mobileNumber"
+      placeholder="Enter Mobile Number"
+      className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-pink-400 outline-none"
+    />
+
+    <input
+      type="text"
+      name="address"
+      placeholder="Enter Address"
+      className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-pink-400 outline-none"
+    />
+
+    <button
+      onClick={handleConfirmDetails}
+      className="w-full bg-gradient-to-r from-pink-500 to-orange-400 text-white py-2 rounded-lg shadow-md hover:opacity-90 transition"
+    >
+      Confirm and Generate
+    </button>
+  </div>
+)}
+
 
           {/* Gallery */}
           {active === "gallery" && (

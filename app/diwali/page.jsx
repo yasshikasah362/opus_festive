@@ -1,15 +1,44 @@
-import { authOptions } from "@/lib/authOptions";
-import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
+"use client";
+
+import { useEffect, useState } from "react";
+import { getSession } from "next-auth/react"; // NextAuth session
+import { useRouter } from "next/navigation";
 import DiwaliUI from "./DiwaliUI";
 
-export default async function Dashboard() {
-  const session = await getServerSession(authOptions);
+export default function DiwaliDashboard() {
+  const [username, setUsername] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
-  if (!session) {
-    // User not logged in → redirect to login page
-    redirect("/login");
+  useEffect(() => {
+    async function checkLogin() {
+      // 1️⃣ Check NextAuth login
+      const session = await getSession();
+      if (session) {
+        setUsername(session.user.name);
+        setLoading(false);
+        return;
+      }
+
+      // 2️⃣ Check Opus login
+      const opusToken = localStorage.getItem("opusToken");
+      if (opusToken) {
+        setUsername("Opus User");
+        setLoading(false);
+        return;
+      }
+
+      // 3️⃣ Neither login exists → redirect to /login
+      router.push("/login");
+    }
+
+    checkLogin();
+  }, [router]);
+
+  if (loading || !username) {
+    // show nothing while loading or redirecting
+    return null;
   }
 
-  return <DiwaliUI username={session.user.name} />;
+  return <DiwaliUI username={username} />;
 }

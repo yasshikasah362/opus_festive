@@ -175,7 +175,7 @@ export default function FlyerSidebar({
             if (!isDisabled) setActiveTab(item.id);
           }}
           disabled={isDisabled}
-          className={`cursor-pointer relative flex flex-col items-center justify-center w-20 h-24 rounded-lg border-2 p-2 mb-2 transition-transform duration-200
+          className={`cursor-pointer relative flex flex-col items-center justify-center w-full h-24 rounded-lg border-2  mb-2 transition-transform duration-200
             ${
               isActive
                 ? "bg-gradient-to-tr from-pink-500 to-orange-400 text-white shadow-lg scale-105 border-pink-400"
@@ -283,21 +283,24 @@ export default function FlyerSidebar({
         <div className="w-full space-y-3">
           <input
             type="text"
-            placeholder="Name"
+            placeholder="Enter Name"
+            name="name"
             value={name}
             onChange={(e) => setName(e.target.value)}
             className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-pink-400 outline-none"
           />
           <input
             type="text"
-            placeholder="Number"
+            placeholder="Enter Mobile Number"
+            name="mobile number"
             value={number}
             onChange={(e) => setNumber(e.target.value)}
             className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-pink-400 outline-none"
           />
           <input
             type="text"
-            placeholder="Address"
+            placeholder="Enter Address"
+            name="address"
             value={address}
             onChange={(e) => setAddress(e.target.value)}
             className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-pink-400 outline-none"

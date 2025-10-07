@@ -73,77 +73,76 @@ export default function FlyerModal({
   };
 
   return (
-    <AnimatePresence>
-      {activeEdit && (
-        <motion.div
-          className="fixed inset-0 flex items-center justify-center z-50 bg-gray-200 bg-opacity-40"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.2 }}
+   <AnimatePresence>
+  {activeEdit && (
+    <motion.div
+      className="fixed inset-0 flex items-center justify-center z-50 bg-gray-200 bg-opacity-40 p-2 sm:p-4"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.2 }}
+    >
+      <motion.div
+        className="
+          bg-white rounded-2xl shadow-xl 
+          w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl
+          max-h-[90vh] overflow-y-auto
+          p-4 sm:p-6 md:p-8 flex flex-col relative
+        "
+        initial={{ opacity: 0, scale: 0.9, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.9, y: 20 }}
+        transition={{ duration: 0.3, ease: 'easeOut' }}
+      >
+        {/* Close button */}
+        <button
+          className="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-2xl sm:text-3xl"
+          onClick={() => setActiveEdit(null)}
         >
-          <main className="flex-1 flex items-center justify-center relative px-2 sm:px-4">
-            <motion.div
-              className="
-                bg-white rounded-2xl shadow-xl 
-                w-full max-w-lg sm:max-w-xl md:max-w-2xl 
-                max-h-[90vh] overflow-y-auto
-                p-4 sm:p-6 md:p-8 flex flex-col relative
-              "
-              initial={{ opacity: 0, scale: 0.9, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              transition={{ duration: 0.3, ease: 'easeOut' }}
+          ✕
+        </button>
+
+        <h2 className="font-bold text-lg sm:text-xl md:text-2xl mb-3 sm:mb-4 text-center sm:text-left">
+          {modalContent.title}
+        </h2>
+
+        <div className="flex flex-col gap-2 sm:gap-3 overflow-y-auto flex-1">
+          {modalContent.options.map((opt, idx) => (
+            <button
+              key={idx}
+              className={`w-full py-2 sm:py-2.5 px-3 sm:px-4 border rounded-lg transition text-sm sm:text-base text-left
+                ${
+                  selectedValue === opt
+                    ? "bg-pink-100 border-pink-500 text-pink-600 font-medium"
+                    : "hover:bg-gray-100 border-gray-300 text-gray-700"
+                }`}
+              onClick={() => setSelectedValue(opt)}
             >
-              {/* Close button */}
-              <button
-                className="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-xl"
-                onClick={() => setActiveEdit(null)}
-              >
-                ✕
-              </button>
+              {opt}
+            </button>
+          ))}
 
-              <h2 className="font-bold text-xl sm:text-2xl mb-4 sm:mb-6 text-center sm:text-left">
-                {modalContent.title}
-              </h2>
+          {/* Editable input */}
+          <input
+            type="text"
+            className="w-full border rounded-lg p-2 sm:p-3 text-sm sm:text-base mt-2"
+            placeholder="Or type your own..."
+            value={selectedValue}
+            onChange={(e) => setSelectedValue(e.target.value)}
+          />
+        </div>
 
-              <div className="flex flex-col gap-3 sm:gap-4 overflow-y-auto flex-1">
-                {modalContent.options.map((opt, idx) => (
-                  <button
-                    key={idx}
-                    className={`w-full py-2 sm:py-3 px-3 border rounded-lg transition text-base sm:text-lg text-left
-                      ${
-                        selectedValue === opt
-                          ? "bg-pink-100 border-pink-500 text-pink-600 font-medium"
-                          : "hover:bg-gray-100 border-gray-300 text-gray-700"
-                      }`}
-                    onClick={() => setSelectedValue(opt)}
-                  >
-                    {opt}
-                  </button>
-                ))}
+        <button
+          className="mt-3 sm:mt-4 bg-[#FC6C87] text-white py-2 sm:py-3 px-4 rounded-lg hover:bg-[#FF9A8B] transition text-sm sm:text-base"
+          onClick={handleConfirm}
+          disabled={loading}
+        >
+          {loading ? "Generating..." : "Confirm"}
+        </button>
+      </motion.div>
+    </motion.div>
+  )}
+</AnimatePresence>
 
-                {/* Editable input */}
-                <input
-                  type="text"
-                  className="w-full border rounded-lg p-2 sm:p-3 text-base sm:text-lg mt-2"
-                  placeholder="Or type your own..."
-                  value={selectedValue}
-                  onChange={(e) => setSelectedValue(e.target.value)}
-                />
-              </div>
-
-              <button
-                className="cursor-pointer mt-4 sm:mt-6 bg-[#FC6C87] text-white py-2 sm:py-3 px-4 rounded-lg hover:bg-[#FF9A8B] transition text-base sm:text-lg"
-                onClick={handleConfirm}
-                disabled={loading}
-              >
-                {loading ? "Generating..." : "Confirm"}
-              </button>
-            </motion.div>
-          </main>
-        </motion.div>
-      )}
-    </AnimatePresence>
   );
 }

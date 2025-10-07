@@ -16,7 +16,7 @@ export default function OpusLoginModal({ isOpen, onClose, onConfirm, loading }) 
   const { data: session } = useSession();
   const router = useRouter(); 
  useEffect(() => {
-   if (session) router.push("/dashboard/ui");
+   if (session) router.push("/dashboard");
  }, [session]);
 
 

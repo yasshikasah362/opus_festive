@@ -1,37 +1,43 @@
-import { authOptions } from "@/lib/authOptions";
-import { getServerSession } from "next-auth";
-import DashboardUI from './DashboardUI';
+"use client";
 
+import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import DashboardUI from "./DashboardUI";
 
+export default function Dashboard() {
+  const { data: session, status } = useSession(); // status: 'loading', 'authenticated', 'unauthenticated'
+  const [opusToken, setOpusToken] = useState(null);
+  const [loadingToken, setLoadingToken] = useState(true);
+  const router = useRouter();
 
-export default async function Dashboard() {
-  const session = await getServerSession(authOptions);
- 
+  // Load Opus token
+  useEffect(() => {
+    const token = localStorage.getItem("opusToken");
+    setOpusToken(token);
+    setLoadingToken(false);
+  }, []);
 
+  // Redirect only after both session and Opus token are loaded
+  useEffect(() => {
+    if (!loadingToken && status !== "loading") {
+      if (!session && !opusToken) {
+        router.push("/login");
+      }
+    }
+  }, [session, status, opusToken, loadingToken, router]);
+
+  if (status === "loading" || loadingToken) {
+    return null; // or show a loading spinner
+  }
 
   if (session) {
     return <DashboardUI username={session.user.name} />;
   }
-   const opusToken =
-    typeof window !== "undefined" ? localStorage.getItem("opusToken") : null;
 
   if (opusToken) {
     return <DashboardUI username="Opus User" />;
   }
 
-    return (
-     <div className="flex items-center justify-center min-h-screen px-4"
-         style={{ background: "var(--primary-gradient)" }}>
-      <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/flowers.png')] opacity-120 mix-blend-overlay" />
-      <div className="bg-white/80 backdrop-blur-lg p-8 rounded-lg shadow-xl text-center border border-gray-200">
-        <h2 className="text-2xl font-semibold text-red-500 mb-3">Unauthorized</h2>
-        <p className="text-gray-600 text-sm">
-          Please log in to access the dashboard.
-        </p>
-      </div>
-    </div>
-    );
-  }
-
- 
-
+  return null; // fallback
+}
