@@ -3,7 +3,7 @@
 import { motion, useMotionValue, useSpring } from "framer-motion";
 import { useEffect, useState } from "react";
 
-const colors = ["#FC6C87", "#FFD700", "#FFA500", "#FACC15", "#22C55E"]; // festive colors
+const colors = ["#FC6C87", "#FFD700", "#FFA500", "#FACC15", "#22C55E"];
 
 export default function FestiveCursor() {
   const mouseX = useMotionValue(-100);
@@ -13,6 +13,22 @@ export default function FestiveCursor() {
   const springY = useSpring(mouseY, { stiffness: 300, damping: 30 });
 
   const [cursorColor, setCursorColor] = useState("#9b2c2c"); // default dark color
+
+  // 🔹 Individual springs for the sparkle trail (top-level hooks)
+  const trail1X = useSpring(mouseX, { stiffness: 200, damping: 20 });
+  const trail1Y = useSpring(mouseY, { stiffness: 200, damping: 20 });
+
+  const trail2X = useSpring(mouseX, { stiffness: 170, damping: 20 });
+  const trail2Y = useSpring(mouseY, { stiffness: 170, damping: 20 });
+
+  const trail3X = useSpring(mouseX, { stiffness: 140, damping: 20 });
+  const trail3Y = useSpring(mouseY, { stiffness: 140, damping: 20 });
+
+  const trail4X = useSpring(mouseX, { stiffness: 110, damping: 20 });
+  const trail4Y = useSpring(mouseY, { stiffness: 110, damping: 20 });
+
+  const trail5X = useSpring(mouseX, { stiffness: 80, damping: 20 });
+  const trail5Y = useSpring(mouseY, { stiffness: 80, damping: 20 });
 
   // Move the cursor
   useEffect(() => {
@@ -27,18 +43,22 @@ export default function FestiveCursor() {
   // Hover effect over interactive elements
   useEffect(() => {
     const addHover = (el: Element) => {
-      el.addEventListener("mouseenter", () => document.body.classList.add("cursor-hover"));
-      el.addEventListener("mouseleave", () => document.body.classList.remove("cursor-hover"));
+      el.addEventListener("mouseenter", () =>
+        document.body.classList.add("cursor-hover")
+      );
+      el.addEventListener("mouseleave", () =>
+        document.body.classList.remove("cursor-hover")
+      );
     };
     document.querySelectorAll("button, input, a, svg").forEach(addHover);
   }, []);
 
-  // Optional: change color based on background (simple example)
+  // Optional: change color based on background
   useEffect(() => {
     const checkBg = () => {
       const bgColor = window.getComputedStyle(document.body).backgroundColor;
-      if (bgColor === "rgb(255, 255, 255)") setCursorColor("#9b2c2c"); // dark on white
-      else setCursorColor("#FC6C87"); // bright on pink
+      if (bgColor === "rgb(255, 255, 255)") setCursorColor("#9b2c2c");
+      else setCursorColor("#FC6C87");
     };
     window.addEventListener("scroll", checkBg);
     checkBg();
@@ -59,17 +79,26 @@ export default function FestiveCursor() {
       />
 
       {/* Sparkle trail */}
-      {colors.map((color, idx) => (
-        <motion.div
-          key={idx}
-          className="fixed w-2 h-2 rounded-full pointer-events-none z-[9998] opacity-70"
-          style={{
-            translateX: useSpring(mouseX, { stiffness: 200 - idx * 30, damping: 20 }),
-            translateY: useSpring(mouseY, { stiffness: 200 - idx * 30, damping: 20 }),
-            backgroundColor: color,
-          }}
-        />
-      ))}
+      <motion.div
+        className="fixed w-2 h-2 rounded-full pointer-events-none z-[9998] opacity-70"
+        style={{ translateX: trail1X, translateY: trail1Y, backgroundColor: colors[0] }}
+      />
+      <motion.div
+        className="fixed w-2 h-2 rounded-full pointer-events-none z-[9998] opacity-70"
+        style={{ translateX: trail2X, translateY: trail2Y, backgroundColor: colors[1] }}
+      />
+      <motion.div
+        className="fixed w-2 h-2 rounded-full pointer-events-none z-[9998] opacity-70"
+        style={{ translateX: trail3X, translateY: trail3Y, backgroundColor: colors[2] }}
+      />
+      <motion.div
+        className="fixed w-2 h-2 rounded-full pointer-events-none z-[9998] opacity-70"
+        style={{ translateX: trail4X, translateY: trail4Y, backgroundColor: colors[3] }}
+      />
+      <motion.div
+        className="fixed w-2 h-2 rounded-full pointer-events-none z-[9998] opacity-70"
+        style={{ translateX: trail5X, translateY: trail5Y, backgroundColor: colors[4] }}
+      />
 
       {/* Hover effect */}
       <style jsx global>{`
