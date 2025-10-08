@@ -252,6 +252,12 @@ export default function Login() {
       />
       Login with Opus Account
     </motion.button>
+    <OpusLoginModal
+  isOpen={isOpusOpen}
+  onClose={() => setIsOpusOpen(false)}
+  onConfirm={handleOpusConfirm}
+/>
+
 
     {/* Sign Up */}
     <div className="text-center text-xs sm:text-sm mt-3 text-gray-600">
