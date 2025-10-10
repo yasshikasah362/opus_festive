@@ -110,7 +110,7 @@ export default function FlyerModal({
           {modalContent.options.map((opt, idx) => (
             <button
               key={idx}
-              className={`w-full py-2 sm:py-2.5 px-3 sm:px-4 border rounded-lg transition text-sm sm:text-base text-left
+              className={`cursor-pointer w-full py-2 sm:py-2.5 px-3 sm:px-4 border rounded-lg transition text-sm sm:text-base text-left
                 ${
                   selectedValue === opt
                     ? "bg-pink-100 border-pink-500 text-pink-600 font-medium"
@@ -133,7 +133,7 @@ export default function FlyerModal({
         </div>
 
         <button
-          className="mt-3 sm:mt-4 bg-[#FC6C87] text-white py-2 sm:py-3 px-4 rounded-lg hover:bg-[#FF9A8B] transition text-sm sm:text-base"
+          className="cursor-pointer mt-3 sm:mt-4 bg-[#FC6C87] text-white py-2 sm:py-3 px-4 rounded-lg hover:bg-[#FF9A8B] transition text-sm sm:text-base"
           onClick={handleConfirm}
           disabled={loading}
         >

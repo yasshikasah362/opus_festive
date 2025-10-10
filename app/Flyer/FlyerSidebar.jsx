@@ -1,9 +1,11 @@
 "use client";
-import { useState } from "react";
+import { useState , useMemo} from "react";
 import { FaRegImages, FaExclamationCircle, FaCheckCircle } from "react-icons/fa";
 import { MdGridView, MdNoteAdd, MdPhotoLibrary } from "react-icons/md";
 import { Flyer_Prompts } from "./FlyerData";
 import { FlyerForm } from "./FlyerForm";
+import { motion, AnimatePresence } from "framer-motion";
+import Masonry from "react-masonry-css"; 
 
 export default function FlyerSidebar({
   activeTab,
@@ -14,7 +16,15 @@ export default function FlyerSidebar({
   products,
   handleProductSelect,
   selectedProduct,
+  panelOpen,
+  setPanelOpen,
 }) {
+
+  const openPanel = () => {
+    setPanelOpen(true);
+  };
+
+
   const [flyerForm] = useState(new FlyerForm());
   const [lastSelectedProduct, setLastSelectedProduct] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -23,6 +33,7 @@ export default function FlyerSidebar({
   const [address, setAddress] = useState("");
   const [generated, setGenerated] = useState(false);
   const [flyers, setFlyers] = useState([]);
+   const [searchQuery, setSearchQuery] = useState("");
 
   const [tabStatus, setTabStatus] = useState({
     templates: false,
@@ -31,8 +42,16 @@ export default function FlyerSidebar({
     gallery: false,
   });
 
+  const masonryBreakpoints = {
+  default: 2,
+  1100: 2,
+  700: 1,
+};
+
+   // ✅ Use panelOpen from parent instead of showRightPanel
   const handleTemplateClickLocal = (template) => {
     handleTemplateClick(template);
+     setPanelOpen(true);
     setTabStatus((prev) => ({ ...prev, templates: true }));
   };
 
@@ -41,6 +60,22 @@ export default function FlyerSidebar({
     setLastSelectedProduct(product);
     setTabStatus((prev) => ({ ...prev, products: true }));
   };
+
+   // Filtered templates based on search (at least 3 letters)
+  const filteredTemplates = useMemo(() => {
+    if (searchQuery.length < 3) return Flyer_Prompts;
+    return Flyer_Prompts.filter((t) =>
+      t.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [searchQuery]);
+
+  // Filtered products based on search (at least 3 letters)
+  const filteredProducts = useMemo(() => {
+    if (searchQuery.length < 3) return products;
+    return products.filter((p) =>
+      p.product_name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [searchQuery, products]);
 
   function generateFlyerPrompt(settings) {
     let prompt = "Generate a marketing flyer for the uploaded image with these settings -\n\n";
@@ -155,7 +190,7 @@ export default function FlyerSidebar({
   <aside
     className="
       hidden md:flex 
-      w-24 flex-col py-4 bg-gray-200 border-r-2 border-r-gray-100 shadow-2xl pl-2
+      w-24 flex-col py-4 bg-gray-200 border-r-2 border-r-gray-100 shadow-2xl p-2
     "
   >
     {menuItems.map((item) => {
@@ -173,9 +208,10 @@ export default function FlyerSidebar({
           key={item.id}
           onClick={() => {
             if (!isDisabled) setActiveTab(item.id);
+            openPanel();
           }}
           disabled={isDisabled}
-          className={`cursor-pointer relative flex flex-col items-center justify-center w-full h-24 rounded-lg border-2  mb-2 transition-transform duration-200
+          className={`cursor-pointer relative flex flex-col items-center justify-center w-full h-24 rounded-lg border-2   mb-2 transition-transform duration-200
             ${
               isActive
                 ? "bg-gradient-to-tr from-pink-500 to-orange-400 text-white shadow-lg scale-105 border-pink-400"
@@ -202,146 +238,187 @@ export default function FlyerSidebar({
     })}
   </aside>
 
-  {/* Right Sidebar */}
-  <aside
-    className="
-      w-full md:w-96 
-      p-4 h-auto md:h-[40rem] 
-      flex flex-col overflow-y-auto 
-      bg-white border-r-2 border-r-gray-100
-    "
-  >
-    {/* Templates */}
-    {activeTab === "templates" && (
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-2 gap-4">
-        {Flyer_Prompts.map((template) => (
-          <div
-            key={template.id}
-            className={`relative rounded-xl cursor-pointer border-2 transition-transform duration-300 hover:scale-105 ${
-              selectedTemplate?.id === template.id
-                ? "ring-4 ring-pink-200 border-pink-300 scale-105"
-                : "border-gray-300"
-            }`}
-            onClick={() => handleTemplateClickLocal(template)}
-          >
-            {selectedTemplate?.id === template.id && (
-              <FaCheckCircle className="absolute top-2 left-2 text-green-500 w-4 h-4" />
-            )}
-            <img
-              src={`https://supoassets.s3.ap-south-1.amazonaws.com/public/GoogleStudio/assets/Templates/flyer/v2/${encodeURIComponent(
-                template.name
-              )}.webp`}
-              alt={template.name}
-              className="w-full h-32 sm:h-40 object-cover rounded-md"
-              draggable={false}
-            />
-          </div>
-        ))}
-      </div>
-    )}
+ 
+   
+    {/* 🟣 Sliding Right Panel */}
+     <AnimatePresence>
+  {panelOpen && (
+    <motion.aside
+      initial={{ x: "100%", opacity: 0 }}
+      animate={{ x: 0, opacity: 1 }}
+      exit={{ x: "100%", opacity: 0 }}
+      transition={{ type: "spring", stiffness: 100, damping: 20 }}
+      className="w-full md:w-96 p-4 h-auto md:h-[40rem] flex flex-col overflow-y-auto bg-white border-l border-gray-100 shadow-xl"
+    >
 
-    {/* Products */}
-    {activeTab === "products" && (
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-2 gap-4">
-        {products.map((product) => {
-          const isSelected =
-            selectedProduct?.product_name === product.product_name;
-          return (
-            <div
-              key={product.product_name}
-              onClick={() => handleProductSelectLocal(product)}
-              className={`relative cursor-pointer border rounded-lg shadow-sm transition-transform duration-200 bg-white 
-                ${
-                  isSelected
-                    ? "ring-4 ring-pink-200 border-pink-300 scale-105"
-                    : "border-gray-300 hover:shadow-md hover:scale-105"
-                }`}
-            >
-              {isSelected && (
-                <FaCheckCircle className="absolute top-2 left-2 text-green-500 w-5 h-5" />
-              )}
-              <img
-                src={product.imageUrl}
-                alt={product.product_name}
-                className="w-full h-24 sm:h-32 object-contain rounded-md"
+       {/* Search + Close */}
+          {(activeTab === "templates" || activeTab === "products") && (
+            <div className="flex items-center justify-between mb-4">
+              <input
+                type="text"
+                placeholder="Search..."
+                className="flex-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-pink-400 outline-none"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
               />
-              <div className="mt-2 text-center mb-4">
-                <p className="text-sm font-semibold">
-                  {product.product_name}
-                </p>
-                {/* <p className="text-xs text-gray-500">{product.category_name}</p> */}
-              </div>
+              <button
+                onClick={() => setPanelOpen(false)}
+                className="ml-3 text-xl font-bold text-gray-500 hover:text-gray-800 transition"
+              >
+                &times;
+              </button>
             </div>
-          );
-        })}
+          )}
+
+      {/* Templates */}
+            {activeTab === "templates" && (
+  <Masonry
+    breakpointCols={masonryBreakpoints}
+    className="flex w-auto gap-4"
+    columnClassName="bg-clip-padding space-y-4"
+  >
+    {filteredTemplates.map((template) => (
+      <div
+        key={template.id}
+        className={`relative rounded-xl cursor-pointer border-2 transition-transform duration-300 hover:scale-105 ${
+          selectedTemplate?.id === template.id
+            ? "ring-4 ring-pink-200 border-pink-300 scale-105"
+            : "border-gray-300"
+        }`}
+        // ✅ Call the local handler here
+        onClick={() => handleTemplateClickLocal(template)}
+      >
+        {selectedTemplate?.id === template.id && (
+          <FaCheckCircle className="absolute top-2 left-2 text-green-500 w-4 h-4" />
+        )}
+        <img
+          src={`https://supoassets.s3.ap-south-1.amazonaws.com/public/GoogleStudio/assets/Templates/flyer/v2/${encodeURIComponent(
+            template.name
+          )}.webp`}
+          alt={template.name}
+          className="w-full h-32 sm:h-40 object-cover rounded-md"
+          draggable={false}
+        />
       </div>
-    )}
+    ))}
+  </Masonry>
+)}
 
-    {/* Details */}
-    {activeTab === "detail" && (
-      <div className="flex flex-col justify-center items-center h-full w-full">
-        <div className="w-full space-y-3">
-          <input
-            type="text"
-            placeholder="Enter Name"
-            name="name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-pink-400 outline-none"
-          />
-          <input
-            type="text"
-            placeholder="Enter Mobile Number"
-            name="mobile number"
-            value={number}
-            onChange={(e) => setNumber(e.target.value)}
-            className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-pink-400 outline-none"
-          />
-          <input
-            type="text"
-            placeholder="Enter Address"
-            name="address"
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
-            className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-pink-400 outline-none"
-          />
-        </div>
-
-        <button
-          onClick={handleAddDetails}
-          disabled={loading}
-          className={` cursor-pointer mt-5 px-6 py-3 ${
-            loading
-              ? "bg-gray-400"
-              : generated
-              ? "bg-green-500"
-              : "bg-gradient-to-r from-pink-500 to-orange-400"
-          } text-white font-semibold rounded-xl shadow-md hover:scale-105 transition-transform`}
+      {/* Templates */}
+      {activeTab === "products" && (
+  <Masonry
+    breakpointCols={masonryBreakpoints}
+    className="flex w-auto gap-4"
+    columnClassName="bg-clip-padding space-y-4"
+  >
+    {filteredProducts.map((product) => {
+      const isSelected = selectedProduct?.product_name === product.product_name;
+      return (
+        <div
+          key={product.product_name}
+          // ✅ Call the local handler here
+          onClick={() => handleProductSelectLocal(product)}
+          className={`relative cursor-pointer border rounded-lg shadow-sm transition-transform duration-200 bg-white 
+            ${
+              isSelected
+                ? "ring-4 ring-pink-200 border-pink-300 scale-105"
+                : "border-gray-300 hover:shadow-md hover:scale-105"
+            }`}
         >
-          {loading
-            ? "Generating..."
-            : generated
-            ? "Generated"
-            : "Confirm & Generate Flyer"}
-        </button>
-      </div>
-    )}
+          {isSelected && (
+            <FaCheckCircle className="absolute top-2 left-2 text-green-500 w-5 h-5" />
+          )}
+          <img
+            src={product.imageUrl}
+            alt={product.product_name}
+            className="w-full h-24 sm:h-32 object-contain rounded-md"
+          />
+          <div className="mt-2 text-center mb-4">
+            <p className="text-sm font-semibold">{product.product_name}</p>
+          </div>
+        </div>
+      );
+    })}
+  </Masonry>
+)}
 
-    {/* Gallery */}
-    {activeTab === "gallery" && flyers.length > 0 && (
-      <div className="p-4 grid grid-cols-2 sm:grid-cols-3 gap-4">
-        {flyers.map((img, index) => (
-          <div key={index} className="flex justify-center">
-            <img
-              src={img}
-              alt={`Generated Flyer ${index + 1}`}
-              className="w-32 sm:w-48 h-auto rounded-lg shadow-lg hover:scale-105 transition-transform"
+      {/* Details */}
+      {activeTab === "detail" && (
+        <div className="flex flex-col justify-center items-center h-full w-full">
+          <div className="w-full space-y-3">
+            <input
+              type="text"
+              placeholder="Enter Name"
+              name="name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-pink-400 outline-none"
+            />
+            <input
+              type="text"
+              placeholder="Enter Mobile Number"
+              name="mobile number"
+              value={number}
+              onChange={(e) => setNumber(e.target.value)}
+              className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-pink-400 outline-none"
+            />
+            <input
+              type="text"
+              placeholder="Enter Address"
+              name="address"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+              className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-pink-400 outline-none"
             />
           </div>
-        ))}
-      </div>
-    )}
-  </aside>
+
+          <button
+            onClick={handleAddDetails}
+            disabled={loading}
+            className={` cursor-pointer mt-5 px-6 py-3 ${
+              loading
+                ? "bg-gray-400"
+                : generated
+                ? "bg-green-500"
+                : "bg-gradient-to-r from-pink-500 to-orange-400"
+            } text-white font-semibold rounded-xl shadow-md hover:scale-105 transition-transform`}
+          >
+            {loading
+              ? "Generating..."
+              : generated
+              ? "Generated"
+              : "Confirm & Generate Flyer"}
+          </button>
+        </div>
+      )}
+
+      {/* Gallery */}
+      {activeTab === "gallery" && flyers.length > 0 && (
+        <div className="p-4 grid grid-cols-2 sm:grid-cols-3 gap-4">
+          {flyers.map((img, index) => (
+            <div key={index} className="flex justify-center">
+              <img
+                src={img}
+                alt={`Generated Flyer ${index + 1}`}
+                className="w-32 sm:w-48 h-auto rounded-lg shadow-lg hover:scale-105 transition-transform"
+              />
+            </div>
+          ))}
+        </div>
+      )}
+    </motion.aside>
+  )}
+</AnimatePresence>
+
+
+
+
+  
+   
+
+   
+
+
 </>
   );
 }

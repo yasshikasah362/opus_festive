@@ -5,7 +5,6 @@ import FlyerSidebar from "./FlyerSidebar";
 import FlyerCanvas from "./FlyerCanvas";
 import { FlyerForm } from "./FlyerForm";
 
-
 export default function Flyer() {
   const [activeTab, setActiveTab] = useState("templates");
   const [activeEdit, setActiveEdit] = useState(null);
@@ -14,35 +13,22 @@ export default function Flyer() {
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [imgLoaded, setImgLoaded] = useState(false);
   const [flyerForm, setFlyerForm] = useState(new FlyerForm());
- const [inputImageUrl, setInputImageUrl] = useState("");
- const [selectedProduct, setSelectedProduct] = useState(null);
- 
+  const [inputImageUrl, setInputImageUrl] = useState("");
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [panelOpen, setPanelOpen] = useState(false); // 👈 shared state
 
-
-const handleTemplateClick = (template) => {
-  setSelectedTemplate(template);
-  setImgLoaded(false);
-
-  setFlyerForm((prev) => {
-  return {
-    ...prev,
-    currFlyer: template,
-    
+  const handleTemplateClick = (template) => {
+    setSelectedTemplate(template);
+    setImgLoaded(false);
+    setFlyerForm((prev) => ({
+      ...prev,
+      currFlyer: template,
+    }));
   };
-});
 
-};
-
-
-
-useEffect(() => {
-  if (activeTab === "products") setProducts(productsData);
-}, [activeTab]);
-
-
- 
-
-
+  useEffect(() => {
+    if (activeTab === "products") setProducts(productsData);
+  }, [activeTab]);
 
   const getScaledPosition = (coord) => {
     if (!imgLoaded) return { left: 0, top: 0 };
@@ -55,57 +41,45 @@ useEffect(() => {
     };
   };
 
- // Product select pe sirf product ka imageUrl bhejna hai
-const handleProductSelect = (product) => {
-  // 1. FlyerForm update (jaise abhi kar rahe ho)
-  setFlyerForm((prev) => {
-    const updatedForm = { ...prev };
-    updatedForm.inputImageUrl = product.imageUrl;
-    console.log("Saving inputImageUrl:", product.imageUrl);
-    console.log("Updated FlyerForm:", updatedForm);
-    return updatedForm;
-  });
-
-  // 2. SelectedProducts array update (UI ke liye)
-  setSelectedProduct(product);
-};
-
-
-
-
-
-
-
-
-
+  const handleProductSelect = (product) => {
+    setFlyerForm((prev) => {
+      const updatedForm = { ...prev };
+      updatedForm.inputImageUrl = product.imageUrl;
+      console.log("Saving inputImageUrl:", product.imageUrl);
+      console.log("Updated FlyerForm:", updatedForm);
+      return updatedForm;
+    });
+    setSelectedProduct(product);
+  };
 
   return (
     <div className="h-screen flex flex-col bg-white overflow-hidden">
       <div className="flex mt-16">
         <FlyerSidebar
-  activeTab={activeTab}
-  setActiveTab={setActiveTab}
-  selectedTemplate={selectedTemplate} 
-  selectedProducts={selectedProducts}
-  setSelectedProducts={setSelectedProducts}
-  selectedProduct={selectedProduct}
-  products={products}
-  handleTemplateClick={handleTemplateClick} 
-  handleProductSelect={handleProductSelect}   
-/>
-
-
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          selectedTemplate={selectedTemplate}
+          selectedProducts={selectedProducts}
+          setSelectedProducts={setSelectedProducts}
+          selectedProduct={selectedProduct}
+          products={products}
+          handleTemplateClick={handleTemplateClick}
+          handleProductSelect={handleProductSelect}
+          panelOpen={panelOpen}
+          setPanelOpen={setPanelOpen} // 🔥 ADD THIS LINE
+        />
 
         <FlyerCanvas
-  selectedTemplate={selectedTemplate}
-  activeEdit={activeEdit}
-  setActiveEdit={setActiveEdit}
-  imgLoaded={imgLoaded}
-  setImgLoaded={setImgLoaded}
-  getScaledPosition={getScaledPosition}
-  flyerForm={flyerForm}            // ✅ add
-  setFlyerForm={setFlyerForm}      // ✅ add
-/>
+          selectedTemplate={selectedTemplate}
+          activeEdit={activeEdit}
+          setActiveEdit={setActiveEdit}
+          imgLoaded={imgLoaded}
+          setImgLoaded={setImgLoaded}
+          getScaledPosition={getScaledPosition}
+          flyerForm={flyerForm}
+          setFlyerForm={setFlyerForm}
+          panelOpen={panelOpen}
+        />
       </div>
     </div>
   );

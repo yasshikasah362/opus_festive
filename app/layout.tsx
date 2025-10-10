@@ -3,10 +3,10 @@ import './globals.css';
 import { Providers } from './providers';
 import Navbar from '../components/Navbar';
 import { Poppins } from "next/font/google";
-import FestiveCursor from "../components/FestiveCursor";
+// import FestiveCursor from "../components/FestiveCursor";
 
 export const metadata = {
-  title: 'FastiveMaker',
+  title: 'FestiveMaker',
   description: 'Simple Auth using NextAuth',
 };
 
@@ -19,7 +19,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={poppins.className}>
       <body>
-          <FestiveCursor />
+          {/* <FestiveCursor /> */}
         <Providers>
           <Navbar/>
           {children}</Providers>

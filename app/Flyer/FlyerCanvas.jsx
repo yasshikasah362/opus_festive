@@ -1,5 +1,6 @@
 "use client";
 import { useRef, useEffect, useState } from "react";
+import { motion } from "framer-motion"; // 🟣 Added for animation
 import { FaHeading, FaTag } from "react-icons/fa";
 import { MdSubtitles } from "react-icons/md";
 import { RiPriceTag3Fill } from "react-icons/ri";
@@ -22,33 +23,32 @@ export default function FlyerCanvas({
   getScaledPosition,
   flyerForm,
   setFlyerForm,
+  panelOpen,
 }) {
   const imgRef = useRef(null);
-  const [confirmedEdits, setConfirmedEdits] = useState({}); // ✅ Track confirmed fields
-  
-
+  const [confirmedEdits, setConfirmedEdits] = useState({});
+  const [slideRight, setSlideRight] = useState(false); // 🟢 Added
 
   useEffect(() => {
-    if (selectedTemplate) setImgLoaded(false);
+    if (selectedTemplate) {
+      setImgLoaded(false);
+      setSlideRight(true); // 🟢 Slide canvas right when template selected
+    }
   }, [selectedTemplate]);
 
   const handleImageLoad = () => {
     const img = imgRef.current;
     if (!img) return;
-
     const containerWidth = img.clientWidth;
     const containerHeight = img.clientHeight;
     const naturalWidth = img.naturalWidth;
     const naturalHeight = img.naturalHeight;
-
     const imageRatio = naturalWidth / naturalHeight;
     const containerRatio = containerWidth / containerHeight;
-
     let renderedWidth,
       renderedHeight,
       offsetX = 0,
       offsetY = 0;
-
     if (imageRatio > containerRatio) {
       renderedWidth = containerWidth;
       renderedHeight = containerWidth / imageRatio;
@@ -58,7 +58,6 @@ export default function FlyerCanvas({
       renderedWidth = containerHeight * imageRatio;
       offsetX = (containerWidth - renderedWidth) / 2;
     }
-
     setImgLoaded({
       naturalWidth,
       naturalHeight,
@@ -86,17 +85,18 @@ export default function FlyerCanvas({
   ];
 
   return (
-    <main className="flex-1 flex items-center justify-center overflow-hidden relative p-2">
+    <motion.main
+      animate={{ x: panelOpen ? "2rem" : 0, }} // 🟢 Shift right when template selected
+      transition={{ type: "spring", stiffness: 20, damping: 20 }}
+      className="flex-1 flex items-center justify-center overflow-hidden relative p-10"
+    >
       <div
-        className="
-          relative bg-gray-200 shadow-lg rounded-xl flex items-center justify-center
-          w-full h-[60vh] sm:h-[70vh] md:h-[80vh] lg:h-[90vh]
-          max-w-[95%] sm:max-w-[90%] md:max-w-[80%] lg:max-w-[70%]
-        "
+        className="relative bg-gray-200 shadow-lg rounded-xl flex items-center justify-center
+        w-full h-[60vh] sm:h-[70vh] md:h-[80vh] lg:h-[80vh]
+        max-w-[95%] sm:max-w-[90%] md:max-w-[80%] lg:max-w-[70%]"
       >
         {selectedTemplate ? (
           <>
-            {/* Template Image */}
             <img
               ref={imgRef}
               src={`https://supoassets.s3.ap-south-1.amazonaws.com/public/GoogleStudio/assets/Templates/flyer/v2/${encodeURIComponent(
@@ -108,15 +108,13 @@ export default function FlyerCanvas({
               onLoad={handleImageLoad}
             />
 
-            {/* Left Vertical Icon Panel */}
+            {/* Left Icon Panel */}
             <div className="absolute left-3 top-1/2 -translate-y-1/2 flex flex-col gap-4 bg-white/80 backdrop-blur-sm p-3 rounded-xl shadow-md">
               {iconPanel.map((item) => {
                 const isActive = activeEdit === item.key;
                 const confirmed = confirmedEdits[item.key];
-
                 const bgColor = confirmed || isActive ? "#FC6C87" : "#ffffff";
                 const iconColor = confirmed || isActive ? "#ffffff" : "#000000";
-
                 return (
                   <button
                     key={item.key}
@@ -126,7 +124,7 @@ export default function FlyerCanvas({
                       backgroundColor: bgColor,
                       color: iconColor,
                     }}
-                    className={`w-9 h-9 flex items-center justify-center rounded-full shadow transition-all duration-200 hover:scale-105 ${
+                    className={`cursor-pointer w-9 h-9 flex items-center justify-center rounded-full shadow transition-all duration-200 hover:scale-105 ${
                       isActive ? "ring-2 ring-[#FC6C87]" : ""
                     }`}
                   >
@@ -136,18 +134,16 @@ export default function FlyerCanvas({
               })}
             </div>
 
-            {/* Modal */}
             <FlyerModal
-  activeEdit={activeEdit}
-  setActiveEdit={setActiveEdit}
-  data={data}
-  flyerForm={flyerForm}
-  setFlyerForm={setFlyerForm}
-  onConfirmEdit={(key) =>
-    setConfirmedEdits((prev) => ({ ...prev, [key]: true }))
-  } // ✅ mark as confirmed
-/>
-
+              activeEdit={activeEdit}
+              setActiveEdit={setActiveEdit}
+              data={data}
+              flyerForm={flyerForm}
+              setFlyerForm={setFlyerForm}
+              onConfirmEdit={(key) =>
+                setConfirmedEdits((prev) => ({ ...prev, [key]: true }))
+              }
+            />
           </>
         ) : (
           <div className="flex items-center justify-center w-full h-full">
@@ -157,6 +153,6 @@ export default function FlyerCanvas({
           </div>
         )}
       </div>
-    </main>
+    </motion.main>
   );
 }
