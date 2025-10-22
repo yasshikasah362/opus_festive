@@ -87,7 +87,7 @@ export default function FlyerCanvas({
   return (
     <motion.main
       animate={{ x: panelOpen ? "2rem" : 0, }} // 🟢 Shift right when template selected
-      transition={{ type: "spring", stiffness: 20, damping: 20 }}
+      transition={{ type: "spring", stiffness: 120, damping: 15 }}
       className="flex-1 flex items-center justify-center overflow-hidden relative p-10"
     >
       <div

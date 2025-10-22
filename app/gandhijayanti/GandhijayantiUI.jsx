@@ -1,43 +1,48 @@
-"use client"
+"use client";
 import React, { useState, useEffect } from "react";
-import { FaRegImages, FaHeading, FaTag, FaCheckCircle, FaExclamationCircle } from "react-icons/fa";
+import {
+  FaRegImages,
+  FaHeading,
+  FaTag,
+  FaCheckCircle,
+  FaExclamationCircle,
+} from "react-icons/fa";
 import { MdNoteAdd, MdPhotoLibrary, MdGridView, MdSubtitles } from "react-icons/md";
 import { RiPriceTag3Fill } from "react-icons/ri";
+import { motion } from "framer-motion";
 import EditModal from "./EditModal";
+import Masonry from "react-masonry-css";
 
 const Gandhijayanti = ({ username }) => {
-  const [active, setActive] = useState("templates");
+  const [active, setActive] = useState("null"); // current active step
   const [templates, setTemplates] = useState([]);
   const [selectedTemplate, setSelectedTemplate] = useState(null);
   const [products, setProducts] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
 
-  // ✅ State for tracking completion
   const [isTemplateSelected, setIsTemplateSelected] = useState(false);
   const [isProductSelected, setIsProductSelected] = useState(false);
   const [isDetailsConfirmed, setIsDetailsConfirmed] = useState(false);
 
-  // Modal states
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalType, setModalType] = useState(null);
-
-  // ✅ Saved data should be per-template
   const [savedData, setSavedData] = useState({});
 
-  // fetch templates
+  // Sliding panel visibility
+  const [isPanelOpen, setIsPanelOpen] = useState(false);
+  const [isTemplatePanelOpen, setIsTemplatePanelOpen] = useState(false);
+  
+
   useEffect(() => {
     fetch("/gandhijayanti.json")
       .then((res) => res.json())
       .then((data) => setTemplates(data))
-      .catch((err) => console.error("Error loading templates:", err));
-  }, []);
+      .catch((err) => console.error(err));
 
-  // fetch products
-  useEffect(() => {
     fetch("/products.json")
       .then((res) => res.json())
       .then((data) => setProducts(data))
-      .catch((err) => console.error("Error loading products:", err));
+      .catch((err) => console.error(err));
   }, []);
 
   const templateImages = [
@@ -52,6 +57,7 @@ const Gandhijayanti = ({ username }) => {
     { id: 9, img: "/gandhi9.jpeg" },
     { id: 10, img: "/gandhi10.jpeg" },
   ];
+  
 
   const getOptions = () => {
     if (!selectedTemplate) return [];
@@ -70,33 +76,6 @@ const Gandhijayanti = ({ username }) => {
     }
   };
 
-  const generateTemplate = async () => {
-    if (!selectedTemplate) return alert("Please select a template first");
-    if (!selectedProduct) return alert("Please select a product");
-
-    const payload = {
-      imageUrl: selectedProduct.imageUrl,
-      prompt_settings: {
-        ...selectedTemplate.prompt_settings,
-        ...(savedData[selectedTemplate.id] || {}),
-      },
-    };
-
-    try {
-      const res = await fetch("http://localhost:5000/api/generate-template", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-      const data = await res.json();
-      console.log("Generated Template:", data.generatedImage);
-      setActive("gallery");
-    } catch (err) {
-      console.error("Error generating template:", err);
-    }
-  };
-
-  // Sidebar items with process logic
   const sidebarItems = [
     { key: "templates", icon: <FaRegImages size={20} />, label: "1. Select Templates", completed: isTemplateSelected, enabled: true },
     { key: "product", icon: <MdGridView size={20} />, label: "2. Products", completed: isProductSelected, enabled: isTemplateSelected },
@@ -104,278 +83,238 @@ const Gandhijayanti = ({ username }) => {
     { key: "gallery", icon: <MdPhotoLibrary size={20} />, label: "4. Result", completed: false, enabled: isDetailsConfirmed },
   ];
 
-  return (
-    <div className="flex flex-col h-screen">
-  {/* Navbar */}
-  <div className="h-12 sm:h-14 md:h-16 bg-gradient-to-r from-pink-600 to-orange-500 text-white flex items-center justify-center text-sm sm:text-base md:text-lg font-semibold shadow-md">
-   
-  </div>
+ const handleSidebarClick = (item) => {
+  if (!item.enabled) return;
 
-  <div className="flex flex-1 flex-col sm:flex-row overflow-hidden">
-    {/* Sidebar (Desktop) */}
-    <div className="hidden sm:flex w-20 md:w-32 flex-col py-4 bg-gray-100 border-r border-gray-200 shadow-xl space-y-4">
-      {sidebarItems.map((item) => (
+  setActive(item.key);
+
+  // Open template panel only once
+  if (item.key === "templates" && !isTemplatePanelOpen) {
+    setIsTemplatePanelOpen(true);
+  }
+};
+
+
+  
+
+
+  return (
+     <div className="flex flex-col h-screen">
+      {/* Navbar */}
+      <div className="h-12 sm:h-14 md:h-16 bg-gradient-to-r from-pink-600 to-orange-500 text-white flex items-center justify-center text-sm sm:text-base md:text-lg font-semibold shadow-md">
+        
+      </div>
+
+      <div className="flex flex-1 overflow-hidden relative">
+        {/* Sidebar */}
+        <div className="hidden sm:flex w-20 md:w-32 flex-col py-4 bg-gray-100 border-r border-gray-200 shadow-xl space-y-4 z-30">
+          {sidebarItems.map((item) => (
+            <div
+              key={item.key}
+              onClick={() => handleSidebarClick(item)}
+              className={`cursor-pointer flex flex-col items-center gap-1 p-3 rounded-xl transition-all duration-200 relative group ${
+                active === item.key
+                  ? "bg-gradient-to-tr from-pink-500 to-orange-400 text-white shadow-lg scale-105"
+                  : item.enabled
+                  ? "bg-gradient-to-tr from-pink-500 to-orange-400 text-white shadow-lg scale-105"
+                  : "bg-gray-100 text-gray-400 cursor-not-allowed"
+              }`}
+            >
+              <div className="relative">
+                {item.icon}
+                {item.completed ? (
+                  <FaCheckCircle className="absolute -top-1 -left-5 text-green-400 w-4 h-4" />
+                ) : (
+                  <FaExclamationCircle className="absolute -top-1 -left-5 text-yellow-500 w-4 h-4" />
+                )}
+              </div>
+              <span className="font-medium text-center text-xs md:text-sm">{item.label}</span>
+            </div>
+          ))}
+        </div>
+
+      {/* Sliding Panel */}
+     <motion.div
+  initial={{ x: -300, opacity: 0 }}
+  animate={{
+    x: isTemplatePanelOpen ? 0 : -300,
+    opacity: isTemplatePanelOpen ? 1 : 0,
+  }}
+  transition={{ type: "spring", stiffness: 120, damping: 20 }}
+  className="w-72 border-r border-gray-200 shadow-xl flex-shrink-0 p-3 sm:p-5 flex flex-col z-20"
+>
+       {active === "templates" && (
+  <Masonry
+    breakpointCols={{
+      default: 2, // desktop
+      768: 2,     // sm screens
+      500: 1,     // mobile
+    }}
+    className="flex gap-3 sm:gap-4"
+    columnClassName="flex flex-col gap-3 sm:gap-4"
+  >
+    {templates.map((temp, index) => (
+      <div
+        key={temp.id}
+        onClick={() => {
+          setSelectedTemplate(temp);
+          setIsTemplateSelected(true);
+        }}
+        className={`relative group cursor-pointer rounded-2xl overflow-hidden shadow-md transition-all duration-300 ${
+          selectedTemplate?.id === temp.id
+            ? "ring-4 ring-pink-400 scale-105"
+            : "hover:scale-105 hover:shadow-lg"
+        }`}
+      >
+        <img
+          src={templateImages[index]?.img}
+          alt={temp.name || `Template ${temp.id}`}
+          className="w-full h-24 sm:h-28 md:h-32 object-cover rounded-xl"
+        />
+        {selectedTemplate?.id === temp.id && (
+          <FaCheckCircle className="absolute top-2 left-2 text-green-400 text-lg drop-shadow-lg w-4 h-4" />
+        )}
+      </div>
+    ))}
+  </Masonry>
+)}
+
+
+       {active === "product" && (
+  <Masonry
+    breakpointCols={{
+      default: 2, // 2 columns on default screens
+      768: 2,     // 2 columns on sm screens
+      1024: 3,    // 3 columns on md/lg screens
+    }}
+    className="flex w-auto gap-3 sm:gap-4 "
+    columnClassName="bg-clip-padding"
+  >
+    {products.map((prod, i) => {
+      const isSelected = selectedProduct?.product_name === prod.product_name;
+      return (
         <div
-          key={item.key}
-          onClick={() => item.enabled && setActive(item.key)}
-          className={`cursor-pointer flex flex-col items-center gap-1 p-3 rounded-xl transition-all duration-200 relative group ${
-            active === item.key
-              ? "bg-gradient-to-tr from-pink-500 to-orange-400 text-white shadow-lg scale-105"
-              : item.enabled
-              ? "bg-white hover:shadow-md hover:scale-105 text-gray-700"
-              : "bg-gray-100 text-gray-400 cursor-not-allowed"
+          key={i}
+          onClick={() => {
+            setSelectedProduct(prod);
+            setIsProductSelected(true);
+          }}
+          className={`relative border-2 rounded-2xl shadow-md flex flex-col items-center p-2 hover:shadow-lg transition cursor-pointer mb-4 ${
+            isSelected ? "ring-4 ring-pink-200 border-pink-300 scale-105" : "border-gray-300"
           }`}
         >
-          <div className="relative">
-            {item.icon}
-            {item.completed ? (
-              <FaCheckCircle className="absolute -top-1 -left-5 text-green-400 w-4 h-4" />
-            ) : (
-              <FaExclamationCircle className="absolute -top-1 -left-5 text-yellow-500 w-4 h-4" />
-            )}
-          </div>
-          <span className="font-medium text-center text-xs md:text-sm">{item.label}</span>
+          {isSelected && (
+            <FaCheckCircle className="absolute top-1 left-1 text-green-500 text-sm drop-shadow-md" />
+          )}
+          <img
+            src={prod.imageUrl}
+            alt={prod.product_name}
+            className="w-full object-contain mb-2"
+            style={{ width: "100%", height: "auto" }}
+          />
+          <h4 className="font-medium text-xs sm:text-sm text-gray-800 text-center">
+            {prod.product_name}
+          </h4>
         </div>
-      ))}
-    </div>
+      );
+    })}
+  </Masonry>
+)}
 
-    {/* Middle Panel */}
-    <div className="flex flex-col w-full sm:w-[320px] md:w-[360px] lg:w-[400px] xl:w-[440px] overflow-y-auto p-3 sm:p-5 bg-white">
-      {/* Mobile: Selected Template Preview */}
-      <div className="sm:hidden mb-3">
+        {active === "details" && (
+          <div className="space-y-3 mb-24">
+            <h3 className="text-base font-semibold mb-2">Add Details</h3>
+            <input
+              type="text"
+              name="name"
+              placeholder="Enter Name"
+              className="w-full border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-pink-400 outline-none"
+            />
+            <input
+              type="text"
+              name="mobileNumber"
+              placeholder="Enter Mobile Number"
+              className="w-full border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-pink-400 outline-none"
+            />
+            <input
+              type="text"
+              name="address"
+              placeholder="Enter Address"
+              className="w-full border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-pink-400 outline-none"
+            />
+            <button
+              onClick={() => setIsDetailsConfirmed(true)}
+              className="w-full bg-gradient-to-r from-pink-500 to-orange-400 text-white py-2 rounded-lg shadow-md hover:opacity-90 transition text-sm"
+            >
+              Confirm and Generate
+            </button>
+          </div>
+        )}
+      </motion.div>
+
+      {/* Canvas Preview */}
+      <motion.div
+        className="flex-1 flex items-center justify-center relative overflow-hidden  p-2 sm:p-4"
+        animate={{ marginLeft: active ? 72 : 0 }}
+        transition={{ type: "tween", duration: 0.35 }}
+      >
         {selectedTemplate ? (
-          <div className="relative w-full max-w-full h-[220px] rounded-xl shadow-md overflow-hidden flex justify-center">
+          <div className="relative  backdrop-blur-md shadow-2xl w-full max-w-[640px] h-[500px] rounded-xl flex items-center justify-center overflow-hidden">
             <img
               src={templateImages.find((d) => d.id === selectedTemplate.id)?.img}
               alt={selectedTemplate.name}
-              className="w-full h-full object-cover rounded-xl"
-              draggable={false}
+              className="w-full h-full object-cover rounded-md"
             />
-            {/* Floating Edit Buttons */}
-            <div className="absolute top-2 left-2 flex flex-col gap-2 z-50">
+            <div className="absolute top-4 left-4 flex flex-col gap-2">
               {[
                 { icon: <FaHeading size={14} />, type: "headline" },
                 { icon: <MdSubtitles size={14} />, type: "subtext" },
                 { icon: <RiPriceTag3Fill size={14} />, type: "offer" },
                 { icon: <FaTag size={14} />, type: "offer_tag" },
-              ].map((btn, i) => {
-                const isSaved = savedData[selectedTemplate?.id]?.[btn.type];
-                return (
-                  <button
-                    key={i}
-                    onClick={() => {
-                      setModalType(btn.type);
-                      setIsModalOpen(true);
-                    }}
-                    className={`p-2 rounded-full shadow-md hover:scale-110 transition ${
-                      isSaved
-                        ? "bg-pink-600/70 text-white ring-2 ring-pink-600"
-                        : "bg-white text-black"
-                    }`}
-                  >
-                    {btn.icon}
-                  </button>
-                );
-              })}
+              ].map((btn, i) => (
+                <button
+                  key={i}
+                  onClick={() => {
+                    setModalType(btn.type);
+                    setIsModalOpen(true);
+                  }}
+                  className={`p-2 rounded-full shadow-md hover:scale-110 transition relative group ${
+                    savedData[selectedTemplate?.id]?.[btn.type]
+                      ? "bg-pink-600/70 text-white ring-2 ring-pink-600"
+                      : "bg-white text-black"
+                  }`}
+                >
+                  {btn.icon}
+                </button>
+              ))}
             </div>
           </div>
         ) : (
-          <div className="w-full h-[220px] bg-gray-200 rounded-xl flex items-center justify-center text-gray-500 text-sm">
+          <div className="relative bg-gray-200 shadow-inner w-full max-w-[640px] h-[500px] rounded-xl flex items-center justify-center text-gray-500 text-sm">
             No Template Selected
           </div>
         )}
-      </div>
+      </motion.div>
 
-      {/* Templates */}
-      {active === "templates" && (
-        <div className="grid grid-cols-2 gap-3 justify-center">
-          {templates.map((temp, index) => (
-            <div
-              key={temp.id}
-              onClick={() => {
-                setSelectedTemplate(temp);
-                setIsTemplateSelected(true);
-              }}
-              className={`relative group cursor-pointer rounded-2xl overflow-hidden shadow-md transition-all duration-300 w-[140px] h-[140px] ${
-                selectedTemplate?.id === temp.id ? "ring-4 ring-pink-400 scale-105" : "hover:scale-105 hover:shadow-lg"
-              }`}
-            >
-              <img src={templateImages[index]?.img} alt={temp.name || `Template ${temp.id}`} className="w-full h-full object-cover" />
-              {selectedTemplate?.id === temp.id && (
-                <FaCheckCircle className="absolute top-2 left-2 text-green-400 text-lg drop-shadow-lg w-4 h-4" />
-              )}
-            </div>
-          ))}
-        </div>
-      )}
-
-      {/* Products */}
-      {active === "product" && (
-        <div className="grid grid-cols-2 gap-3 justify-center">
-          {products.map((prod, i) => {
-            const isSelected = selectedProduct?.product_name === prod.product_name;
-            return (
-              <div
-                key={i}
-                onClick={() => {
-                  setSelectedProduct(prod);
-                  setIsProductSelected(true);
-                }}
-                className={`relative border-2 rounded-2xl shadow-md flex flex-col items-center p-2 hover:shadow-lg transition cursor-pointer w-[140px] h-[140px] ${
-                  isSelected ? "ring-4 ring-pink-200 border-pink-300 scale-105" : "border-gray-300"
-                }`}
-              >
-                {isSelected && (
-                  <FaCheckCircle className="absolute top-1 left-1 text-green-500 text-sm drop-shadow-md" />
-                )}
-                <img src={prod.imageUrl} alt={prod.product_name} className="w-full h-full object-contain" />
-                <h4 className="font-medium text-xs sm:text-sm text-gray-800 text-center mt-1">{prod.product_name}</h4>
-              </div>
-            );
-          })}
-        </div>
-      )}
-
-      {/* Details */}
-    {active === "details" && (
-  <div className="space-y-3 mb-24">
-    <h3 className="text-base font-semibold mb-2">Add Details</h3>
-
-    <input
-      type="text"
-      name="name"
-      placeholder="Enter Name"
-      className="w-full border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-pink-400 outline-none"
-    />
-
-    <input
-      type="text"
-      name="mobileNumber"
-      placeholder="Enter Mobile Number"
-      className="w-full border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-pink-400 outline-none"
-    />
-
-    <input
-      type="text"
-      name="address"
-      placeholder="Enter Address"
-      className="w-full border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-pink-400 outline-none"
-    />
-
-    <button
-      onClick={() => setIsDetailsConfirmed(true)}
-      className="w-full bg-gradient-to-r from-pink-500 to-orange-400 text-white py-2 rounded-lg shadow-md hover:opacity-90 transition text-sm"
-    >
-      Confirm and Generate
-    </button>
-  </div>
-)}
-
-
-      {/* Gallery */}
-      {active === "gallery" && (
-        <div>
-          <h3 className="text-base font-semibold mb-2">Gallery</h3>
-          <p className="text-sm text-gray-600">Gallery images yaha show hongi...</p>
-        </div>
-      )}
+      {/* Edit Modal */}
+      <EditModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        type={modalType}
+        options={getOptions()}
+        onSave={(val) => {
+          setSavedData((prev) => ({
+            ...prev,
+            [selectedTemplate.id]: {
+              ...(prev[selectedTemplate.id] || {}),
+              [modalType]: val,
+            },
+          }));
+          setIsModalOpen(false);
+        }}
+      />
     </div>
-
-    {/* Right Panel Preview (Desktop Only) */}
-    <div className="hidden sm:flex flex-1 items-center justify-center relative overflow-hidden bg-gray-50 p-2 sm:p-4">
-      {selectedTemplate ? (
-        <div className="relative bg-white/80 backdrop-blur-md shadow-2xl w-full max-w-[640px] h-60 sm:h-72 md:h-[380px] lg:h-[500px] rounded-xl flex items-center justify-center overflow-hidden">
-          <img
-            src={templateImages.find((d) => d.id === selectedTemplate.id)?.img}
-            alt={selectedTemplate.name}
-            className="w-full h-full object-cover rounded-md"
-          />
-          <div className="absolute top-4 left-4 flex flex-col gap-2">
-            {[
-              { icon: <FaHeading size={14} />, type: "headline" },
-              { icon: <MdSubtitles size={14} />, type: "subtext" },
-              { icon: <RiPriceTag3Fill size={14} />, type: "offer" },
-              { icon: <FaTag size={14} />, type: "offer_tag" },
-            ].map((btn, i) => (
-              <button
-                key={i}
-                onClick={() => {
-                  setModalType(btn.type);
-                  setIsModalOpen(true);
-                }}
-                className={`p-2 rounded-full shadow-md hover:scale-110 transition relative group ${
-                  savedData[selectedTemplate?.id]?.[btn.type]
-                    ? "bg-pink-600/70 text-white ring-2 ring-pink-600"
-                    : "bg-white text-black"
-                }`}
-              >
-                {btn.icon}
-              </button>
-            ))}
-          </div>
-        </div>
-      ) : (
-        <div className="relative bg-gray-200 shadow-inner w-full max-w-[640px] h-60 sm:h-72 md:h-[380px] lg:h-[500px] rounded-xl flex items-center justify-center text-gray-500 text-sm">
-          No Template Selected
-        </div>
-      )}
     </div>
-  </div>
-
-  {/* Mobile Bottom Navbar */}
-  <div className="sm:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg flex justify-around py-2">
-    {sidebarItems.map((item) => {
-      let enabled = false;
-      if (item.key === "templates") enabled = true;
-      else if (item.key === "product") enabled = isTemplateSelected;
-      else if (item.key === "details") enabled = isProductSelected;
-      else if (item.key === "gallery") enabled = isDetailsConfirmed;
-
-      return (
-        <button
-          key={item.key}
-          onClick={() => enabled && setActive(item.key)}
-          className={`flex flex-col items-center text-xs cursor-pointer transition ${
-            active === item.key
-              ? "text-pink-600 font-semibold"
-              : enabled
-              ? "text-gray-600"
-              : "text-gray-400 cursor-not-allowed"
-          }`}
-        >
-          <div className="relative">
-            {item.icon}
-            {item.completed ? (
-              <FaCheckCircle className="absolute -top-1 -right-2 text-green-400 text-xs" />
-            ) : (
-              <FaExclamationCircle className={`absolute -top-1 -right-2 text-yellow-500 text-xs ${!enabled ? "opacity-40" : ""}`} />
-            )}
-          </div>
-          {item.label1}
-        </button>
-      );
-    })}
-  </div>
-
-  {/* Edit Modal */}
-  <EditModal
-    isOpen={isModalOpen}
-    onClose={() => setIsModalOpen(false)}
-    type={modalType}
-    options={getOptions()}
-    onSave={(val) => {
-      setSavedData((prev) => ({
-        ...prev,
-        [selectedTemplate.id]: {
-          ...(prev[selectedTemplate.id] || {}),
-          [modalType]: val,
-        },
-      }));
-      setIsModalOpen(false);
-    }}
-  />
-</div>
-
   );
 };
 

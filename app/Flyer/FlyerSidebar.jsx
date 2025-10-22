@@ -244,10 +244,10 @@ export default function FlyerSidebar({
      <AnimatePresence>
   {panelOpen && (
     <motion.aside
-      initial={{ x: "100%", opacity: 0 }}
+      initial={{ x: "-100%", opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
-      exit={{ x: "100%", opacity: 0 }}
-      transition={{ type: "spring", stiffness: 100, damping: 20 }}
+      exit={{ x: "-100%", opacity: 0 }}
+      transition={{ type: "spring", stiffness: 100, damping: 50 }}
       className="w-full md:w-96 p-4 h-auto md:h-[40rem] flex flex-col overflow-y-auto bg-white border-l border-gray-100 shadow-xl"
     >
 
