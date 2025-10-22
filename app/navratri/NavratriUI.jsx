@@ -14,6 +14,8 @@ const Navratri = ({ username }) => {
   const [selectedTemplate, setSelectedTemplate] = useState(null);
   const [products, setProducts] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
+
 
   // Completion states
   const [isTemplateSelected, setIsTemplateSelected] = useState(false);
@@ -129,99 +131,119 @@ const Navratri = ({ username }) => {
         </div>
 
         {/* Sliding Panel (Desktop & Mobile) */}
-        {leftPanelOpen && (
-          <motion.div
-                  initial={{ x: -300 }}
-                  animate={{ x: active ? 0 : -300 }}
-                  transition={{ type: "spring", stiffness: 100, damping: 50 }}
-                  className="w-72 bg-white border-r border-gray-200 shadow-xl flex-shrink-0 p-3 sm:p-5 flex flex-col z-20"
-                >
-            <div className="">
-              {/* Templates */}
-              {active === "templates" && (
-  <Masonry
-    breakpointCols={{
-      default: 2, // desktop
-      768: 2,     // sm screens
-      500: 1,     // mobile
-    }}
-    className="flex gap-4"
-    columnClassName="flex flex-col gap-4"
+       {leftPanelOpen && (
+  <motion.div
+    initial={{ x: -300 }}
+    animate={{ x: active ? 0 : -300 }}
+    transition={{ type: "spring", stiffness: 100, damping: 50 }}
+    className="w-72 bg-white border-r border-gray-200 shadow-xl flex-shrink-0 p-3 sm:p-5 flex flex-col z-20"
   >
-    {templates.map((temp, index) => (
-      <div
-        key={temp.id}
-        onClick={() => setSelectedTemplate(temp)}
-        className={`relative group cursor-pointer rounded-2xl overflow-hidden shadow-md transition-all duration-300 ${
-          selectedTemplate?.id === temp.id
-            ? "ring-4 ring-pink-400 scale-105"
-            : "hover:scale-105 hover:shadow-lg"
-        }`}
+    {/* Search Bar for Templates and Products */}
+    {(active === "templates" || active === "product") && (
+      <input
+        type="text"
+        placeholder={`Search ${active === "templates" ? "Templates" : "Products"}`}
+        className="w-full mb-3 border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-pink-400 outline-none"
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+      />
+    )}
+
+    {/* Templates */}
+    {active === "templates" && (
+      <Masonry
+        breakpointCols={{
+          default: 2,
+          768: 2,
+          500: 1,
+        }}
+        className="flex gap-4"
+        columnClassName="flex flex-col gap-4"
       >
-        <img
-          src={navratri[index]?.img}
-          alt={temp.name}
-          className="w-full object-cover rounded-xl"
-          draggable={false}
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition">
-          <h5 className="absolute bottom-2 left-2 text-white font-semibold text-xs sm:text-sm">{temp.name}</h5>
-        </div>
-        {selectedTemplate?.id === temp.id && (
-          <FaCheckCircle className="absolute top-2 left-2 text-green-400 text-2xl drop-shadow-lg w-4 h-4" />
-        )}
-      </div>
-    ))}
-  </Masonry>
-)}
-
-
-              {/* Products */}
-              {active === "product" && (
-  <Masonry
-    breakpointCols={{
-      default: 2,
-      768: 2,  // sm screens
-      500: 1,  // mobile
-    }}
-    className="flex gap-4"
-    columnClassName="flex flex-col gap-4"
-  >
-    {products.map((prod, i) => {
-      const isSelected = selectedProduct?.product_name === prod.product_name;
-      return (
-        <div
-          key={i}
-          onClick={() => handleProductSelect(prod)}
-          className={`relative border-2 rounded-2xl shadow-md flex flex-col items-center p-3 hover:shadow-lg transition ${
-            isSelected ? "ring-4 ring-pink-200 border-pink-300 scale-105" : "border-gray-200"
-          }`}
-        >
-          {isSelected && <FaCheckCircle className="absolute top-2 left-2 text-green-500 text-lg drop-shadow-mdw- h-4" />}
-          <img src={prod.imageUrl} alt={prod.product_name} className="w-full object-contain" />
-          <h4 className="font-semibold text-xs sm:text-sm text-center mt-1">{prod.product_name}</h4>
-        </div>
-      );
-    })}
-  </Masonry>
-)}
-
-
-              {/* Details */}
-              {active === "details" && (
-                <div className="space-y-3">
-                  <h3 className="text-base sm:text-lg font-semibold mb-2">Add Details</h3>
-                  <input type="text" placeholder="Enter Name" className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-pink-400 outline-none" />
-                  <input type="text" placeholder="Enter Mobile Number" className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-pink-400 outline-none" />
-                  <input type="text" placeholder="Enter Address" className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-pink-400 outline-none" />
-                  <button onClick={handleConfirmDetails} className="w-full bg-gradient-to-r from-pink-500 to-orange-400 text-white py-2 rounded-lg shadow-md hover:opacity-90 transition">
-                    Confirm and Generate
-                  </button>
-                </div>
+        {templates
+          .filter((temp) =>
+            searchQuery.length >= 3
+              ? temp.name.toLowerCase().includes(searchQuery.toLowerCase())
+              : true
+          )
+          .map((temp, index) => (
+            <div
+              key={temp.id}
+              onClick={() => setSelectedTemplate(temp)}
+              className={`relative group cursor-pointer rounded-2xl overflow-hidden shadow-md transition-all duration-300 ${
+                selectedTemplate?.id === temp.id
+                  ? "ring-4 ring-pink-400 scale-105"
+                  : "hover:scale-105 hover:shadow-lg"
+              }`}
+            >
+              <img
+                src={navratri[index]?.img}
+                alt={temp.name}
+                className="w-full object-cover rounded-xl"
+                draggable={false}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition">
+                <h5 className="absolute bottom-2 left-2 text-white font-semibold text-xs sm:text-sm">{temp.name}</h5>
+              </div>
+              {selectedTemplate?.id === temp.id && (
+                <FaCheckCircle className="absolute top-2 left-2 text-green-400 text-2xl drop-shadow-lg w-4 h-4" />
               )}
             </div>
-          </motion.div>
-        )}
+          ))}
+      </Masonry>
+    )}
+
+    {/* Products */}
+    {active === "product" && (
+      <Masonry
+        breakpointCols={{
+          default: 2,
+          768: 2,
+          500: 1,
+        }}
+        className="flex gap-4"
+        columnClassName="flex flex-col gap-4"
+      >
+        {products
+          .filter((prod) =>
+            searchQuery.length >= 3
+              ? prod.product_name.toLowerCase().includes(searchQuery.toLowerCase())
+              : true
+          )
+          .map((prod, i) => {
+            const isSelected = selectedProduct?.product_name === prod.product_name;
+            return (
+              <div
+                key={i}
+                onClick={() => handleProductSelect(prod)}
+                className={`relative border-2 rounded-2xl shadow-md flex flex-col items-center p-3 hover:shadow-lg transition ${
+                  isSelected ? "ring-4 ring-pink-200 border-pink-300 scale-105" : "border-gray-200"
+                }`}
+              >
+                {isSelected && <FaCheckCircle className="absolute top-2 left-2 text-green-500 text-lg drop-shadow-md w-4 h-4" />}
+                <img src={prod.imageUrl} alt={prod.product_name} className="w-full object-contain" />
+                <h4 className="font-semibold text-xs sm:text-sm text-center mt-1">{prod.product_name}</h4>
+              </div>
+            );
+          })}
+      </Masonry>
+    )}
+
+    {/* Details */}
+    {active === "details" && (
+      <div className="space-y-3">
+        <h3 className="text-base sm:text-lg font-semibold mb-2">Add Details</h3>
+        <input type="text" placeholder="Enter Name" className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-pink-400 outline-none" />
+        <input type="text" placeholder="Enter Mobile Number" className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-pink-400 outline-none" />
+        <input type="text" placeholder="Enter Address" className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-pink-400 outline-none" />
+        <button onClick={handleConfirmDetails} className="w-full bg-gradient-to-r from-pink-500 to-orange-400 text-white py-2 rounded-lg shadow-md hover:opacity-90 transition">
+          Confirm and Generate
+        </button>
+      </div>
+    )}
+  </motion.div>
+)}
+
 
         {/* Right Panel (Desktop) */}
         <div className="flex-1 flex items-center justify-center p-4 ">

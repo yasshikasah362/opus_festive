@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect} from "react";
 import { motion } from "framer-motion";
 import { FaRegImages, FaHeading, FaTag, FaCheckCircle, FaExclamationCircle } from "react-icons/fa";
 import { MdNoteAdd, MdPhotoLibrary, MdGridView, MdSubtitles } from "react-icons/md";
@@ -19,6 +19,8 @@ const DiwaliUI = ({ username }) => {
   const [isTemplateSelected, setIsTemplateSelected] = useState(false);
   const [isProductSelected, setIsProductSelected] = useState(false);
   const [isDetailsConfirmed, setIsDetailsConfirmed] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+
 
   useEffect(() => {
     fetch("/diwali.json")
@@ -71,6 +73,7 @@ const DiwaliUI = ({ username }) => {
     { key: "gallery", icon: <MdPhotoLibrary size={22} />, label: "4. Results", completed: false, disabled: !isDetailsConfirmed },
   ];
 
+
   return (
     <div className="flex h-screen relative pt-12 sm:pt-14 md:pt-16 ">
 
@@ -111,110 +114,137 @@ const DiwaliUI = ({ username }) => {
 
       {/* Sliding Panel */}
       <motion.div
-        initial={{ x: -300 }}
-        animate={{ x: active ? 0 : -300 }}
-        transition={{ type: "spring", stiffness: 100, damping: 50 }}
-        className="w-72 bg-white border-r border-gray-200 shadow-xl flex-shrink-0 p-3 sm:p-5 flex flex-col z-20"
-      >
-        {active === "templates" && (
-          <div className="grid gap-3 sm:gap-4 grid-cols-2">
-            {templates.map((temp, index) => (
-              <div
-                key={temp.id}
-                onClick={() => {
-                  setSelectedTemplate(temp);
-                  setIsTemplateSelected(true);
-                }}
-                className={`relative group cursor-pointer rounded-2xl overflow-hidden shadow-md transition-all duration-300 ${
-                  selectedTemplate?.id === temp.id
-                    ? "ring-4 ring-pink-400 scale-105"
-                    : "hover:scale-105 hover:shadow-lg"
-                }`}
-              >
-                <img
-                  src={diwali[index]?.img}
-                  alt={temp.name || `Template ${temp.id}`}
-                  className="w-full h-24 sm:h-28 md:h-32 object-cover"
-                />
-                {selectedTemplate?.id === temp.id && (
-                  <FaCheckCircle className="absolute top-2 left-2 text-green-400 text-lg drop-shadow-lg w-4 h-4" />
-                )}
-              </div>
-            ))}
+  initial={{ x: -300 }}
+  animate={{ x: active ? 0 : -300 }}
+  transition={{ type: "spring", stiffness: 100, damping: 50 }}
+  className="w-72 bg-white border-r border-gray-200 shadow-xl flex-shrink-0 p-3 sm:p-5 flex flex-col z-20"
+>
+  {/* Search bar for templates and products */}
+  {(active === "templates" || active === "product") && (
+    <input
+      type="text"
+      placeholder={`Search ${active === "templates" ? "Templates" : "Products"}`}
+      className="w-full mb-3 border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-pink-400 outline-none"
+      value={searchQuery}
+      onChange={(e) => setSearchQuery(e.target.value)}
+    />
+  )}
+
+  {/* Templates Panel */}
+  {active === "templates" && (
+    <div className="grid gap-3 sm:gap-4 grid-cols-2">
+      {templates
+        .filter((temp) =>
+          searchQuery.length >= 3
+            ? temp.name.toLowerCase().includes(searchQuery.toLowerCase())
+            : true
+        )
+        .map((temp, index) => (
+          <div
+            key={temp.id}
+            onClick={() => {
+              setSelectedTemplate(temp);
+              setIsTemplateSelected(true);
+            }}
+            className={`relative group cursor-pointer rounded-2xl overflow-hidden shadow-md transition-all duration-300 ${
+              selectedTemplate?.id === temp.id
+                ? "ring-4 ring-pink-400 scale-105"
+                : "hover:scale-105 hover:shadow-lg"
+            }`}
+          >
+            <img
+              src={diwali[index]?.img}
+              alt={temp.name || `Template ${temp.id}`}
+              className="w-full h-24 sm:h-28 md:h-32 object-cover"
+            />
+            {selectedTemplate?.id === temp.id && (
+              <FaCheckCircle className="absolute top-2 left-2 text-green-400 text-lg drop-shadow-lg w-4 h-4" />
+            )}
           </div>
-        )}
+        ))}
+    </div>
+  )}
 
-       {active === "product" && (
-  <Masonry
-    breakpointCols={{
-      default: 2, // 2 columns on default screens
-      768: 2,     // 2 columns on sm screens
-      1024: 3,    // 3 columns on md/lg screens
-    }}
-    className="flex w-auto gap-3 sm:gap-4 "
-    columnClassName="bg-clip-padding"
-  >
-    {products.map((prod, i) => {
-      const isSelected = selectedProduct?.product_name === prod.product_name;
-      return (
-        <div
-          key={i}
-          onClick={() => {
-            setSelectedProduct(prod);
-            setIsProductSelected(true);
-          }}
-          className={`relative border-2 rounded-2xl shadow-md flex flex-col items-center p-2 hover:shadow-lg transition cursor-pointer mb-4 ${
-            isSelected ? "ring-4 ring-pink-200 border-pink-300 scale-105" : "border-gray-300"
-          }`}
-        >
-          {isSelected && (
-            <FaCheckCircle className="absolute top-1 left-1 text-green-500 text-sm drop-shadow-md" />
-          )}
-          <img
-            src={prod.imageUrl}
-            alt={prod.product_name}
-            className="w-full object-contain mb-2"
-            style={{ width: "100%", height: "auto" }}
-          />
-          <h4 className="font-medium text-xs sm:text-sm text-gray-800 text-center">
-            {prod.product_name}
-          </h4>
-        </div>
-      );
-    })}
-  </Masonry>
-)}
-
-        {active === "details" && (
-          <div className="space-y-3 mb-24">
-            <h3 className="text-base font-semibold mb-2">Add Details</h3>
-            <input
-              type="text"
-              name="name"
-              placeholder="Enter Name"
-              className="w-full border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-pink-400 outline-none"
-            />
-            <input
-              type="text"
-              name="mobileNumber"
-              placeholder="Enter Mobile Number"
-              className="w-full border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-pink-400 outline-none"
-            />
-            <input
-              type="text"
-              name="address"
-              placeholder="Enter Address"
-              className="w-full border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-pink-400 outline-none"
-            />
-            <button
-              onClick={() => setIsDetailsConfirmed(true)}
-              className="w-full bg-gradient-to-r from-pink-500 to-orange-400 text-white py-2 rounded-lg shadow-md hover:opacity-90 transition text-sm"
+  {/* Products Panel */}
+  {active === "product" && (
+    <Masonry
+      breakpointCols={{
+        default: 2,
+        768: 2,
+        1024: 3,
+      }}
+      className="flex w-auto gap-3 sm:gap-4"
+      columnClassName="bg-clip-padding"
+    >
+      {products
+        .filter((prod) =>
+          searchQuery.length >= 3
+            ? prod.product_name.toLowerCase().includes(searchQuery.toLowerCase())
+            : true
+        )
+        .map((prod, i) => {
+          const isSelected = selectedProduct?.product_name === prod.product_name;
+          return (
+            <div
+              key={i}
+              onClick={() => {
+                setSelectedProduct(prod);
+                setIsProductSelected(true);
+              }}
+              className={`relative border-2 rounded-2xl shadow-md flex flex-col items-center p-2 hover:shadow-lg transition cursor-pointer mb-4 ${
+                isSelected ? "ring-4 ring-pink-200 border-pink-300 scale-105" : "border-gray-300"
+              }`}
             >
-              Confirm and Generate
-            </button>
-          </div>
-        )}
-      </motion.div>
+              {isSelected && (
+                <FaCheckCircle className="absolute top-1 left-1 text-green-500 text-sm drop-shadow-md" />
+              )}
+              <img
+                src={prod.imageUrl}
+                alt={prod.product_name}
+                className="w-full object-contain mb-2"
+                style={{ width: "100%", height: "auto" }}
+              />
+              <h4 className="font-medium text-xs sm:text-sm text-gray-800 text-center">
+                {prod.product_name}
+              </h4>
+            </div>
+          );
+        })}
+    </Masonry>
+  )}
+
+  {/* Details Panel */}
+  {active === "details" && (
+    <div className="space-y-3 mb-24">
+      <h3 className="text-base font-semibold mb-2">Add Details</h3>
+      <input
+        type="text"
+        name="name"
+        placeholder="Enter Name"
+        className="w-full border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-pink-400 outline-none"
+      />
+      <input
+        type="text"
+        name="mobileNumber"
+        placeholder="Enter Mobile Number"
+        className="w-full border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-pink-400 outline-none"
+      />
+      <input
+        type="text"
+        name="address"
+        placeholder="Enter Address"
+        className="w-full border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-pink-400 outline-none"
+      />
+      <button
+        onClick={() => setIsDetailsConfirmed(true)}
+        className="w-full bg-gradient-to-r from-pink-500 to-orange-400 text-white py-2 rounded-lg shadow-md hover:opacity-90 transition text-sm"
+      >
+        Confirm and Generate
+      </button>
+    </div>
+  )}
+</motion.div>
+
 
       {/* Canvas Preview */}
       <motion.div
