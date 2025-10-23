@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect} from "react";
 import { motion } from "framer-motion";
-import { FaRegImages, FaHeading, FaTag, FaCheckCircle, FaExclamationCircle } from "react-icons/fa";
+import { FaRegImages, FaHeading, FaTag, FaCheckCircle, FaExclamationCircle,FaTimes } from "react-icons/fa";
 import { MdNoteAdd, MdPhotoLibrary, MdGridView, MdSubtitles } from "react-icons/md";
 import { RiPriceTag3Fill } from "react-icons/ri";
 import EditModal from "./EditModal";
@@ -78,7 +78,7 @@ const DiwaliUI = ({ username }) => {
     <div className="flex h-screen relative pt-12 sm:pt-14 md:pt-16 ">
 
       {/* Left-most step sidebar */}
-      <div className="hidden sm:flex w-20 md:w-32 flex-col p-3 bg-gray-100 border-r border-gray-200 shadow-xl space-y-4 z-30">
+      <div className="hidden sm:flex w-20 md:w-32 flex-col p-4 bg-gray-100 border-r border-gray-200 shadow-xl space-y-4 z-30">
         {steps.map((item) => {
           let enabled = false;
           if (item.key === "templates") enabled = true;
@@ -117,22 +117,44 @@ const DiwaliUI = ({ username }) => {
   initial={{ x: -300 }}
   animate={{ x: active ? 0 : -300 }}
   transition={{ type: "spring", stiffness: 100, damping: 50 }}
-  className="w-72 bg-white border-r border-gray-200 shadow-xl flex-shrink-0 p-3 sm:p-5 flex flex-col z-20"
+  className="w-72 bg-white border-r border-gray-200 shadow-xl flex-shrink-0 p-3 sm:p-5 flex flex-col z-20 relative"
 >
-  {/* Search bar for templates and products */}
-  {(active === "templates" || active === "product") && (
-    <input
-      type="text"
-      placeholder={`Search ${active === "templates" ? "Templates" : "Products"}`}
-      className="w-full mb-3 border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-pink-400 outline-none"
-      value={searchQuery}
-      onChange={(e) => setSearchQuery(e.target.value)}
-    />
-  )}
+  {/* 🔹 Close Icon */}
+  {/* 🔹 Header with Close Button */}
+<div className="flex items-center justify-between mb-3">
+  <h2 className="text-sm font-semibold text-gray-700 capitalize">
+    {active === "templates"
+      ? "Templates"
+      : active === "product"
+      ? "Products"
+      : "Panel"}
+  </h2>
+
+  <button
+    onClick={() => setActive(null)} // close panel
+    className="cursor-pointer text-gray-500 hover:text-red-500 transition"
+  >
+    <FaTimes size={18} />
+  </button>
+</div>
+
+{/* 🔍 Search bar for templates and products */}
+{(active === "templates" || active === "product") && (
+  <input
+    type="text"
+    placeholder={`Search ${
+      active === "templates" ? "Templates" : "Products"
+    }`}
+    className="w-full mb-3 border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-pink-400 outline-none"
+    value={searchQuery}
+    onChange={(e) => setSearchQuery(e.target.value)}
+  />
+)}
+
 
   {/* Templates Panel */}
   {active === "templates" && (
-    <div className="grid gap-3 sm:gap-4 grid-cols-2">
+    <div className="grid gap-3 sm:gap-4 grid-cols-2 mt-8">
       {templates
         .filter((temp) =>
           searchQuery.length >= 3
@@ -168,12 +190,8 @@ const DiwaliUI = ({ username }) => {
   {/* Products Panel */}
   {active === "product" && (
     <Masonry
-      breakpointCols={{
-        default: 2,
-        768: 2,
-        1024: 3,
-      }}
-      className="flex w-auto gap-3 sm:gap-4"
+      breakpointCols={{ default: 2, 768: 2, 1024: 3 }}
+      className="flex w-auto gap-3 sm:gap-4 mt-8"
       columnClassName="bg-clip-padding"
     >
       {products
@@ -202,7 +220,6 @@ const DiwaliUI = ({ username }) => {
                 src={prod.imageUrl}
                 alt={prod.product_name}
                 className="w-full object-contain mb-2"
-                style={{ width: "100%", height: "auto" }}
               />
               <h4 className="font-medium text-xs sm:text-sm text-gray-800 text-center">
                 {prod.product_name}
@@ -215,7 +232,7 @@ const DiwaliUI = ({ username }) => {
 
   {/* Details Panel */}
   {active === "details" && (
-    <div className="space-y-3 mb-24">
+    <div className="space-y-3 mb-24 mt-8">
       <h3 className="text-base font-semibold mb-2">Add Details</h3>
       <input
         type="text"
@@ -248,47 +265,48 @@ const DiwaliUI = ({ username }) => {
 
       {/* Canvas Preview */}
       <motion.div
-        className="flex-1 flex items-center justify-center relative overflow-hidden  p-2 sm:p-4"
-        animate={{ marginLeft: active ? 72 : 0 }}
-        transition={{ type: "tween", duration: 0.35 }}
-      >
-        {selectedTemplate ? (
-          <div className="relative bg-white/80 backdrop-blur-md shadow-2xl w-full max-w-[640px] h-[500px] rounded-xl flex items-center justify-center overflow-hidden">
-            <img
-              src={diwali.find((d) => d.id === selectedTemplate.id)?.img}
-              alt={selectedTemplate.name}
-              className="w-full h-full object-cover rounded-md"
-            />
-            <div className="absolute top-4 left-4 flex flex-col gap-2">
-              {[
-                { icon: <FaHeading size={14} />, type: "headline" },
-                { icon: <MdSubtitles size={14} />, type: "subtext" },
-                { icon: <RiPriceTag3Fill size={14} />, type: "offer" },
-                { icon: <FaTag size={14} />, type: "offer_tag" },
-              ].map((btn, i) => (
-                <button
-                  key={i}
-                  onClick={() => {
-                    setModalType(btn.type);
-                    setIsModalOpen(true);
-                  }}
-                  className={`p-2 rounded-full shadow-md hover:scale-110 transition relative group ${
-                    savedData[selectedTemplate?.id]?.[btn.type]
-                      ? "bg-pink-600/70 text-white ring-2 ring-pink-600"
-                      : "bg-white text-black"
-                  }`}
-                >
-                  {btn.icon}
-                </button>
-              ))}
-            </div>
-          </div>
-        ) : (
-          <div className="relative bg-gray-200 shadow-inner w-full max-w-[640px] h-[500px] rounded-xl flex items-center justify-center text-gray-500 text-sm">
-            No Template Selected
-          </div>
-        )}
-      </motion.div>
+  className="flex-1 flex items-center justify-center relative overflow-hidden p-2 sm:p-4 mr-50"
+  animate={{ marginLeft: active ? 0 : -80 }} // <- move left when active
+  transition={{ type: "tween", duration: 0.35 }}
+>
+  {selectedTemplate ? (
+    <div className="relative bg-white/80 backdrop-blur-md shadow-2xl w-full max-w-[640px] h-[500px] rounded-xl flex items-center justify-center overflow-hidden">
+      <img
+        src={diwali.find((d) => d.id === selectedTemplate.id)?.img}
+        alt={selectedTemplate.name}
+        className="w-full h-full object-cover rounded-md"
+      />
+      <div className="absolute top-4 left-4 flex flex-col gap-2">
+        {[
+          { icon: <FaHeading size={14} />, type: "headline" },
+          { icon: <MdSubtitles size={14} />, type: "subtext" },
+          { icon: <RiPriceTag3Fill size={14} />, type: "offer" },
+          { icon: <FaTag size={14} />, type: "offer_tag" },
+        ].map((btn, i) => (
+          <button
+            key={i}
+            onClick={() => {
+              setModalType(btn.type);
+              setIsModalOpen(true);
+            }}
+            className={`p-2 rounded-full shadow-md hover:scale-110 transition relative group ${
+              savedData[selectedTemplate?.id]?.[btn.type]
+                ? "bg-pink-600/70 text-white ring-2 ring-pink-600"
+                : "bg-white text-black"
+            }`}
+          >
+            {btn.icon}
+          </button>
+        ))}
+      </div>
+    </div>
+  ) : (
+    <div className="relative bg-gray-200 shadow-inner w-full max-w-[640px] h-[500px] rounded-xl flex items-center justify-center text-gray-500 text-sm">
+      No Template Selected
+    </div>
+  )}
+</motion.div>
+
 
       {/* Edit Modal */}
       <EditModal

@@ -6,6 +6,7 @@ import {
   FaTag,
   FaCheckCircle,
   FaExclamationCircle,
+  FaTimes
 } from "react-icons/fa";
 import { MdNoteAdd, MdPhotoLibrary, MdGridView, MdSubtitles } from "react-icons/md";
 import { RiPriceTag3Fill } from "react-icons/ri";
@@ -80,7 +81,7 @@ const Gandhijayanti = ({ username }) => {
 
   const sidebarItems = [
     { key: "templates", icon: <FaRegImages size={20} />, label: "1. Select Templates", completed: isTemplateSelected, enabled: true },
-    { key: "product", icon: <MdGridView size={20} />, label: "2. Products", completed: isProductSelected, enabled: isTemplateSelected },
+    { key: "product", icon: <MdGridView size={20} />, label: "2. Select Products", completed: isProductSelected, enabled: isTemplateSelected },
     { key: "details", icon: <MdNoteAdd size={20} />, label: "3. Add Details", completed: isDetailsConfirmed, enabled: isProductSelected },
     { key: "gallery", icon: <MdPhotoLibrary size={20} />, label: "4. Result", completed: false, enabled: isDetailsConfirmed },
   ];
@@ -109,7 +110,7 @@ const Gandhijayanti = ({ username }) => {
 
       <div className="flex flex-1 overflow-hidden relative">
         {/* Sidebar */}
-        <div className="hidden sm:flex w-20 md:w-32 flex-col py-4 bg-gray-100 border-r border-gray-200 shadow-xl space-y-4 z-30">
+        <div className="hidden sm:flex w-20 md:w-32 flex-col p-4 bg-gray-100 border-r border-gray-200 shadow-xl space-y-4 z-30">
           {sidebarItems.map((item) => (
             <div
               key={item.key}
@@ -136,16 +137,37 @@ const Gandhijayanti = ({ username }) => {
         </div>
 
       {/* Sliding Panel */}
-     <motion.div
+    <motion.div
   initial={{ x: -300, opacity: 0 }}
   animate={{
-    x: isTemplatePanelOpen ? 0 : -300,
+    x: isTemplatePanelOpen ? -20 : -300, // <- shift left by 20px when open
     opacity: isTemplatePanelOpen ? 1 : 0,
   }}
   transition={{ type: "spring", stiffness: 120, damping: 20 }}
-  className="w-72 border-r border-gray-200 shadow-xl flex-shrink-0 p-3 sm:p-5 flex flex-col z-20"
+  className="w-72 border-r border-gray-200 shadow-xl flex-shrink-0 p-3 sm:p-5 flex flex-col z-20 -ml-20"
 >
-  {/* Search bar for templates and products */}
+  {/* 🔹 Header with Close Button */}
+  <div className="flex items-center justify-between mb-3">
+    <h2 className="text-sm font-semibold text-gray-700 capitalize">
+      {active === "templates"
+        ? "Templates"
+        : active === "product"
+        ? "Products"
+        : "Panel"}
+    </h2>
+
+    <button
+      onClick={() => {
+        setActive(null);
+        setIsTemplatePanelOpen(false);
+      }}
+      className="cursor-pointer text-gray-500 hover:text-red-500 transition"
+    >
+      <FaTimes size={18} />
+    </button>
+  </div>
+
+  {/* 🔍 Search bar */}
   {(active === "templates" || active === "product") && (
     <input
       type="text"
@@ -159,11 +181,7 @@ const Gandhijayanti = ({ username }) => {
   {/* Templates Panel */}
   {active === "templates" && (
     <Masonry
-      breakpointCols={{
-        default: 2,
-        768: 2,
-        500: 1,
-      }}
+      breakpointCols={{ default: 2, 768: 2, 500: 1 }}
       className="flex gap-3 sm:gap-4"
       columnClassName="flex flex-col gap-3 sm:gap-4"
     >
@@ -202,11 +220,7 @@ const Gandhijayanti = ({ username }) => {
   {/* Products Panel */}
   {active === "product" && (
     <Masonry
-      breakpointCols={{
-        default: 2,
-        768: 2,
-        1024: 3,
-      }}
+      breakpointCols={{ default: 2, 768: 2, 1024: 3 }}
       className="flex w-auto gap-3 sm:gap-4"
       columnClassName="bg-clip-padding"
     >
@@ -280,49 +294,51 @@ const Gandhijayanti = ({ username }) => {
 </motion.div>
 
 
+
       {/* Canvas Preview */}
-      <motion.div
-        className="flex-1 flex items-center justify-center relative overflow-hidden  p-2 sm:p-4"
-        animate={{ marginLeft: active ? 72 : 0 }}
-        transition={{ type: "tween", duration: 0.35 }}
-      >
-        {selectedTemplate ? (
-          <div className="relative  backdrop-blur-md shadow-2xl w-full max-w-[640px] h-[500px] rounded-xl flex items-center justify-center overflow-hidden">
-            <img
-              src={templateImages.find((d) => d.id === selectedTemplate.id)?.img}
-              alt={selectedTemplate.name}
-              className="w-full h-full object-cover rounded-md"
-            />
-            <div className="absolute top-4 left-4 flex flex-col gap-2">
-              {[
-                { icon: <FaHeading size={14} />, type: "headline" },
-                { icon: <MdSubtitles size={14} />, type: "subtext" },
-                { icon: <RiPriceTag3Fill size={14} />, type: "offer" },
-                { icon: <FaTag size={14} />, type: "offer_tag" },
-              ].map((btn, i) => (
-                <button
-                  key={i}
-                  onClick={() => {
-                    setModalType(btn.type);
-                    setIsModalOpen(true);
-                  }}
-                  className={`p-2 rounded-full shadow-md hover:scale-110 transition relative group ${
-                    savedData[selectedTemplate?.id]?.[btn.type]
-                      ? "bg-pink-600/70 text-white ring-2 ring-pink-600"
-                      : "bg-white text-black"
-                  }`}
-                >
-                  {btn.icon}
-                </button>
-              ))}
-            </div>
-          </div>
-        ) : (
-          <div className="relative bg-gray-200 shadow-inner w-full max-w-[640px] h-[500px] rounded-xl flex items-center justify-center text-gray-500 text-sm">
-            No Template Selected
-          </div>
-        )}
-      </motion.div>
+       <motion.div
+              className="flex-1 flex items-center justify-center relative overflow-hidden  p-2 sm:p-4"
+              initial={{ marginLeft: active ? 72 : 0 }}
+              animate={{ marginLeft: active ? 72 : 0 }}
+              transition={{ type: "tween" }}
+            >
+              {selectedTemplate ? (
+                <div className="relative bg-white/80 backdrop-blur-md shadow-2xl w-full max-w-[640px] h-[500px] rounded-xl flex items-center justify-center overflow-hidden">
+                  <img
+                    src={templateImages.find((d) => d.id === selectedTemplate.id)?.img}
+                    alt={selectedTemplate.name}
+                    className="w-full h-full object-cover rounded-md"
+                  />
+                  <div className="absolute top-4 left-4 flex flex-col gap-2">
+                    {[
+                      { icon: <FaHeading size={14} />, type: "headline" },
+                      { icon: <MdSubtitles size={14} />, type: "subtext" },
+                      { icon: <RiPriceTag3Fill size={14} />, type: "offer" },
+                      { icon: <FaTag size={14} />, type: "offer_tag" },
+                    ].map((btn, i) => (
+                      <button
+                        key={i}
+                        onClick={() => {
+                          setModalType(btn.type);
+                          setIsModalOpen(true);
+                        }}
+                        className={`p-2 rounded-full shadow-md hover:scale-110 transition relative group ${
+                          savedData[selectedTemplate?.id]?.[btn.type]
+                            ? "bg-pink-600/70 text-white ring-2 ring-pink-600"
+                            : "bg-white text-black"
+                        }`}
+                      >
+                        {btn.icon}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <div className="relative bg-gray-200 shadow-inner w-full max-w-[640px] h-[500px] rounded-xl flex items-center justify-center text-gray-500 text-sm">
+                  No Template Selected
+                </div>
+              )}
+            </motion.div>
 
       {/* Edit Modal */}
       <EditModal

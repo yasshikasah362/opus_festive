@@ -73,76 +73,71 @@ export default function FlyerModal({
   };
 
   return (
-   <AnimatePresence>
+  <AnimatePresence>
   {activeEdit && (
     <motion.div
-      className="fixed inset-0 flex items-center justify-center z-50 bg-gray-200 bg-opacity-40 p-2 sm:p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.2 }}
     >
+      {/* Overlay */}
+      <div className="absolute inset-0 bg-black/40" onClick={() => setActiveEdit(null)} />
+
+      {/* Modal */}
       <motion.div
-        className="
-          bg-white rounded-2xl shadow-xl 
-          w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl
-          max-h-[90vh] overflow-y-auto
-          p-4 sm:p-6 md:p-8 flex flex-col relative
-        "
-        initial={{ opacity: 0, scale: 0.9, y: 20 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.9, y: 20 }}
-        transition={{ duration: 0.3, ease: 'easeOut' }}
+        className="relative bg-white rounded-2xl shadow-2xl w-full max-w-xl p-6 max-h-[80vh] overflow-y-auto"
+        initial={{ scale: 0.95, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.95, opacity: 0 }}
+        transition={{ duration: 0.3, ease: "easeOut" }}
       >
-        {/* Close button */}
-        <button
-          className="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-2xl sm:text-3xl"
-          onClick={() => setActiveEdit(null)}
-        >
-          ✕
-        </button>
+        
 
-        <h2 className="font-bold text-lg sm:text-xl md:text-2xl mb-3 sm:mb-4 text-center sm:text-left">
-          {modalContent.title}
-        </h2>
-
-        <div className="flex flex-col gap-2 sm:gap-3 overflow-y-auto flex-1">
+        <div className="space-y-2 mb-2 max-h-[60vh] overflow-y-auto">
           {modalContent.options.map((opt, idx) => (
-            <button
+            <div
               key={idx}
-              className={`cursor-pointer w-full py-2 sm:py-2.5 px-3 sm:px-4 border rounded-lg transition text-sm sm:text-base text-left
-                ${
-                  selectedValue === opt
-                    ? "bg-pink-100 border-pink-500 text-pink-600 font-medium"
-                    : "hover:bg-gray-100 border-gray-300 text-gray-700"
-                }`}
               onClick={() => setSelectedValue(opt)}
+              className={`px-4 py-2 border rounded-lg cursor-pointer ${
+                selectedValue === opt
+                  ? "bg-pink-100 border-pink-500 text-pink-600 font-medium"
+                  : "hover:bg-gray-100 border-gray-300 text-gray-700"
+              }`}
             >
               {opt}
-            </button>
+            </div>
           ))}
 
-          {/* Editable input */}
-          <input
-            type="text"
-            className="w-full border rounded-lg p-2 sm:p-3 text-sm sm:text-base mt-2"
-            placeholder="Or type your own..."
-            value={selectedValue}
-            onChange={(e) => setSelectedValue(e.target.value)}
-          />
+          
         </div>
 
-        <button
-          className="cursor-pointer mt-3 sm:mt-4 bg-[#FC6C87] text-white py-2 sm:py-3 px-4 rounded-lg hover:bg-[#FF9A8B] transition text-sm sm:text-base"
-          onClick={handleConfirm}
-          disabled={loading}
-        >
-          {loading ? "Generating..." : "Confirm"}
-        </button>
+        <div className="flex justify-end gap-3">
+          <button
+            onClick={() => setActiveEdit(null)}
+            className="cursor-pointer px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={handleConfirm}
+            className="cursor-pointer px-4 py-2 bg-[#FC6C87] text-white rounded-lg hover:bg-[#FF9A8B]"
+          >
+            Confirm
+          </button>
+        </div>
       </motion.div>
     </motion.div>
   )}
 </AnimatePresence>
+
+
+
+
+
+
+
 
   );
 }
