@@ -140,7 +140,7 @@ const Gandhijayanti = ({ username }) => {
     <motion.div
   initial={{ x: -300, opacity: 0 }}
   animate={{
-    x: isTemplatePanelOpen ? -20 : -300, // <- shift left by 20px when open
+    x: isTemplatePanelOpen ? 80 : -300, // <- shift left by 20px when open
     opacity: isTemplatePanelOpen ? 1 : 0,
   }}
   transition={{ type: "spring", stiffness: 120, damping: 20 }}

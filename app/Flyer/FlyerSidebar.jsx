@@ -312,7 +312,7 @@ export default function FlyerSidebar({
                     template.name
                   )}.webp`}
                   alt={template.name}
-                  className="w-full h-32 sm:h-40 object-cover rounded-md"
+                  className="w-full h-full sm:h-40 object-cover rounded-md"
                   draggable={false}
                 />
               </div>
