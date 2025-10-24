@@ -143,7 +143,7 @@ const Gandhijayanti = ({ username }) => {
     x: isTemplatePanelOpen ? 80 : -300, // <- shift left by 20px when open
     opacity: isTemplatePanelOpen ? 1 : 0,
   }}
-  transition={{ type: "spring", stiffness: 120, damping: 20 }}
+  transition={{ type: "tween", duration: 1 }}
   className="w-72 border-r border-gray-200 shadow-xl flex-shrink-0 p-3 sm:p-5 flex flex-col z-20 -ml-20"
 >
   {/* 🔹 Header with Close Button */}
