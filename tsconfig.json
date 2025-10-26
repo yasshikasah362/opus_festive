@@ -36,7 +36,8 @@
     "app/Flyer/page.jsx",
     "context/OpusAuthContext.tsx",
     ".next\\dev/types/**/*.ts",
-    ".next\\dev/types/**/*.ts"
+    ".next\\dev/types/**/*.ts",
+    ".next/dev/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"
