@@ -299,7 +299,7 @@ const Navratri = ({ username }) => {
                          className="flex-1 flex items-center justify-center relative overflow-hidden  p-2 sm:p-4"
                          initial={{ marginLeft: active ? 0 : -70 }}
                          animate={{ marginLeft: active ? 0 : 0 }}
-                         transition={{ type: "tween" }}
+                         transition={{ type: "spring" }}
                        >
                          {selectedTemplate ? (
                            <div className="relative bg-white/80 backdrop-blur-md shadow-2xl w-full max-w-[640px] h-[500px] rounded-xl flex items-center justify-center overflow-hidden">

@@ -300,7 +300,7 @@ const Gandhijayanti = ({ username }) => {
   className="flex-1 flex items-center justify-center relative overflow-hidden p-2 sm:p-4"
   initial={false} // disables unwanted initial animation
   animate={{ marginLeft: isTemplatePanelOpen ? 80 : -200 }} // 👈 0 = closed panel left position
-  transition={{ type: "tween", duration: 0.35, ease: "easeInOut" }}
+  transition={{ type: "spring", duration: 0.35, ease: "easeInOut" }}
 >
   {selectedTemplate ? (
     <div className="relative bg-white/80 backdrop-blur-md shadow-2xl w-full max-w-[640px] h-[500px] rounded-xl flex items-center justify-center overflow-hidden">
