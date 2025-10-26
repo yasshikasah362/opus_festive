@@ -297,48 +297,48 @@ const Gandhijayanti = ({ username }) => {
 
       {/* Canvas Preview */}
        <motion.div
-              className="flex-1 flex items-center justify-center relative overflow-hidden  p-2 sm:p-4"
-              initial={{ marginLeft: active ? 72 : 0 }}
-              animate={{ marginLeft: active ? 72 : 0 }}
-              transition={{ type: "tween" }}
-            >
-              {selectedTemplate ? (
-                <div className="relative bg-white/80 backdrop-blur-md shadow-2xl w-full max-w-[640px] h-[500px] rounded-xl flex items-center justify-center overflow-hidden">
-                  <img
-                    src={templateImages.find((d) => d.id === selectedTemplate.id)?.img}
-                    alt={selectedTemplate.name}
-                    className="w-full h-full object-cover rounded-md"
-                  />
-                  <div className="absolute top-4 left-4 flex flex-col gap-2">
-                    {[
-                      { icon: <FaHeading size={14} />, type: "headline" },
-                      { icon: <MdSubtitles size={14} />, type: "subtext" },
-                      { icon: <RiPriceTag3Fill size={14} />, type: "offer" },
-                      { icon: <FaTag size={14} />, type: "offer_tag" },
-                    ].map((btn, i) => (
-                      <button
-                        key={i}
-                        onClick={() => {
-                          setModalType(btn.type);
-                          setIsModalOpen(true);
-                        }}
-                        className={`p-2 rounded-full shadow-md hover:scale-110 transition relative group ${
-                          savedData[selectedTemplate?.id]?.[btn.type]
-                            ? "bg-pink-600/70 text-white ring-2 ring-pink-600"
-                            : "bg-white text-black"
-                        }`}
-                      >
-                        {btn.icon}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              ) : (
-                <div className="relative bg-gray-200 shadow-inner w-full max-w-[640px] h-[500px] rounded-xl flex items-center justify-center text-gray-500 text-sm">
-                  No Template Selected
-                </div>
-              )}
-            </motion.div>
+  className="flex-1 flex items-center justify-center relative overflow-hidden p-2 sm:p-4"
+  initial={false} // disables unwanted initial animation
+  animate={{ marginLeft: isTemplatePanelOpen ? 80 : -200 }} // 👈 0 = closed panel left position
+  transition={{ type: "tween", duration: 0.35, ease: "easeInOut" }}
+>
+  {selectedTemplate ? (
+    <div className="relative bg-white/80 backdrop-blur-md shadow-2xl w-full max-w-[640px] h-[500px] rounded-xl flex items-center justify-center overflow-hidden">
+      <img
+        src={templateImages.find((d) => d.id === selectedTemplate.id)?.img}
+        alt={selectedTemplate.name}
+        className="w-full h-full object-cover rounded-md"
+      />
+      <div className="absolute top-4 left-4 flex flex-col gap-2">
+        {[
+          { icon: <FaHeading size={14} />, type: "headline" },
+          { icon: <MdSubtitles size={14} />, type: "subtext" },
+          { icon: <RiPriceTag3Fill size={14} />, type: "offer" },
+          { icon: <FaTag size={14} />, type: "offer_tag" },
+        ].map((btn, i) => (
+          <button
+            key={i}
+            onClick={() => {
+              setModalType(btn.type);
+              setIsModalOpen(true);
+            }}
+            className={`p-2 rounded-full shadow-md hover:scale-110 transition relative group ${
+              savedData[selectedTemplate?.id]?.[btn.type]
+                ? "bg-pink-600/70 text-white ring-2 ring-pink-600"
+                : "bg-white text-black"
+            }`}
+          >
+            {btn.icon}
+          </button>
+        ))}
+      </div>
+    </div>
+  ) : (
+    <div className="relative bg-gray-200 shadow-inner w-full max-w-[640px] h-[500px] rounded-xl flex items-center justify-center text-gray-500 text-sm">
+      No Template Selected
+    </div>
+  )}
+</motion.div>
 
       {/* Edit Modal */}
       <EditModal

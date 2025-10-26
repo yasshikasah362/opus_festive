@@ -266,6 +266,7 @@ const DiwaliUI = ({ username }) => {
       {/* Canvas Preview */}
       <motion.div
   className="flex-1 flex items-center justify-center relative overflow-hidden p-2 sm:p-4 mr-50"
+  initial={false}
   animate={{ marginLeft: active ? 0 : -80 }} // <- move left when active
   transition={{ type: "tween", duration: 0.35 }}
 >
